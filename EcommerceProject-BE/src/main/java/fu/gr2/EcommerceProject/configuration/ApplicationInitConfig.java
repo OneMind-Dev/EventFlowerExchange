@@ -1,13 +1,12 @@
 package fu.gr2.EcommerceProject.configuration;
 
-import fu.gr2.EcommerceProject.domain.User;
+import fu.gr2.EcommerceProject.entity.User;
 import fu.gr2.EcommerceProject.enums.Role;
 import fu.gr2.EcommerceProject.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

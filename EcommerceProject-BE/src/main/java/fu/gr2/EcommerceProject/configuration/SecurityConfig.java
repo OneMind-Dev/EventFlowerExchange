@@ -35,6 +35,8 @@ public class SecurityConfig {
                 request.requestMatchers(HttpMethod.POST,PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET,"/users")
                         .hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE)
+                        .hasAuthority("SCOPE_ADMIN")
                         .anyRequest().authenticated());
 
         httpSecurity.oauth2ResourceServer(oauth2 ->

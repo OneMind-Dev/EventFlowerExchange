@@ -5,7 +5,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import fu.gr2.EcommerceProject.domain.User;
+import fu.gr2.EcommerceProject.entity.User;
 import fu.gr2.EcommerceProject.dto.request.AuthenticationRequest;
 import fu.gr2.EcommerceProject.dto.request.IntrospectRequest;
 import fu.gr2.EcommerceProject.dto.response.AuthenticationResponse;
@@ -27,7 +27,6 @@ import org.springframework.util.CollectionUtils;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Collection;
 import java.util.Date;
 import java.util.StringJoiner;
 
@@ -56,7 +55,6 @@ public class AuthenticationService {
         return IntrospectResponse.builder()
                 .valid(verifed && expiratetime.after(new Date()))
                 .build();
-
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request){

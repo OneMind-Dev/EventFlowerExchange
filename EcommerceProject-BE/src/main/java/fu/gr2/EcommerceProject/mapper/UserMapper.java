@@ -2,12 +2,11 @@ package fu.gr2.EcommerceProject.mapper;
 
 
 
-import fu.gr2.EcommerceProject.domain.User;
+import fu.gr2.EcommerceProject.entity.User;
 import fu.gr2.EcommerceProject.dto.request.UserCreationRequest;
 import fu.gr2.EcommerceProject.dto.request.UserUpdateRequest;
 import fu.gr2.EcommerceProject.dto.response.UserResponse;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 

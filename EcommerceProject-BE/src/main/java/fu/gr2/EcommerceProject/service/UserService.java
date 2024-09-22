@@ -1,6 +1,6 @@
 package fu.gr2.EcommerceProject.service;
 
-import fu.gr2.EcommerceProject.domain.User;
+import fu.gr2.EcommerceProject.entity.User;
 import fu.gr2.EcommerceProject.dto.request.UserCreationRequest;
 import fu.gr2.EcommerceProject.dto.request.UserUpdateRequest;
 import fu.gr2.EcommerceProject.dto.response.UserResponse;
@@ -12,13 +12,9 @@ import fu.gr2.EcommerceProject.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 

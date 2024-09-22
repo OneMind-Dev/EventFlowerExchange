@@ -1,6 +1,5 @@
 package fu.gr2.EcommerceProject.controller;
 
-import fu.gr2.EcommerceProject.domain.User;
 import fu.gr2.EcommerceProject.dto.request.ApiResponse;
 import fu.gr2.EcommerceProject.dto.request.UserCreationRequest;
 import fu.gr2.EcommerceProject.dto.request.UserUpdateRequest;

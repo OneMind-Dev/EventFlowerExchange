@@ -1,4 +1,4 @@
-package fu.gr2.EcommerceProject.domain;
+package fu.gr2.EcommerceProject.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -7,7 +7,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Set;
 
