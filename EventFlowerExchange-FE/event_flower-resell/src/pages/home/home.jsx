@@ -1,18 +1,14 @@
+import "./home.css";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Header from "../../components/header/header";
 
 const Home = () => {
   const navigate = useNavigate();
   return (
-    <div>
-      <button
-        onClick={() => {
-          navigate("/login");
-        }}
-      >
-        Login
-      </button>
-    </div>
+    <>
+      <Header></Header>
+    </>
   );
 };
 

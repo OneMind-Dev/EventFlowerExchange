@@ -8,23 +8,6 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const navigate = useNavigate();
 
-  // vùng của javascript
-  const handleLogin = async (values) => {
-    console.log(values);
-
-    try {
-      // gửi request đến server
-      const response = await api.post("login", values);
-      const { token } = response.data;
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(response.data));
-      navigate("/");
-    } catch (err) {
-      console.log(err);
-      alert(err.response.data);
-    }
-  };
-
   return (
     <>
       <AuthenTemplate>
