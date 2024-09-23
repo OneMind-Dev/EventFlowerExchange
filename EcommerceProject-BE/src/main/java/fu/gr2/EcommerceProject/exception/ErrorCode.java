@@ -16,6 +16,7 @@ public enum ErrorCode {
     PASSWORD_INVALID(1004,"Password must be atleat 8 characters"),
     USER_NOT_EXISTED(1005,"User not existed"),
     UNAUTHENTICATED(1006,"Unauthenticated"),
+    BANNED(1007,"your account has been banned by admin"),
     ;
     int code;
     String message;
