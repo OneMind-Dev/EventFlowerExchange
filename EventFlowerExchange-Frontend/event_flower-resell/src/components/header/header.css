@@ -1,6 +1,6 @@
 .header {
     background-color: #F4DDDD;
-    height: 170px;
+    height: 140px;
 }
 
 .header__container {
@@ -48,10 +48,12 @@
 .header__navbar {
     display: flex;
     justify-content: center;
-    margin: 0 160px;
-    padding-top: 5px;
+    margin: -20px 160px 0 160px;
     color: #CC7A7A;
     font-weight: 700;
+}
+.ant-dropdown-menu {
+    background-color: #F4DDDD !important;
 }
 
 .header__navbar-home,
@@ -68,6 +70,6 @@
     cursor: pointer;
 }
 
-.hihi {
-    color: #CC7A7A;
-}
+.ant-dropdown-menu-item {
+    color: #CC7A7A !important; /* Change the text color */
+  }

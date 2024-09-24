@@ -12,7 +12,7 @@ function Header() {
   const events = [
     {
       label: (
-        <a className="hihi" href="#">
+        <a href="#">
           ĐÁM CƯỚI
         </a>
       ),
@@ -60,6 +60,9 @@ function Header() {
               className="header__container-logo"
               src="./src/components/images/logo.png"
               alt=""
+              onClick={() => {
+                navigate("/");
+              }}
             />
           </div>
 
