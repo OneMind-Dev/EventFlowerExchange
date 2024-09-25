@@ -3,10 +3,28 @@ import AuthenTemplate from "../../components/authen-template/authen-template";
 import { Form, Input, Button } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import { useNavigate } from "react-router-dom";
-//import api from "../../config/axios";
+import api from "../../components/config/axios";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate();
+
+  const handleLogin = async (values) => {
+    try {
+      const response = await api.post("login", values);
+      console.log(response);
+      const { role, token } = response.data;
+      localStorage.setItem("token", token);
+
+      if (role === "ADMIN") {
+        navigate("/");
+      } else {
+        navigate("/");
+      }
+    } catch (err) {
+      toast.error(err.response.data);
+    }
+  };
 
   return (
     <>
@@ -15,6 +33,7 @@ const Login = () => {
           labelCol={{
             span: 24,
           }}
+          onFinish={handleLogin}
         >
           <h1>Đăng Nhập</h1>
           <FormItem
