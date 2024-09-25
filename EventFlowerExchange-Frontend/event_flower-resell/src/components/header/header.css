@@ -1,6 +1,6 @@
 .header {
     background-color: #F4DDDD;
-    height: 140px;
+    height: 170px;
 }
 
 .header__container {
@@ -48,7 +48,8 @@
 .header__navbar {
     display: flex;
     justify-content: center;
-    margin: -20px 160px 0 160px;
+    margin: 0 160px;
+    padding-top: 5px;
     color: #CC7A7A;
     font-weight: 700;
 }
