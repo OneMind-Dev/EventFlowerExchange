@@ -1,13 +1,77 @@
 import React from 'react'
 import Header from "../../components/header/header";
 import Footer from "../../components/footer/footer";
-import "../../components/admin/admin"
+import { Space, Table, Tag } from 'antd';
 
 function Admin() {
-    const users = [
-        { username: 'jackcypher', fullname: 'Trieu Phu Thang', email: 'phuthang4444@gmail.com', status: true },
-        { username: 'litteboy', fullname: 'Japanese Favours meteor', email: 'shadowjutsu@example.com', status: false },
-        { username: 'nibba', fullname: 'black man', email: 'quyendanchu404@example.com', status: false }
+    const columns = [
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
+        },
+        {
+            title: 'Address',
+            dataIndex: 'address',
+            key: 'address',
+        },
+        {
+            title: 'Status',
+            key: 'status',
+            dataIndex: 'status',
+            render: (_, { status }) => {
+                let color = status;
+                if (status === 'Active') {
+                    color = 'green';
+                } else {
+                    color = 'red';
+                }
+                return (
+                    <Tag color={color} key={status}>
+                        {status.toUpperCase()}
+                    </Tag>
+                );
+            },
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (_, record) => (
+                <Space size="middle">
+                    <a>
+                        {record.status === 'Active' ? 'Ban' : 'Unban'}
+                    </a>
+                </Space>
+            ),
+        },
+    ];
+    const data = [
+        {
+            key: '1',
+            name: 'nibba',
+            email: 'quyendanchu404@black.man',
+            address: 'New York No. 1 Lake Park',
+            status: 'Active',
+        },
+        {
+            key: '2',
+            name: 'littleboy',
+            email: 'shadowjutsu@nuclear.boom',
+            address: 'London No. 1 Lake Park',
+            status: 'InActive',
+        },
+        {
+            key: '3',
+            name: 'china',
+            email: 'badluckifitsagirl@reincarnation',
+            address: 'Sydney No. 1 Lake Park',
+            status: 'Active',
+        },
     ];
     return (
         <div>
@@ -15,34 +79,7 @@ function Admin() {
             <div className="admin-container">
                 <h1 className="title">Users List</h1>
                 <div className="table-container">
-                    <table className="user-table">
-                        <thead>
-                            <tr className="table-header">
-                                <th>Username</th>
-                                <th>Fullname</th>
-                                <th>Email</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {users.map((user, index) => (
-                                <tr key={index} className="table-row">
-                                    <td>{user.username}</td>
-                                    <td>{user.fullname}</td>
-                                    <td>{user.email}</td>
-                                    <td className={`status ${user.status ? 'active' : 'inactive'}`}>
-                                        {user.status ? 'Active' : 'Inactive'}
-                                    </td>
-                                    <td>
-                                        <button className="action-btn">
-                                            {user.status ? 'ban' : 'unban'}
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <Table columns={columns} dataSource={data} />;
                 </div>
             </div>
             <Footer />

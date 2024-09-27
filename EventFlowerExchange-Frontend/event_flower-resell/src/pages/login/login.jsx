@@ -18,10 +18,10 @@ const Login = () => {
       (user) => user.username === username && user.password === password
     );
 
-    if (user) {
+    if (user.role == "admin") {
       // You can set user role in a global state or context here if needed
       console.log("Logged in as:", user.role);
-      navigate("/"); // Navigate to home page on success
+      navigate("/admin"); // Navigate to home page on success
     } else {
       setError("Tên người dùng hoặc mật khẩu không chính xác.");
     }
