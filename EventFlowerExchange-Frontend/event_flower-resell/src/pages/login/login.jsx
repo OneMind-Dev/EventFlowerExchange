@@ -16,8 +16,8 @@ const Login = () => {
       const { role, token } = response.data;
       localStorage.setItem("token", token);
 
-      if (role === "ADMIN") {
-        navigate("/");
+      if (role === "admin") {
+        navigate("/dashboard");
       } else {
         navigate("/");
       }

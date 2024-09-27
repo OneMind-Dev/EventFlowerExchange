@@ -4,6 +4,7 @@ import Login from "./pages/login/login";
 import Home from "./pages/home/home";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Register from "./pages/register/register";
+import AdminDashboard from "./pages/admin/adminDashboard";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -18,6 +19,10 @@ const App = () => {
     {
       path: "register",
       element: <Register />,
+    },
+    {
+      path: "dashboard",
+      element: <AdminDashboard />,
     },
   ]);
 
