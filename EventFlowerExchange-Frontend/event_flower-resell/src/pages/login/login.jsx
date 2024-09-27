@@ -3,35 +3,38 @@ import AuthenTemplate from "../../components/authen-template/authen-template";
 import { Form, Input, Button } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import { useNavigate } from "react-router-dom";
-//import api from "../../config/axios";
-const users = [
-  { username: "admin", password: "123", role: "admin" },
-  { username: "user", password: "123", role: "user" },
-];
+import api from "../../components/config/axios";
+import { toast } from "react-toastify";
+
 const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (values) => {
-    const { username, password } = values;
-    const user = users.find(
-      (user) => user.username === username && user.password === password
-    );
+  const handleLogin = async (values) => {
+    try {
+      const response = await api.post("login", values);
+      console.log(response);
+      const { role, token } = response.data;
+      localStorage.setItem("token", token);
 
-    if (user.role == "admin") {
-      // You can set user role in a global state or context here if needed
-      console.log("Logged in as:", user.role);
-      navigate("/admin"); // Navigate to home page on success
-    } else {
-      setError("Tên người dùng hoặc mật khẩu không chính xác.");
+      if (role === "ADMIN") {
+        navigate("/");
+      } else {
+        navigate("/");
+      }
+    } catch (err) {
+      toast.error(err.response.data);
     }
   };
+
   return (
     <>
       <AuthenTemplate>
         <Form
-          labelCol={{ span: 24 }}
-          onFinish={handleSubmit}
+          labelCol={{
+            span: 24,
+          }}
+          onFinish={handleLogin}
         >
           <h1>Đăng Nhập</h1>
           {error && <div style={{ color: 'red' }}>{error}</div>}

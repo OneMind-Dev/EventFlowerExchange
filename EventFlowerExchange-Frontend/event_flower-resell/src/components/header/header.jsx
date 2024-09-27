@@ -59,7 +59,7 @@ function Header() {
             <img
               className="header__container-logo"
               src="./src/components/images/logo.png"
-              alt=""
+              alt="logo"
             />
           </div>
 

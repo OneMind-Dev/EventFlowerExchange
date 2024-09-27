@@ -3,9 +3,23 @@ import { Form, Input, Button } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import { useNavigate } from "react-router-dom";
 import AuthenTemplate from "../../components/authen-template/authen-template";
+import { toast } from "react-toastify";
+import api from "../../components/config/axios";
 
 const Register = () => {
   const navigate = useNavigate();
+
+  const handleRegister = async (values) => {
+    //submit xuống back-end
+    try {
+      const response = await api.post("register", values);
+
+      toast.success("Successfully register new account");
+      navigate("/login");
+    } catch (err) {
+      toast.error("Error register new account");
+    }
+  };
 
   return (
     <>
@@ -14,6 +28,7 @@ const Register = () => {
           labelCol={{
             span: 24,
           }}
+          onFinish={handleRegister}
         >
           <h1>Đăng Ký</h1>
           <FormItem
