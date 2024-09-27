@@ -11,11 +11,7 @@ function Header() {
 
   const events = [
     {
-      label: (
-        <a className="hihi" href="#">
-          ĐÁM CƯỚI
-        </a>
-      ),
+      label: <a href="#">ĐÁM CƯỚI</a>,
       key: "1",
     },
     {

@@ -7,8 +7,7 @@ const Home = () => {
   const navigate = useNavigate();
   return (
     <>
-      <Header></Header>
-      <Footer></Footer>
+      <Header />
     </>
   );
 };
