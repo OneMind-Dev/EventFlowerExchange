@@ -1,0 +1,47 @@
+.background {
+    background-color: #F4F4F4;
+    min-height: 100vh; /* Ensures the background covers the full height */
+    padding: 20px; /* Optional padding for content spacing */
+}
+
+.user_container {
+    background-color: white;
+    width: 17%; /* Set a specific width */
+    margin-left: 5%; /* Center the div */
+    padding: 15px; /* Optional: Add padding for content spacing */
+    border-radius: 10px;
+    padding-bottom: 2%;
+    text-align: center; /* Center text within the box */
+}
+
+.user_infor {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column; /* Stacks icon and username vertically */
+    align-items: center; /* Center the icon and text horizontally */
+}
+
+.user_icon {
+    font-size: 55px; /* Adjust the size as needed */
+    margin-bottom: 10px; /* Adds space below the icon */
+}
+
+.username {
+    margin-top: 10px;
+    color: #818181;
+}
+
+.user_interact {
+    margin-top: 30px;
+    text-align: center; /* Center the text */
+}
+
+.user_interact p {
+    color: #CC7A7A;
+    margin-bottom: 30px; /* Adds space between the paragraphs */
+}
+
+.privateInfor {
+    color: #CC7A7A;
+    margin-bottom: 30px;
+}
