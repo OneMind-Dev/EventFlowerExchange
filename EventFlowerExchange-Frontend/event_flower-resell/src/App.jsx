@@ -5,6 +5,7 @@ import Home from "./pages/home/home";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Register from "./pages/register/register";
 import AdminDashboard from "./pages/admin/adminDashboard";
+import Admin from "./pages/admin/admin";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -24,6 +25,10 @@ const App = () => {
       path: "dashboard",
       element: <AdminDashboard />,
     },
+    {
+      path: "admin",
+      element: <Admin />,
+    }
   ]);
 
   return <RouterProvider router={router} />;
