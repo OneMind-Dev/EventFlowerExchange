@@ -2,7 +2,9 @@ import React from 'react'
 import Header from '../../components/header/header'
 import Footer from '../../components/footer/footer'
 import '../../components/user/userProfile.css'
+import { Form, Input, Button } from "antd";
 import { FaCircleUser } from "react-icons/fa6";
+import FormItem from "antd/es/form/FormItem";
 
 
 function UserProfile() {
@@ -28,6 +30,32 @@ function UserProfile() {
                             Đơn hàng
                         </p>
                     </div>
+                </div>
+                <div className='infor_container'>
+                    <h1>
+                        Thông tin cá nhân
+                    </h1>
+                    <p>
+                        Tên tài khoản
+                        <FormItem
+                            className="input-box"
+                            name="username"
+                        >
+                            <Input className="input" type="text" placeholder="" />
+                        </FormItem>
+                    </p>
+                    <p>
+                        Họ và tên
+                    </p>
+                    <p>
+                        Số điện thoại
+                    </p>
+                    <p>
+                        Email
+                    </p>
+                    <p>
+                        Địa chỉ
+                    </p>
                 </div>
             </div >
             <Footer />

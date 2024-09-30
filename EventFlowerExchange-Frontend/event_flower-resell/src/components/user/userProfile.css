@@ -2,6 +2,10 @@
     background-color: #F4F4F4;
     min-height: 100vh; /* Ensures the background covers the full height */
     padding: 20px; /* Optional padding for content spacing */
+    display: flex;             /* Enable flexbox */
+    justify-content: start;    /* Align items at the start of the container */
+    align-items: flex-start;   /* Align items at the top */
+    gap: 20px;
 }
 
 .user_container {
@@ -44,4 +48,22 @@
 .privateInfor {
     color: #CC7A7A;
     margin-bottom: 30px;
+}
+
+.infor_container {
+    background-color: white;
+    width: 70%; /* Set a specific width */
+    padding: 15px; /* Optional: Add padding for content spacing */
+    border-radius: 10px;
+    padding-bottom: 8%;
+}
+
+.infor_container h1 {
+    margin: 15px 0px 5% 6%;
+    color: #CC7A7A;
+}
+
+.infor_container p {
+    margin: 15px 0px 3% 6%;
+    color: #CC7A7A;
 }
