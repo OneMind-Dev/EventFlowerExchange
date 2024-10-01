@@ -12,7 +12,7 @@ const Register = () => {
   const handleRegister = async (values) => {
     //submit xuống back-end
     try {
-      const response = await api.post("register", values);
+      const response = await api.post("users/register", values);
 
       toast.success("Successfully register new account");
       navigate("/login");
@@ -42,6 +42,19 @@ const Register = () => {
             ]}
           >
             <Input className="input" type="text" placeholder="Tên người dùng" />
+          </FormItem>
+
+          <FormItem
+            className="input-box"
+            name="address"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập địa chỉ.",
+              },
+            ]}
+          >
+            <Input className="input" type="text" placeholder="địa chỉ" />
           </FormItem>
 
           <FormItem

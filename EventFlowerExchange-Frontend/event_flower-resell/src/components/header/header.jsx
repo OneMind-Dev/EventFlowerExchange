@@ -11,7 +11,11 @@ function Header() {
 
   const events = [
     {
-      label: <a href="#">ĐÁM CƯỚI</a>,
+      label: (
+        <a className="hihi" href="#">
+          ĐÁM CƯỚI
+        </a>
+      ),
       key: "1",
     },
     {
@@ -54,8 +58,9 @@ function Header() {
           <div>
             <img
               className="header__container-logo"
-              src="./src/components/images/logo.png"
+              src="../src/components/images/logo.png"
               alt="logo"
+              onClick={() => navigate("/")}
             />
           </div>
 
@@ -87,7 +92,14 @@ function Header() {
         </div>
 
         <div className="header__navbar">
-          <p className="header__navbar-home">TRANG CHỦ</p>
+          <p
+            onClick={() => {
+              navigate("/");
+            }}
+            className="header__navbar-home"
+          >
+            TRANG CHỦ
+          </p>
 
           <div className="header__navbar-events">
             <Dropdown
@@ -124,6 +136,7 @@ function Header() {
           <p className="header__navbar-feedback">GÓP Ý</p>
         </div>
       </header>
+      <div className="divide"></div>
     </>
   );
 }
