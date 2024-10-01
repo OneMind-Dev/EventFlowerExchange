@@ -12,7 +12,7 @@ const Login = () => {
 
   const handleLogin = async (values) => {
     try {
-      const response = await api.post("login", values);
+      const response = await api.post("auth/login", values);
       console.log(response);
       const { role, token } = response.data;
       localStorage.setItem("token", token);

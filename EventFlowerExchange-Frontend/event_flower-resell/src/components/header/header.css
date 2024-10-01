@@ -15,6 +15,10 @@
     padding: 0;
 }
 
+.header__container-logo:hover {
+    cursor: pointer;
+}
+
 .header__login-register {
     display: inline-flex;
     color: #CC7A7A;
@@ -72,5 +76,10 @@
 }
 
 .ant-dropdown-menu-item {
-    color: #CC7A7A !important; /* Change the text color */
-  }
+    color: #CC7A7A !important;
+    font-size: 16px !important;
+}
+
+.ant-dropdown-menu {
+    background: #F4DDDD !important;
+}
