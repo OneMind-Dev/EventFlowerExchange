@@ -3,7 +3,7 @@
     min-height: 100vh; /* Ensures the background covers the full height */
     padding: 20px; /* Optional padding for content spacing */
     display: flex;             /* Enable flexbox */
-    justify-content: start;    /* Align items at the start of the container */
+    justify-content: start;
     align-items: flex-start;   /* Align items at the top */
     gap: 20px;
 }
@@ -63,7 +63,32 @@
     color: #CC7A7A;
 }
 
-.infor_container p {
-    margin: 15px 0px 3% 6%;
+.form-item {
+    display: flex;
+    margin: 15px 0;
+    align-items: flex-start;
+}
+
+.form-item label {
+    width: 150px; /* Fixed width for labels */
+    margin-left: 2%;
+    color: #CC7A7A;
+}
+
+.form-item .ant-form-item {
+    flex: 1;
+}
+
+.form-item .ant-input {
+    width: 50%;
+}
+
+.address {
+    padding-bottom: 8%;
+}
+
+.submit-button {
+    background-color: #F4DDDD;
+    margin-left: 2%;
     color: #CC7A7A;
 }
