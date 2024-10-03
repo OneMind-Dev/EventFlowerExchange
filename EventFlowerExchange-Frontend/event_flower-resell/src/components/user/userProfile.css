@@ -18,6 +18,15 @@
     text-align: center; /* Center text within the box */
 }
 
+.user_avatar {
+    width: 100%; /* Set the image width to fit the container */
+    max-width: 150px; /* Maximum width for the avatar */
+    height: auto; /* Maintain the aspect ratio */
+    border-radius: 50%; /* Optional: Make the avatar circular */
+    object-fit: cover; /* Ensure the image covers the container without distortion */
+}
+
+
 .user_infor {
     margin-top: 10px;
     display: flex;
@@ -31,8 +40,9 @@
 }
 
 .username {
+    color: blue;
+    
     margin-top: 10px;
-    color: #818181;
 }
 
 .user_interact {
@@ -55,7 +65,7 @@
     width: 70%; /* Set a specific width */
     padding: 15px; /* Optional: Add padding for content spacing */
     border-radius: 10px;
-    padding-bottom: 8%;
+    padding-bottom: 1%;
 }
 
 .infor_container h1 {
@@ -68,6 +78,21 @@
     margin: 15px 0;
     align-items: flex-start;
 }
+
+.edit-button {
+    margin-left: auto; /* Aligns the button to the right */
+    background-color: #F4DDDD; /* Consistent button color */
+    color: #CC7A7A; /* Consistent text color */
+    border: none; /* Remove default border */
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+}
+
+.edit-button:hover {
+    background-color: #0056b3; /* Background color on hover */
+    color: #ffcc00; /* Text color on hover */
+}
+
 
 .form-item label {
     width: 150px; /* Fixed width for labels */
@@ -90,5 +115,16 @@
 .submit-button {
     background-color: #F4DDDD;
     margin-left: 2%;
+    color: #CC7A7A;
+}
+
+.cancel-button {
+    margin-left: 2%;
+    background-color: #F4DDDD;
+    color: #CC7A7A;
+}
+
+.edit-button {
+    background-color: #F4DDDD;
     color: #CC7A7A;
 }

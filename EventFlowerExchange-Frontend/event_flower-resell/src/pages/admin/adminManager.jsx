@@ -2,6 +2,7 @@ import React from 'react'
 import Header from "../../components/header/header";
 import Footer from "../../components/footer/footer";
 import { Space, Table, Tag } from 'antd';
+import "../../components/admin/admin.css";
 
 function Admin() {
     const columns = [
