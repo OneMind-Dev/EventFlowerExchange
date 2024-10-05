@@ -52,27 +52,22 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(AppException.UserNotFoundException.class)
+    @ExceptionHandler({AppException.UserNotFoundException.class})
     public ResponseEntity<String> handleUserNotFoundException(AppException.UserNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    @ExceptionHandler(AppException.UserAlreadyApprovedException.class)
+    @ExceptionHandler({AppException.UserAlreadyApprovedException.class})
     public ResponseEntity<String> handleUserAlreadyApprovedException(AppException.UserAlreadyApprovedException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Validation error: " + ex.getMessage());
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Validation error: " + ex.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({Exception.class})
     public ResponseEntity<String> handleGenericException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }

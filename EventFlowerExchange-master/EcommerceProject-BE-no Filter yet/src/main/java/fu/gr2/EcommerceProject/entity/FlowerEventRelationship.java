@@ -3,11 +3,11 @@ package fu.gr2.EcommerceProject.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "Relationship")
+@Table(name = "Flower_Event_Relationship")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,24 +18,32 @@ public class FlowerEventRelationship {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int eventId;
-
-    int categoryId;
-    String eventName;
-    String description;
-
-    @Column(name = "created_at")
-    LocalDateTime createdAt;
-
-    String image;
+    @Column(name = "e_id")
+    int eId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    User user;
+    @JoinColumn(name = "event_id")
+    Event event;
 
-    LocalDateTime startDate;
-    LocalDateTime endDate;
+    @ManyToOne
+    @JoinColumn(name = "flower_id")
+    Flower flower;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<FlowerEventRelationship> flowerEventRelationships;
+    @Column(name = "quantity")
+    int quantity;
+
+    @Column(name = "description")
+    String description;
+
+    @Column(name = "flower_price")
+    BigDecimal floPrice;
+
+    @Column(name = "stock")
+    int stock;
+
+    @Column(name = "created_at")
+    LocalDate createdAt;
+
+    @Column(name = "image")
+    String image;
 }
