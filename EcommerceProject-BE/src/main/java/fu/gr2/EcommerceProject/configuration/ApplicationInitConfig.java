@@ -27,14 +27,14 @@ public class ApplicationInitConfig {
     ApplicationRunner applicationRunner(UserRepository userRepository){
         return args -> {
             if(userRepository.findByUsername("admin").isEmpty()){
-                var roles = new HashSet<String>();
-                roles.add(Role.ADMIN.name());
+                var roles = new HashSet<Role>();
+                roles.add(Role.valueOf(Role.ADMIN.name()));
                 User user = User.builder()
                         .username("admin")
                         .password(passwordEncoder.encode("admin"))
                         .role(roles)
                         .email("defaultemail@gmail.com")
-                        .status_user(true)
+                        .statusUser(true)
                         .build();
 
                 userRepository.save(user);

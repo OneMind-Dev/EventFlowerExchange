@@ -1,0 +1,77 @@
+.wrapper__event-info--img {
+    width: 100%;
+    border-radius: 25px;
+    margin-top: 0;
+    border: 2px solid #f4f4f4;
+}
+
+.wrapper__event-name {
+    color: #CC7A7A;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.wrapper__title-all {
+    display: flex;
+    justify-content: center;
+    margin: 50px 0 20px 0;
+    color: #CC7A7A;
+}
+
+.wrapper__event-info {
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    background: #ffff;
+    margin-top: 20px;
+    border-radius: 15px;
+}
+
+.wrapper__event-des {
+    color: #CC7A7A;
+}
+
+.wrapper__event-name,
+.wrapper__event-des {
+    padding-left: 10px;
+}
+
+.wrapper__shop-info {
+    display: flex;
+    padding: 20px 40px;
+    background: #ffff;
+    margin-top: 20px;
+    border-radius: 15px;
+}
+
+.wrapper__shop-info--img img{
+    width: 60px;
+}
+
+.wrapper__shop-info--des {
+    margin-left: 20px;
+}
+
+.wrapper__event--detail,
+.wrapper__event--other h3 {
+    color: #CC7A7A;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.wrapper__event--detail-card,
+.wrapper__event--other-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.wrapper__event--detail,
+.wrapper__event--other {
+    padding: 20px 40px;
+    background: #ffff;
+    border-radius: 15px;
+    border: 2px solid #f4f4f4;
+    margin: 20px 0;
+}
