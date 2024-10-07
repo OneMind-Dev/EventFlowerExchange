@@ -1,17 +1,17 @@
 .wrapper__card-all {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     flex-wrap: wrap;
     padding: 20px 40px;
     background: #ffff;
     border-radius: 15px;
     border: 2px solid #f4f4f4;
+    gap: 20px;
 }
 
 .wrapper__title-all {
     display: flex;
     justify-content: center;
-    margin: 50px 0 20px 0;
+    margin: 30px 0 20px 0;
     color: #CC7A7A;
 }

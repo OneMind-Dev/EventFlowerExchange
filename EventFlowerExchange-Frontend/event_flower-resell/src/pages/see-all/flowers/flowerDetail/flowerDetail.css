@@ -1,0 +1,105 @@
+.wrapper__flower-info,
+.wrapper__flower-des {
+    display: flex;
+    padding: 40px;
+    background: #ffff;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.wrapper__flower-info--img {
+    width: 300px !important;
+    height: 300px !important;
+    border-radius: 25px;
+    border: 2px solid #f4f4f4;
+}
+
+.wrapper__flower-info-detail {
+    margin-left: 50px;
+}
+
+.wrapper__flower-info-detail h1 {
+    padding-bottom: 20px;
+    color: #CC7A7A;
+}
+
+.wrapper__flower-info-detail h2 {
+    padding-bottom: 20px;
+    color: red;
+    font-weight: 400;
+}
+
+.wrapper__flower-info-detail p {
+    padding-bottom: 20px;
+    color: rgb(116, 114, 114);
+}
+
+.wrapper__flower-info-detail--btn--buy,
+.wrapper__flower-info-detail--btn--add {
+    border: none;
+    border-radius: 10px;
+    width: 110px;
+    height: 40px;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.wrapper__flower-info-detail--btn--buy {
+    background: #F4DDDD;
+    color: #CC7A7A;
+    font-weight: 600;
+}
+
+.wrapper__flower-info-detail--btn--add {
+    color: #CC7A7A;
+    font-weight: 600;
+    background: #ffff;
+    border: 1px solid #CC7A7A;
+}
+
+.wrapper__flower-info-detail--btn--buy:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.wrapper__flower-info-detail--btn--add:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.wrapper__flower-des {
+    flex-direction: column;
+}
+
+.wrapper__flower-des h2 {
+    margin-bottom: 20px;
+    color: #CC7A7A;
+}
+
+.wrapper__flower-des p {
+    color: rgb(116, 114, 114);
+}
+
+.wrapper__flower--detail,
+.wrapper__flower--other h3 {
+    color: #CC7A7A;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.wrapper__flower--detail-card,
+.wrapper__flower--other-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.wrapper__flower--detail,
+.wrapper__flower--other {
+    padding: 20px 40px;
+    background: #ffff;
+    border-radius: 15px;
+    border: 2px solid #f4f4f4;
+    margin: 20px 0;
+}

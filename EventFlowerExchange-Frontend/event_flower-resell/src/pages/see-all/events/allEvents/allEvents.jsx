@@ -5,9 +5,13 @@ import EventData from "../../../../components/config/eventData";
 import { Card } from "antd";
 import Meta from "antd/es/card/Meta";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Events = () => {
   const navigate = useNavigate();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <>
       <Header />

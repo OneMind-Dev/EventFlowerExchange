@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 /* src/pages/admin/admin.css */
 
 .admin-container {
@@ -5,6 +6,13 @@
     font-family: Arial, sans-serif;
     padding: 20px; /* Di chuyển từ inline style */
     text-align: center; /* Di chuyển từ inline style */
+=======
+.admin-container {
+    margin: 20px;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    text-align: center;
+>>>>>>> Stashed changes
 }
 
 .title {
@@ -17,7 +25,11 @@
 .admin-button {
     margin: 20px;
     padding: 10px 20px;
+<<<<<<< Updated upstream
     background-color: #0088FE; /* Bạn có thể tùy chỉnh màu sắc */
+=======
+    background-color: #0088FE; 
+>>>>>>> Stashed changes
     color: white;
     border: none;
     border-radius: 4px;
@@ -26,6 +38,7 @@
 }
 
 .admin-button:hover {
+<<<<<<< Updated upstream
     background-color: #005bb5; /* Màu sắc khi hover */
 }
 
@@ -33,3 +46,11 @@
     text-align: center; /* Di chuyển từ inline style */
 }
 
+=======
+    background-color: #005bb5;
+}
+
+.dashboard-container {
+    text-align: center;
+}
+>>>>>>> Stashed changes

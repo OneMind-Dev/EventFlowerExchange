@@ -54,7 +54,7 @@ const Register = () => {
               },
             ]}
           >
-            <Input className="input" type="text" placeholder="địa chỉ" />
+            <Input className="input" type="text" placeholder="Địa chỉ" />
           </FormItem>
 
           <FormItem

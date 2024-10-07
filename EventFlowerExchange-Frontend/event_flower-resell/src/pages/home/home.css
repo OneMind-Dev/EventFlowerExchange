@@ -1,11 +1,11 @@
 .wrapper {
     margin: auto;
     max-width: 960px;
+    margin-top: 20px;
 }
 
 .wrapper__poster-img {
     width: 100%;
-    margin-top: 20px ;
     border-radius: 15px;
 }
 
@@ -22,11 +22,11 @@
 .wrapper__card {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     flex-wrap: wrap;
     padding: 20px 40px;
     background: #F4DDDD;
     border-radius: 15px;
+    gap: 20px;
 }
 
 .wrapper__card-card {

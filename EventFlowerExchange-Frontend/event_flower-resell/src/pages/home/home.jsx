@@ -40,6 +40,10 @@ const Home = () => {
           {randomFlowers.map((flower) => (
             <>
               <Card
+                bordered={false}
+                onClick={() => {
+                  navigate(`/flowers/${flower.flower_id}`);
+                }}
                 hoverable
                 className="wrapper__card-card"
                 cover={

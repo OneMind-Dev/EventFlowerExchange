@@ -13,6 +13,9 @@ import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -31,16 +34,18 @@ public class SecurityConfig {
     //config truy cap duong dan cua cac role
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(request ->
-                request.requestMatchers(HttpMethod.POST,PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET,"/users")
-                        .hasAuthority("SCOPE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE)
-                        .hasAuthority("SCOPE_ADMIN")
-                        .anyRequest().authenticated());
+        httpSecurity
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(request ->
+                        request.requestMatchers(HttpMethod.POST,PUBLIC_ENDPOINTS).permitAll()
+                                .requestMatchers(HttpMethod.GET,"/users")
+                                .hasAuthority("SCOPE_ADMIN")
+                                .requestMatchers(HttpMethod.DELETE)
+                                .hasAuthority("SCOPE_ADMIN")
+                                .anyRequest().authenticated());
 
         httpSecurity.oauth2ResourceServer(oauth2 ->
-            oauth2.jwt(jwtConfigurer ->  jwtConfigurer.decoder(jwtDecoder()))
+                oauth2.jwt(jwtConfigurer ->  jwtConfigurer.decoder(jwtDecoder()))
         );
 
 
@@ -49,6 +54,17 @@ public class SecurityConfig {
 
 
         return httpSecurity.build();
+    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("*");  // Cho phép tất cả nguồn (origin)
+        configuration.addAllowedMethod("*");  // Cho phép tất cả phương thức HTTP (GET, POST, PUT, DELETE, ...)
+        configuration.addAllowedHeader("*");  // Cho phép tất cả headers
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);  // Áp dụng cấu hình cho tất cả các đường dẫn
+        return source;
     }
 
     @Bean

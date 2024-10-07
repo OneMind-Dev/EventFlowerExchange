@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 // src/components/admin/Dashboard.jsx
 import React from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
@@ -9,6 +10,18 @@ const data = [
 ];
 
 const COLORS = ['#0088FE', '#00C49F'];
+=======
+import React from "react";
+import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import "../admin/admin.css"; // Import file CSS
+
+const data = [
+  { name: "Đã Đăng Ký", value: 400 },
+  { name: "Khách Truy Cập", value: 600 },
+];
+
+const COLORS = ["#0088FE", "#00C49F"];
+>>>>>>> Stashed changes
 
 function Dashboard() {
   return (
@@ -20,7 +33,13 @@ function Dashboard() {
           cx="50%"
           cy="50%"
           labelLine={false}
+<<<<<<< Updated upstream
           label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+=======
+          label={({ name, percent }) =>
+            `${name}: ${(percent * 100).toFixed(0)}%`
+          }
+>>>>>>> Stashed changes
           outerRadius={150}
           fill="#8884d8"
           dataKey="value"

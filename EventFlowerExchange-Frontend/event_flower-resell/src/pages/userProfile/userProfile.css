@@ -1,0 +1,130 @@
+.background {
+    background-color: #F4F4F4;
+    min-height: 100vh; 
+    padding: 20px; 
+    display: flex;            
+    justify-content: start;
+    align-items: flex-start;  
+    gap: 20px;
+}
+
+.user_container {
+    background-color: white;
+    width: 17%;
+    margin-left: 5%;
+    padding: 15px; 
+    border-radius: 10px;
+    padding-bottom: 2%;
+    text-align: center; 
+}
+
+.user_avatar {
+    width: 100%; 
+    max-width: 150px; 
+    height: auto; 
+    border-radius: 50%; 
+    object-fit: cover; 
+}
+
+
+.user_infor {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+}
+
+.user_icon {
+    font-size: 55px;
+    margin-bottom: 10px;
+}
+
+.username {
+    color: blue;
+    
+    margin-top: 10px;
+}
+
+.user_interact {
+    margin-top: 30px;
+    text-align: center; 
+}
+
+.user_interact p {
+    color: #CC7A7A;
+    margin-bottom: 30px; 
+}
+
+.privateInfor {
+    color: #CC7A7A;
+    margin-bottom: 30px;
+}
+
+.infor_container {
+    background-color: white;
+    width: 70%; 
+    padding: 15px; 
+    border-radius: 10px;
+    padding-bottom: 1%;
+}
+
+.infor_container h1 {
+    margin: 15px 0px 5% 6%;
+    color: #CC7A7A;
+}
+
+.form-item {
+    display: flex;
+    margin: 15px 0;
+    align-items: flex-start;
+}
+
+.edit-button {
+    margin-left: auto; 
+    background-color: #F4DDDD; 
+    color: #CC7A7A; 
+    border: none; 
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s; 
+}
+
+.edit-button:hover {
+    background-color: #0056b3; 
+    color: #ffcc00; 
+}
+
+
+.form-item label {
+    width: 150px;
+    margin-left: 2%;
+    color: #CC7A7A;
+}
+
+.form-item .ant-form-item {
+    flex: 1;
+}
+
+.form-item .ant-input {
+    width: 50%;
+}
+
+.address {
+    padding-bottom: 8%;
+}
+
+.submit-button {
+    background-color: #F4DDDD;
+    margin-left: 2%;
+    color: #CC7A7A;
+}
+
+.cancel-button {
+    margin-left: 2%;
+    background-color: #F4DDDD;
+    color: #CC7A7A;
+}
+
+.edit-button {
+    background-color: #F4DDDD;
+    color: #CC7A7A;
+}

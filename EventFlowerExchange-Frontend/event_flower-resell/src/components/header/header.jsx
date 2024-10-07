@@ -5,9 +5,13 @@ import { SearchOutlined } from "@ant-design/icons";
 import { DownOutlined } from "@ant-design/icons";
 import { Dropdown, Space } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 function Header() {
   const navigate = useNavigate();
+
+  const user = useSelector((store) => store.user);
+  const dispatch = useDispatch();
 
   const events = [
     {
@@ -72,22 +76,36 @@ function Header() {
             />
           </div>
 
-          <div className="header__login-register">
-            <p
-              className="header__login-register--seperate"
-              onClick={() => {
-                navigate("/register");
-              }}
-            >
-              Đăng ký
-            </p>
-            <p
-              onClick={() => {
-                navigate("/login");
-              }}
-            >
-              Đăng nhập
-            </p>
+          <div>
+            {user == null ? (
+              <div className="header__login-register">
+                <p
+                  className="header__login-register--seperate"
+                  onClick={() => {
+                    navigate("/register");
+                  }}
+                >
+                  Đăng ký
+                </p>
+                <p
+                  onClick={() => {
+                    navigate("/login");
+                  }}
+                >
+                  Đăng nhập
+                </p>
+              </div>
+            ) : (
+              <div>
+                <button
+                  onClick={() => {
+                    navigate("/profile");
+                  }}
+                >
+                  UserProfile
+                </button>
+              </div>
+            )}
           </div>
         </div>
 

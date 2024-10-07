@@ -5,25 +5,31 @@ import FormItem from "antd/es/form/FormItem";
 import { useNavigate } from "react-router-dom";
 import api from "../../components/config/axios";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/features/userSlice";
 
 const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
   const handleLogin = async (values) => {
     try {
       const response = await api.post("auth/login", values);
-      console.log(response);
-      const { role, token } = response.data;
+      toast.success("Đăng nhập thành công");
+      console.log(response.data);
+      dispatch(login(response.data.result));
+      const { role, token } = response.data.result;
       localStorage.setItem("token", token);
 
-      if (role === "admin") {
+      if (role.includes("ADMIN")) {
         navigate("/dashboard");
       } else {
         navigate("/");
       }
     } catch (err) {
-      toast.error(err.response.data);
+      toast.error("Đăng nhập thất bại");
     }
   };
 

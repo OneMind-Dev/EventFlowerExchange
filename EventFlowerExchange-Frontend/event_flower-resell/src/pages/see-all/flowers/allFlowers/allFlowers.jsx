@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./allFlowers.css";
 import EventData from "../../../../components/config/eventData";
 import { Card } from "antd";
@@ -9,6 +9,9 @@ import { useNavigate } from "react-router-dom";
 const Flowers = () => {
   const navigate = useNavigate();
   const allFlowers = EventData.flatMap((event) => event.flowers);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <>
       <Header />

@@ -1,16 +1,21 @@
 import React from "react";
 import "./eventDetail.css";
 import Header from "../../../../components/header/header";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import EventData from "../../../../components/config/eventData";
 import { Card, Image } from "antd";
 import Meta from "antd/es/card/Meta";
+import { useEffect } from "react";
 
 const EventDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams(); // Lấy id của sự kiện từ URL
   const event = EventData.find((event) => event.event_id === parseInt(id)); // Tìm sự kiện theo id1
   const displayedEvents = EventData.slice(0, 2);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <>

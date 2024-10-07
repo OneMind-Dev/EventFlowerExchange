@@ -23,7 +23,6 @@
     flex-direction: column;
     padding: 40px;
     background: #ffff;
-    margin-top: 20px;
     border-radius: 15px;
 }
 
@@ -63,8 +62,8 @@
 .wrapper__event--other-card {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     flex-wrap: wrap;
+    gap: 20px;
 }
 
 .wrapper__event--detail,
