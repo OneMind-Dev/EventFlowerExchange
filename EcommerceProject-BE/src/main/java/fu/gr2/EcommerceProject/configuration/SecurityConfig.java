@@ -27,7 +27,10 @@ public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = { "/users/register",
                                                 "/auth/login",
                                                 "/auth/introspect",
-                                                "/auth/logout"};
+                                                "/auth/logout",
+                                                "/auth/introspect   ",
+                                                "/AllEvents",
+                                                   "/api/flowers" };
 
     @Value("${jwt.signerKey}")
     private String signerKey;
@@ -42,6 +45,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(request ->
                 request.requestMatchers(HttpMethod.POST,PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET,PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET,PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET,"/users")
                         .hasAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE)

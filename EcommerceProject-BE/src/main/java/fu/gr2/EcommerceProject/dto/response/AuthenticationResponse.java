@@ -18,5 +18,5 @@ public class AuthenticationResponse {
     String email;
     String phone;
     String address;
-    Set<String> role;
+    Set<Role> role;
 }
