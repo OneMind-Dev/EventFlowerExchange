@@ -19,25 +19,31 @@ import { toast } from "react-toastify";
 import Test from "./pages/test";
 
 import Admin from "./pages/admin/adminManager";
-import UserProfile from "./pages/user/userProfile";
 const App = () => {
   const ProtectRouteAuth = ({ children }) => {
     const user = useSelector((store) => store.user);
     console.log(user);
-    if (user != null && user?.role.includes("ADMIN")) {
-      return children;
-    }
-    if (user == null) {
+    if (user != null && user.role.includes("ADMIN")) {
       return children;
     }
     toast.error("Trang này đã bị khóa!");
-    return <Navigate to={"/login"} />;
+    return <Navigate to={"/"} />;
   };
 
   const ProtectRouteAuth1 = ({ children }) => {
     const user = useSelector((store) => store.user);
     console.log(user);
     if (user != null) {
+      return children;
+    }
+    toast.error("Trang này đã bị khóa!");
+    return <Navigate to={"/"} />;
+  };
+
+  const ProtectRouteAuth2 = ({ children }) => {
+    const user = useSelector((store) => store.user);
+    console.log(user);
+    if (user == null) {
       return children;
     }
     toast.error("Trang này đã bị khóa!");
@@ -59,11 +65,19 @@ const App = () => {
     },
     {
       path: "login",
-      element: <Login />,
+      element: (
+        <ProtectRouteAuth2>
+          <Login />
+        </ProtectRouteAuth2>
+      ),
     },
     {
       path: "register",
-      element: <Register />,
+      element: (
+        <ProtectRouteAuth2>
+          <Register />
+        </ProtectRouteAuth2>
+      ),
     },
     {
       path: "dashboard",
