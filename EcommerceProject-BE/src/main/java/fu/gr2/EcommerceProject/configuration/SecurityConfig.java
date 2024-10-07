@@ -22,7 +22,9 @@ public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = { "/users/register",
                                                 "/auth/login",
-                                                "/auth/introspect"};
+                                                "/auth/introspect   ",
+                                                "/AllEvents",
+                                                   "/api/flowers" };
 
     @Value("${jwt.signerKey}")
     private String signerKey;
@@ -33,6 +35,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request ->
                 request.requestMatchers(HttpMethod.POST,PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET,PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET,PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET,"/users")
                         .hasAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE)

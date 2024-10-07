@@ -2,8 +2,12 @@ package fu.gr2.EcommerceProject.controller;
 
 import fu.gr2.EcommerceProject.dto.request.ApiResponse;
 import fu.gr2.EcommerceProject.dto.request.UserCreationRequest;
+import fu.gr2.EcommerceProject.dto.request.UserRegistrationRequest;
 import fu.gr2.EcommerceProject.dto.request.UserUpdateRequest;
 import fu.gr2.EcommerceProject.dto.response.UserResponse;
+import fu.gr2.EcommerceProject.entity.User;
+import fu.gr2.EcommerceProject.exception.UserNotFound;
+import fu.gr2.EcommerceProject.service.UserRegistrationService;
 import fu.gr2.EcommerceProject.service.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +23,7 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
-
+    private UserRegistrationService userRegistrationService;
 
     @PostMapping("/register")
     ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request){
@@ -58,5 +62,16 @@ public class UserController {
     String deleteUser(@PathVariable String userId){
         userService.deleteUser(userId);
         return "User has been deleted";
+    }
+
+    @PostMapping("/registerRole")
+    public User registerUserRole(@RequestBody UserRegistrationRequest request) {
+        try {
+            return userRegistrationService.registerUserRole(request);
+        } catch (UserNotFound e) {
+            throw new UserNotFound("User with the provided details not found.");
+        } catch (UnsupportedOperationException e) {
+            throw new RuntimeException("Operation is not supported.");
+        }
     }
 }

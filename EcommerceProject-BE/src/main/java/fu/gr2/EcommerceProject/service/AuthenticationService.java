@@ -10,6 +10,7 @@ import fu.gr2.EcommerceProject.dto.request.AuthenticationRequest;
 import fu.gr2.EcommerceProject.dto.request.IntrospectRequest;
 import fu.gr2.EcommerceProject.dto.response.AuthenticationResponse;
 import fu.gr2.EcommerceProject.dto.response.IntrospectResponse;
+import fu.gr2.EcommerceProject.enums.Role;
 import fu.gr2.EcommerceProject.exception.AppException;
 import fu.gr2.EcommerceProject.exception.ErrorCode;
 import fu.gr2.EcommerceProject.repository.UserRepository;
@@ -28,6 +29,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Set;
 import java.util.StringJoiner;
 
 @Slf4j
@@ -61,7 +63,7 @@ public class AuthenticationService {
         var user= userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        if(!user.isStatus_user()){
+        if(!user.isStatusUser()){
             throw new AppException(ErrorCode.BANNED);
         }
 
@@ -104,10 +106,14 @@ public class AuthenticationService {
 
     }
 
-    private String buildScope(User user){
+    private String buildScope(User user) {
         StringJoiner stringJoiner = new StringJoiner(" ");
-        if (!CollectionUtils.isEmpty(user.getRole()))
-            user.getRole().forEach(stringJoiner::add);
+
+        // Null check for roles
+        Set<Role> roles = user.getRole();
+        if (roles != null && !CollectionUtils.isEmpty(roles)) {
+            roles.forEach(role -> stringJoiner.add(role.name()));
+        }
 
         return stringJoiner.toString();
     }

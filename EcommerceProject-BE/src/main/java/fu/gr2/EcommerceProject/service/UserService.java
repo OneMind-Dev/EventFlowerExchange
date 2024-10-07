@@ -35,8 +35,8 @@ public class UserService {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        HashSet<String> roles = new HashSet<>();
-        roles.add(Role.USER.name());
+        HashSet<Role> roles = new HashSet<>();
+        roles.add(Role.valueOf(Role.USER.name()));
 
         user.setRole(roles);
 
@@ -57,11 +57,13 @@ public class UserService {
 
         userMapper.updateUser(user,request);
 
-        user.setStatus_user(true);
+        user.setStatusUser(true);
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
     public void deleteUser(String userId){
         userRepository.deleteById(userId);
     }
+
+
 }
