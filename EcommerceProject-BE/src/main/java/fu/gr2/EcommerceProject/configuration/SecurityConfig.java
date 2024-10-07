@@ -1,5 +1,6 @@
 package fu.gr2.EcommerceProject.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,11 +26,14 @@ public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = { "/users/register",
                                                 "/auth/login",
-                                                "/auth/introspect"};
+                                                "/auth/introspect",
+                                                "/auth/logout"};
 
     @Value("${jwt.signerKey}")
     private String signerKey;
 
+    @Autowired
+    private CustomJwtDecoder customJwtDecoder;
 
     //config truy cap duong dan cua cac role
     @Bean
@@ -37,15 +41,15 @@ public class SecurityConfig {
         httpSecurity
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(request ->
-                        request.requestMatchers(HttpMethod.POST,PUBLIC_ENDPOINTS).permitAll()
-                                .requestMatchers(HttpMethod.GET,"/users")
-                                .hasAuthority("SCOPE_ADMIN")
-                                .requestMatchers(HttpMethod.DELETE)
-                                .hasAuthority("SCOPE_ADMIN")
-                                .anyRequest().authenticated());
+                request.requestMatchers(HttpMethod.POST,PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET,"/users")
+                        .hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE)
+                        .hasAuthority("SCOPE_ADMIN")
+                        .anyRequest().authenticated());
 
         httpSecurity.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(jwtConfigurer ->  jwtConfigurer.decoder(jwtDecoder()))
+            oauth2.jwt(jwtConfigurer ->  jwtConfigurer.decoder(customJwtDecoder))
         );
 
 
@@ -71,7 +75,8 @@ public class SecurityConfig {
     JwtDecoder jwtDecoder(){
         SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
 
-        return NimbusJwtDecoder.withSecretKey(secretKeySpec)
+        return NimbusJwtDecoder
+                .withSecretKey(secretKeySpec)
                 .macAlgorithm(MacAlgorithm.HS512)
                 .build();
     }

@@ -4,6 +4,7 @@ import com.nimbusds.jose.JOSEException;
 import fu.gr2.EcommerceProject.dto.request.ApiResponse;
 import fu.gr2.EcommerceProject.dto.request.AuthenticationRequest;
 import fu.gr2.EcommerceProject.dto.request.IntrospectRequest;
+import fu.gr2.EcommerceProject.dto.request.LogoutRequest;
 import fu.gr2.EcommerceProject.dto.response.AuthenticationResponse;
 import fu.gr2.EcommerceProject.dto.response.IntrospectResponse;
 import fu.gr2.EcommerceProject.service.AuthenticationService;
@@ -16,14 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-
 public class AuthenticationController {
     AuthenticationService authenticationService;
     @PostMapping("/login")
@@ -41,4 +39,13 @@ public class AuthenticationController {
                 .result(result)
                 .build();
     }
+
+    @PostMapping("/logout")
+    ApiResponse<Void> logout(@RequestBody LogoutRequest request)
+            throws ParseException, JOSEException {
+        authenticationService.logout(request);
+        return ApiResponse.<Void>builder()
+                .build();
+    }
+
 }

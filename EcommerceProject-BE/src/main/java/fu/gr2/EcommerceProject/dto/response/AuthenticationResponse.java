@@ -1,5 +1,6 @@
 package fu.gr2.EcommerceProject.dto.response;
 
+import fu.gr2.EcommerceProject.enums.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -18,5 +19,4 @@ public class AuthenticationResponse {
     String phone;
     String address;
     Set<String> role;
-    String avatar;
 }
