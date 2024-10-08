@@ -1,5 +1,10 @@
 package fu.gr2.EcommerceProject.dto.response;
 
+import fu.gr2.EcommerceProject.enums.Role;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
@@ -19,7 +24,7 @@ public class UserResponse {
     String phone;
     String address;
     String avatar;
-    Set<String> role;
-    boolean status_user;
+    Set<Role> role;
+    boolean statusUser;
     LocalDateTime created_at;
 }

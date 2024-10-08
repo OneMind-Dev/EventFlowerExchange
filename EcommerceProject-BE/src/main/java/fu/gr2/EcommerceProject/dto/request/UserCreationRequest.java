@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 public class UserCreationRequest {
     @Size(min=3, message = "USERNAME_INVALID")
     String username;
-
     @Size(min = 8, message = "PASSWORD_INVALID")
     String password;
     @NotEmpty
@@ -27,6 +26,6 @@ public class UserCreationRequest {
     @NotEmpty
     String address;
     String avatar;
-    boolean status_user=true;
+    boolean statusUser=true;
     LocalDateTime created_at;
 }

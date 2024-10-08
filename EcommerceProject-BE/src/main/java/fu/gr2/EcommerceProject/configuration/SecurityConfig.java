@@ -25,12 +25,16 @@ import javax.crypto.spec.SecretKeySpec;
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = { "/users/register",
-                                                "/auth/login",
-                                                "/auth/introspect",
-                                                "/auth/logout",
-                                                "/auth/introspect   ",
-                                                "/AllEvents",
-                                                   "/api/flowers" };
+            "/auth/login",
+            "/auth/introspect",
+            "/auth/logout",
+            "/auth/introspect   ",
+            "/AllEvents",
+            "/api/flowers",
+            "/v3/api-docs",
+            "/swagger-resources/**",
+            "/swagger-ui/**",
+            "/webjars/**"};
 
     @Value("${jwt.signerKey}")
     private String signerKey;
@@ -43,27 +47,19 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(request ->
-                request.requestMatchers(HttpMethod.POST,PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET,PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET,PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET,"/users")
-                        .hasAuthority("SCOPE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE)
-                        .hasAuthority("SCOPE_ADMIN")
-                        .anyRequest().authenticated());
-
-        httpSecurity.oauth2ResourceServer(oauth2 ->
-            oauth2.jwt(jwtConfigurer ->  jwtConfigurer.decoder(customJwtDecoder))
-        );
-
-
-        httpSecurity.csrf(AbstractHttpConfigurer::disable);
-
-
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()  // Không yêu cầu JWT
+                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()   // Không yêu cầu JWT
+                        .requestMatchers(HttpMethod.GET, "/users").hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE).hasAuthority("SCOPE_ADMIN")
+                        .anyRequest().authenticated()  // Yêu cầu JWT với các request khác
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder)))
+                .csrf(AbstractHttpConfigurer::disable);
 
         return httpSecurity.build();
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

@@ -33,6 +33,7 @@ public class Event {
    User user;
    LocalDateTime startDate;
    LocalDateTime endDate;
+   String location;
    @OneToMany(mappedBy = "event", cascade = {CascadeType.ALL}, orphanRemoval = true)
        List<FlowerEventRelationship> flowerEventRelationships;
 }

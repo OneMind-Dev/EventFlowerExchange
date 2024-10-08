@@ -36,11 +36,22 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         HashSet<Role> roles = new HashSet<>();
-        roles.add(Role.valueOf(Role.USER.name()));
+        roles.add(Role.USER);
 
         user.setRole(roles);
-
-        return userMapper.toUserResponse(userRepository.save(user));
+        userRepository.save(user);
+        return UserResponse.
+                builder()
+                .user_id(user.getUser_id())
+                .username(user.getUsername())
+                .phone(user.getPhone())
+                .statusUser(user.isStatusUser())
+                .role(user.getRole())
+                .created_at(user.getCreatedAt())
+                .email(user.getEmail())
+                .address(user.getAddress())
+                .avatar(user.getAvatar())
+                .build();
     }
 
     public List<UserResponse> getUser(){

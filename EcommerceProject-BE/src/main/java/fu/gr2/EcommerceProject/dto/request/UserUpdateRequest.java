@@ -15,6 +15,6 @@ public class UserUpdateRequest {
     String phone;
     String address;
     String avatar;
-    boolean status_user;
+    boolean statusUser;
     LocalDateTime created_at;
 }
