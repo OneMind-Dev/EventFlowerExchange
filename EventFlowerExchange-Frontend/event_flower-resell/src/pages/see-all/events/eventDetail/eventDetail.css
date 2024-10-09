@@ -48,11 +48,19 @@
     width: 60px;
 }
 
+.wrapper__shop-info--img img:hover{
+    cursor: pointer;
+}
+
 .wrapper__shop-info--des {
     margin-left: 20px;
 }
 
-.wrapper__event--detail,
+.wrapper__shop-info--des:hover {
+    cursor: pointer;
+}
+
+.wrapper__event--detail h3,
 .wrapper__event--other h3 {
     color: #CC7A7A;
     margin-top: 20px;

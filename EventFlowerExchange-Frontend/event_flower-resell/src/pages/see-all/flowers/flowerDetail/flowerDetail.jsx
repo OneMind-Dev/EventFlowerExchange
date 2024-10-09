@@ -5,6 +5,7 @@ import EventData from "../../../../components/config/eventData";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card, Image } from "antd";
 import Meta from "antd/es/card/Meta";
+import UserData from "../../../../components/config/userData";
 
 const FlowerDetail = () => {
   useEffect(() => {
@@ -16,13 +17,16 @@ const FlowerDetail = () => {
   const { id } = useParams(); // Lấy id của hoa từ URL
   let flowerDetail = null;
   let eventDetail = null;
+  let userDetail = null;
 
-  // Tìm hoa và sự kiện chứa hoa đó
+  // Tìm hoa, sự kiện chứa hoa đó và user sở hữu hoa đó
+
   EventData.forEach((event) => {
     const flower = event.flowers.find((f) => f.flower_id === parseInt(id));
     if (flower) {
       flowerDetail = flower;
-      eventDetail = event; // Sự kiện chứa hoa này
+      eventDetail = event;
+      userDetail = UserData.find((user) => user.user_id === event.user_id);
     }
   });
 
@@ -61,16 +65,25 @@ const FlowerDetail = () => {
         <div className="wrapper__shop-info">
           <div className="wrapper__shop-info--img">
             <img
+              onClick={() => {
+                navigate(`/${userDetail.user_id}`);
+              }}
               src="../src/components/images/userImage.png"
               alt="user image"
             />
           </div>
           <div className="wrapper__shop-info--des">
-            <h3>Shop chuyên hoa cũ</h3>
+            <h3
+              onClick={() => {
+                navigate(`/${userDetail.user_id}`);
+              }}
+            >
+              {userDetail.username}
+            </h3>
           </div>
         </div>
         <div className="wrapper__flower--detail">
-          <h3>SẢN PHẨM TRONG SỰ KIỆN</h3>
+          <h3>SẢN PHẨM THUỘC SỰ KIỆN</h3>
           <div className="wrapper__flower--detail-card">
             <>
               <Card

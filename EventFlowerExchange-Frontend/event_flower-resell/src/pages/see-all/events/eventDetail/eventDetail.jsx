@@ -36,6 +36,9 @@ const EventDetail = () => {
         <div className="wrapper__shop-info">
           <div className="wrapper__shop-info--img">
             <img
+              onClick={() => {
+                navigate(`/${user.user_id}`);
+              }}
               src="../src/components/images/userImage.png"
               alt="user image"
             />
@@ -53,7 +56,7 @@ const EventDetail = () => {
         </div>
 
         <div className="wrapper__event--detail">
-          <h3>SẢN PHẨM TRONG SỰ KIỆN</h3>
+          <h3>SẢN PHẨM CÓ TRONG SỰ KIỆN</h3>
           <div className="wrapper__event--detail-card">
             {event.flowers.map((flower) => (
               <>

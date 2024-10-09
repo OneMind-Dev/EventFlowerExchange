@@ -70,6 +70,7 @@
 
 .wrapper__all-btn:hover {
     opacity: 0.8;
+    cursor: pointer;
 }
 
 .wrapper__card-card--event {
