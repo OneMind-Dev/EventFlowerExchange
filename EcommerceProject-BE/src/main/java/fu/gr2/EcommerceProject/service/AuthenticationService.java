@@ -68,7 +68,7 @@ public class AuthenticationService {
         var user= userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        if(!user.isStatusUser()){
+        if(!user.isStatus()){
             throw new AppException(ErrorCode.BANNED);
         }
 

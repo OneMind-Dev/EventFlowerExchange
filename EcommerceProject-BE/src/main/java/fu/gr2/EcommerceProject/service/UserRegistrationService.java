@@ -40,7 +40,7 @@ public class UserRegistrationService {
         user.setApprovedByAdmin(true);
 
         if (user.getRole().contains(Role.SELLER)) {
-            user.setStatusUser(false);
+            user.setStatus(false);
         }
 
         userRepository.save(user);
@@ -72,7 +72,7 @@ public class UserRegistrationService {
         if (requestedRole == Role.SELLER || requestedRole == Role.SHIPPER) {
             existingUser.getRole().add(requestedRole);
             existingUser.setApprovedByAdmin(false);
-            existingUser.setStatusUser(false);
+            existingUser.setStatus(false);
             return userRepository.save(existingUser);
         } else {
             throw new UnsupportedOperationException("Only SELLER or SHIPPER roles can be registered for existing users.");

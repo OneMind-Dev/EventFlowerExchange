@@ -36,22 +36,11 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         HashSet<Role> roles = new HashSet<>();
-        roles.add(Role.USER);
+        roles.add(Role.valueOf(Role.USER.name()));
 
         user.setRole(roles);
-        userRepository.save(user);
-        return UserResponse.
-                builder()
-                .user_id(user.getUser_id())
-                .username(user.getUsername())
-                .phone(user.getPhone())
-                .statusUser(user.isStatusUser())
-                .role(user.getRole())
-                .created_at(user.getCreatedAt())
-                .email(user.getEmail())
-                .address(user.getAddress())
-                .avatar(user.getAvatar())
-                .build();
+
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
     public List<UserResponse> getUser(){
@@ -68,7 +57,7 @@ public class UserService {
 
         userMapper.updateUser(user,request);
 
-        user.setStatusUser(true);
+        user.setStatus(true);
         return userMapper.toUserResponse(userRepository.save(user));
     }
 

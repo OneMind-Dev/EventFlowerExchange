@@ -4,7 +4,6 @@ import com.nimbusds.jose.JOSEException;
 import fu.gr2.EcommerceProject.dto.request.ApiResponse;
 import fu.gr2.EcommerceProject.dto.request.AuthenticationRequest;
 import fu.gr2.EcommerceProject.dto.request.IntrospectRequest;
-import fu.gr2.EcommerceProject.dto.request.LogoutRequest;
 import fu.gr2.EcommerceProject.dto.response.AuthenticationResponse;
 import fu.gr2.EcommerceProject.dto.response.IntrospectResponse;
 import fu.gr2.EcommerceProject.service.AuthenticationService;
@@ -39,13 +38,4 @@ public class AuthenticationController {
                 .result(result)
                 .build();
     }
-
-    @PostMapping("/logout")
-    ApiResponse<Void> logout(@RequestBody LogoutRequest request)
-            throws ParseException, JOSEException {
-        authenticationService.logout(request);
-        return ApiResponse.<Void>builder()
-                .build();
-    }
-
 }

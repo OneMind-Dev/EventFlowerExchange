@@ -37,5 +37,5 @@ public class UserRegistrationRequest {
     private String rejectionReason; // Optional: In case of rejection, admin can provide a reason
 
     // Status indicating if the user is currently an active regular user
-    private boolean statusUser = true;
+    private boolean status = true;
 }
