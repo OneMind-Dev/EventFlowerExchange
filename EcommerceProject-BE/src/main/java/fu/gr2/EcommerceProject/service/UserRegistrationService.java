@@ -1,5 +1,6 @@
 package fu.gr2.EcommerceProject.service;
 
+import fu.gr2.EcommerceProject.dto.request.ApiResponse;
 import fu.gr2.EcommerceProject.dto.request.UserRegistrationRequest;
 import fu.gr2.EcommerceProject.dto.response.RegistrationFormResponse;
 import fu.gr2.EcommerceProject.entity.RegistrationForm;
@@ -16,9 +17,7 @@ import fu.gr2.EcommerceProject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserRegistrationService {
@@ -43,21 +42,60 @@ public class UserRegistrationService {
         return userOpt.get();
     }
 
-//    public void approveRegistration(String username) throws UserNotFound, UserAlreadyApprovedException {
-//        User user = getUserByUsername(username);
-//
-//        if (user.isApprovedByAdmin()) {
-//            throw new UserAlreadyApprovedException("User registration is already approved.");
-//        }
-//
-//        user.setApprovedByAdmin(true);
-//
-//        if (user.getRole().contains(Role.SELLER)) {
-//            user.setStatus(false);
-//        }
-//
-//        userRepository.save(user);
-//    }
+    public ApiResponse approveRegistration(int formId) {
+        try {
+            // Tìm kiếm form đăng ký dựa trên formId
+            RegistrationForm registrationForm = registrationFormRepository.findById(formId)
+                    .orElseThrow(() -> new AppException(ErrorCode.FORM_NOT_EXISTED));
+
+            // Thay đổi trạng thái phê duyệt
+            registrationForm.setApproved(true);
+
+            // Lưu lại thay đổi vào cơ sở dữ liệu
+            registrationFormRepository.save(registrationForm);
+
+            User user = registrationForm.getUser();
+            if (user == null) {
+                return ApiResponse.builder()
+                        .code(999)
+                        .message("User not found in the registration form.")
+                        .build();
+            }
+
+            Role role = registrationForm.getRole();
+            Set<Role> roles = user.getRole();
+            if (roles == null) {
+                roles = new HashSet<>(); // Khởi tạo nếu vai trò là null
+            }
+
+            // Kiểm tra nếu vai trò đã tồn tại
+            if (!roles.contains(role)) {
+                roles.add(role); // Chỉ thêm nếu chưa có
+            }
+
+            user.setRole(roles);
+            userRepository.save(user);
+
+            // Trả về phản hồi thành công
+            return ApiResponse.builder()
+                    .message("Registration form approved successfully.")
+                    .build();
+        } catch (AppException e) {
+            // Xử lý lỗi liên quan đến AppException
+            return ApiResponse.builder()
+                    .code(999)
+                    .message(e.getMessage())
+                    .build();
+        } catch (Exception e) {
+            // Xử lý các lỗi khác
+            return ApiResponse.builder()
+                    .code(999)
+                    .message("Error occurred while approving the registration form.")
+                    .build();
+        }
+    }
+
+
 
 //    public void rejectRegistration(String username, String reason) throws UserNotFound {
 //        User user = getUserByUsername(username);

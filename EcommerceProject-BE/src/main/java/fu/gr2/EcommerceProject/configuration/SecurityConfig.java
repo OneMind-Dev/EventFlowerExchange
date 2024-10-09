@@ -35,7 +35,9 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/swagger-ui/**",
             "/webjars/**",
-            "users/registerRole/{userId}"};
+            "users/registerRole/{userId}",
+            "/admin/approveRegistration/{formId}",
+            "/admin/registerForm",};
 
     @Value("${jwt.signerKey}")
     private String signerKey;
