@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import AuthenTemplate from "../../components/authen-template/authen-template";
 import { Form, Input, Button } from "antd";
 import FormItem from "antd/es/form/FormItem";
@@ -9,7 +9,6 @@ import { useDispatch } from "react-redux";
 import { login } from "../../redux/features/userSlice";
 
 const Login = () => {
-  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -43,7 +42,6 @@ const Login = () => {
           onFinish={handleLogin}
         >
           <h1>Đăng Nhập</h1>
-          {error && <div style={{ color: 'red' }}>{error}</div>}
           <FormItem
             className="input-box"
             name="username"
@@ -56,9 +54,7 @@ const Login = () => {
           <FormItem
             className="input-box"
             name="password"
-            rules={[
-              { required: true, message: "Vui lòng nhập mật khẩu." },
-            ]}
+            rules={[{ required: true, message: "Vui lòng nhập mật khẩu." }]}
           >
             <Input type="password" placeholder="Mật khẩu" />
           </FormItem>

@@ -19,10 +19,10 @@ import { toast } from "react-toastify";
 import Test from "./pages/test";
 
 import Admin from "./pages/admin/adminManager";
+import ShopProfile from "./pages/shopProfile/shopProfile";
 const App = () => {
   const ProtectRouteAuth = ({ children }) => {
     const user = useSelector((store) => store.user);
-    console.log(user);
     if (user != null && user.role.includes("ADMIN")) {
       return children;
     }
@@ -32,7 +32,6 @@ const App = () => {
 
   const ProtectRouteAuth1 = ({ children }) => {
     const user = useSelector((store) => store.user);
-    console.log(user);
     if (user != null) {
       return children;
     }
@@ -42,11 +41,9 @@ const App = () => {
 
   const ProtectRouteAuth2 = ({ children }) => {
     const user = useSelector((store) => store.user);
-    console.log(user);
     if (user == null) {
       return children;
     }
-    toast.error("Trang này đã bị khóa!");
     return <Navigate to={"/"} />;
   };
 
@@ -110,6 +107,10 @@ const App = () => {
     {
       path: "flowers/:id",
       element: <FlowerDetail />,
+    },
+    {
+      path: "/:id",
+      element: <ShopProfile />,
     },
     {
       path: "admin",

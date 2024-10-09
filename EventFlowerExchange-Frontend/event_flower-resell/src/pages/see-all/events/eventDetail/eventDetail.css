@@ -3,6 +3,7 @@
     border-radius: 25px;
     margin-top: 0;
     border: 2px solid #f4f4f4;
+    height: 400px !important;
 }
 
 .wrapper__event-name {

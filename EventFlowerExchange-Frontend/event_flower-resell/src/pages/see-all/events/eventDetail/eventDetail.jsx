@@ -1,8 +1,9 @@
 import React from "react";
 import "./eventDetail.css";
 import Header from "../../../../components/header/header";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import EventData from "../../../../components/config/eventData";
+import UserData from "../../../../components/config/userData";
 import { Card, Image } from "antd";
 import Meta from "antd/es/card/Meta";
 import { useEffect } from "react";
@@ -12,6 +13,7 @@ const EventDetail = () => {
   const { id } = useParams(); // Lấy id của sự kiện từ URL
   const event = EventData.find((event) => event.event_id === parseInt(id)); // Tìm sự kiện theo id1
   const displayedEvents = EventData.slice(0, 2);
+  const user = UserData.find((user) => user.user_id === event.user_id);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -38,8 +40,15 @@ const EventDetail = () => {
               alt="user image"
             />
           </div>
+
           <div className="wrapper__shop-info--des">
-            <h3>Shop chuyên hoa cũ</h3>
+            <h3
+              onClick={() => {
+                navigate(`/${user.user_id}`);
+              }}
+            >
+              {user.username}
+            </h3>
           </div>
         </div>
 
