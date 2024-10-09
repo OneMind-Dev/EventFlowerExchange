@@ -46,6 +46,4 @@ public class User {
     @CreationTimestamp
     LocalDateTime createdAt;
 
-    boolean approvedByAdmin = false;
-    String rejectionReason;
 }

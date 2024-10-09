@@ -19,31 +19,31 @@ public class AdminController {
         this.userRegistrationService = userRegistrationService;
     }
 
-    @PutMapping("/approve-registration/{username}")
-    public ResponseEntity<String> approveRegistration(@PathVariable String username) {
-        if (username == null || username.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("Username is required and cannot be blank.");
-        }
-
-        try {
-            userRegistrationService.approveRegistration(username);
-            return ResponseEntity.ok("User registration approved successfully.");
-        } catch (UserNotFound | UserAlreadyApprovedException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
-    @PutMapping("/reject-registration/{username}")
-    public ResponseEntity<String> rejectRegistration(@PathVariable String username, @RequestParam @NotBlank String reason) {
-        if (username == null || username.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("Username is required and cannot be blank.");
-        }
-
-        try {
-            userRegistrationService.rejectRegistration(username, reason);
-            return ResponseEntity.ok("User registration rejected successfully.");
-        } catch (UserNotFound e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
+//    @PutMapping("/approve-registration/{username}")
+//    public ResponseEntity<String> approveRegistration(@PathVariable String username) {
+//        if (username == null || username.trim().isEmpty()) {
+//            return ResponseEntity.badRequest().body("Username is required and cannot be blank.");
+//        }
+//
+//        try {
+//            userRegistrationService.approveRegistration(username);
+//            return ResponseEntity.ok("User registration approved successfully.");
+//        } catch (UserNotFound | UserAlreadyApprovedException e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+//        }
+//    }
+//
+//    @PutMapping("/reject-registration/{username}")
+//    public ResponseEntity<String> rejectRegistration(@PathVariable String username, @RequestParam @NotBlank String reason) {
+//        if (username == null || username.trim().isEmpty()) {
+//            return ResponseEntity.badRequest().body("Username is required and cannot be blank.");
+//        }
+//
+//        try {
+//            userRegistrationService.rejectRegistration(username, reason);
+//            return ResponseEntity.ok("User registration rejected successfully.");
+//        } catch (UserNotFound e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+//        }
+//    }
 }

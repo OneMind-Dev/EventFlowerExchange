@@ -18,6 +18,7 @@ public enum ErrorCode {
     UNAUTHENTICATED(1006,"Unauthenticated"),
     BANNED(1007,"your account has been banned by admin"),
     LOGGEDOUT(1008,"You has been log out, please log in to continue"),
+    ALREADYHAVEROLE(1009,"You already have this role, try another role")
     ;
     int code;
     String message;
