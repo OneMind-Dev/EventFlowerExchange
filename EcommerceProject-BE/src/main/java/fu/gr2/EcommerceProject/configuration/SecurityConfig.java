@@ -37,6 +37,7 @@ public class SecurityConfig {
             "/webjars/**",
             "users/registerRole/{userId}",
             "/admin/approveRegistration/{formId}",
+            "/admin/rejectRegistration/{formId}",
             "/admin/registerForm",};
 
     @Value("${jwt.signerKey}")

@@ -97,18 +97,39 @@ public class UserRegistrationService {
 
 
 
-//    public void rejectRegistration(String username, String reason) throws UserNotFound {
-//        User user = getUserByUsername(username);
-//
-//        if (!user.isApprovedByAdmin()) {
-//            throw new IllegalStateException("User registration is already not approved.");
-//        }
-//
-//        user.setApprovedByAdmin(false);
-//        user.setRejectionReason(reason);
-//
-//        userRepository.save(user);
-//    }
+    public ApiResponse rejectRegistration(int formId,String reason) {
+        if(reason.isEmpty()||reason==null)
+            throw new UserNotFound("No reason found");
+        try {
+            // Tìm kiếm form đăng ký dựa trên formId
+            RegistrationForm registrationForm = registrationFormRepository.findById(formId)
+                    .orElseThrow(() -> new AppException(ErrorCode.FORM_NOT_EXISTED));
+
+            // Thay đổi trạng thái phê duyệt
+            registrationForm.setApproved(false);
+            registrationForm.setRejectionReason(reason);
+
+            // Lưu lại thay đổi vào cơ sở dữ liệu
+            registrationFormRepository.save(registrationForm);
+
+            // Trả về phản hồi thành công
+            return ApiResponse.builder()
+                    .message("Registration form reject successfully.")
+                    .build();
+        } catch (AppException e) {
+            // Xử lý lỗi liên quan đến AppException
+            return ApiResponse.builder()
+                    .code(999)
+                    .message(e.getMessage())
+                    .build();
+        } catch (Exception e) {
+            // Xử lý các lỗi khác
+            return ApiResponse.builder()
+                    .code(999)
+                    .message("Error occurred while reject the registration form.")
+                    .build();
+        }
+    }
 
     public RegistrationFormResponse registerUserRole(String userId,UserRegistrationRequest request) throws UserNotFound {
         Optional<User> existingUserOpt = userRepository.findById(userId);

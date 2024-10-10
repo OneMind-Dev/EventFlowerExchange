@@ -33,18 +33,9 @@ public class AdminController {
     ApiResponse approveRegistration(@PathVariable int formId) {
         return userRegistrationService.approveRegistration(formId);
     }
-//
-//    @PutMapping("/reject-registration/{username}")
-//    public ResponseEntity<String> rejectRegistration(@PathVariable String username, @RequestParam @NotBlank String reason) {
-//        if (username == null || username.trim().isEmpty()) {
-//            return ResponseEntity.badRequest().body("Username is required and cannot be blank.");
-//        }
-//
-//        try {
-//            userRegistrationService.rejectRegistration(username, reason);
-//            return ResponseEntity.ok("User registration rejected successfully.");
-//        } catch (UserNotFound e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-//        }
-//    }
+
+    @PostMapping("/rejectRegistration/{formId}")
+    ApiResponse rejectRegistration(@PathVariable int formId, @RequestBody @NotBlank String reason) {
+        return  userRegistrationService.rejectRegistration(formId,reason);
+    }
 }
