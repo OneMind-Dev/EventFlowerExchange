@@ -1,7 +1,7 @@
 import React from "react";
 import "./header.css";
 import { Input } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { DownOutlined } from "@ant-design/icons";
 import { Dropdown, Space } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -74,6 +74,7 @@ function Header() {
               placeholder="Tìm kiếm"
               prefix={<SearchOutlined />}
             />
+            <ShoppingCartOutlined className="header___container-search--cart" />
           </div>
 
           <div>

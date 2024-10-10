@@ -5,7 +5,7 @@ import "./userProfile.css";
 import { Form, Input, Button, Popconfirm } from "antd";
 import { FaCircleUser } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../redux/features/userSlice";
+import { logout, logoutUser } from "../../redux/features/userSlice";
 
 function UserProfile() {
   const [avatarUrl, setAvatarUrl] = useState(null);
@@ -14,6 +14,10 @@ function UserProfile() {
 
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+  };
 
   const handleEdit = (field) => {
     setEditingField(field); // Set the field to edit
@@ -81,10 +85,7 @@ function UserProfile() {
               <h3 className="privateInfor">Hồ sơ cá nhân</h3>
               <p>Thay đổi mật khẩu</p>
               <p>Đơn hàng</p>
-              <Popconfirm
-                onConfirm={() => dispatch(logout())}
-                title="Bạn muốn đăng xuất ?"
-              >
+              <Popconfirm onConfirm={handleLogout} title="Bạn muốn đăng xuất ?">
                 <Button type="primary" danger>
                   ĐĂNG XUẤT
                 </Button>
