@@ -30,8 +30,24 @@
     font-weight: 700;
 }
 
+.header__login-register p:hover{
+    opacity: 0.8;
+}
+
 .header___container-search {
     width: 50%;
+    display: flex;
+}
+
+.header___container-search--cart {
+    font-size: 27px !important;
+    margin-left: 10px;
+    color: #CC7A7A;
+}
+
+.header___container-search--cart:hover {
+    cursor: pointer;
+    opacity: 0.8;
 }
 
 .search {
