@@ -79,6 +79,10 @@ public class AuthenticationService {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         var token = generateToken(user);
 
+        Set<String> rolesAsString = user.getRole().stream()
+                .map(Role::name)  // Chuyển Role enum sang String
+                .collect(Collectors.toSet());
+
         return AuthenticationResponse.builder()
                 .token(token)
                 .authenticated(true)
@@ -86,9 +90,7 @@ public class AuthenticationService {
                 .email(user.getEmail())
                 .phone(user.getPhone())
                 .address(user.getPhone())
-                .role(user.getRole().stream()
-                        .map(Role::name)
-                        .collect(Collectors.toSet()))
+                .role(rolesAsString)
                 .build();
     }
 
