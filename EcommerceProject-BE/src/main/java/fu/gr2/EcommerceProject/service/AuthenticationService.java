@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -85,7 +86,9 @@ public class AuthenticationService {
                 .email(user.getEmail())
                 .phone(user.getPhone())
                 .address(user.getPhone())
-                .role(user.getRole())
+                .role(user.getRole().stream()
+                        .map(Role::name)
+                        .collect(Collectors.toSet()))
                 .build();
     }
 
