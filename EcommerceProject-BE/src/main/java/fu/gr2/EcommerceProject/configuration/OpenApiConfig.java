@@ -10,6 +10,6 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI().info(new Info().title("Ecommerce Project"));
-
+        
     }
 }
