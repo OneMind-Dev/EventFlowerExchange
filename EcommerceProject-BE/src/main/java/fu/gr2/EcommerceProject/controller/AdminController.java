@@ -1,10 +1,14 @@
 package fu.gr2.EcommerceProject.controller;
 
 import fu.gr2.EcommerceProject.dto.request.ApiResponse;
+import fu.gr2.EcommerceProject.dto.request.UserCreationRequest;
 import fu.gr2.EcommerceProject.dto.response.RegistrationFormResponse;
+import fu.gr2.EcommerceProject.dto.response.UserResponse;
 import fu.gr2.EcommerceProject.exception.UserAlreadyApprovedException;
 import fu.gr2.EcommerceProject.exception.UserNotFound;
 import fu.gr2.EcommerceProject.service.UserRegistrationService;
+import fu.gr2.EcommerceProject.service.UserService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +21,19 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
     private final UserRegistrationService userRegistrationService;
+    private final UserService userService;
 
-    public AdminController(UserRegistrationService userRegistrationService) {
+    @PostMapping("/AdminRegister")
+    ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request){
+
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.createAdmin(request))
+                .build();
+    }
+
+    public AdminController(UserRegistrationService userRegistrationService, UserService userService) {
         this.userRegistrationService = userRegistrationService;
+        this.userService = userService;
     }
 
     @GetMapping("/registerForm")
