@@ -3,6 +3,8 @@ package fu.gr2.EcommerceProject.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.util.List;
@@ -21,11 +23,13 @@ public class Event {
    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "event_id")
    UUID eventId;
-   @Column(name = "category_id")
-   String categoryId;
+   @ManyToOne
+   @JoinColumn(name = "Category_id")
+   EventCategory category;
    String eventName;
    String description;
    @Column(name = "created_at")
+   @CreationTimestamp
    LocalDateTime createdAt;
    String image;
    @ManyToOne

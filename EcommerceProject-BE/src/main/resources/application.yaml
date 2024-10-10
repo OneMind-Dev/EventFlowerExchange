@@ -6,7 +6,7 @@ server:
 spring:
   datasource:
 
-    url: jdbc:mysql://localhost:3306/EventFlowerExchange
+    url: jdbc:mysql://localhost:3306/EventFLowerExchange
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver

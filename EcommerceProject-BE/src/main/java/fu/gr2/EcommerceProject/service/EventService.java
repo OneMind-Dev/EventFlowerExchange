@@ -1,5 +1,6 @@
 package fu.gr2.EcommerceProject.service;
 
+import fu.gr2.EcommerceProject.dto.request.EventCreationRequest;
 import fu.gr2.EcommerceProject.dto.request.EventUpdateRequest;
 import fu.gr2.EcommerceProject.dto.response.EventResponse;
 import fu.gr2.EcommerceProject.entity.Event;
@@ -21,12 +22,12 @@ public class EventService {
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
 
-    public List<EventResponse> getAllEvents(String categoryId, String eventName) {
+    public List<EventResponse> getAllEvents(UUID categoryId, String eventName) {
         List<Event> events;
 
-        if (categoryId != null && !categoryId.isEmpty() && eventName != null && !eventName.isEmpty()) {
+        if (categoryId != null && eventName != null && !eventName.isEmpty()) {
             events = eventRepository.findByCategoryIdAndEventNameContaining(categoryId, eventName);
-        } else if (categoryId != null && !categoryId.isEmpty()) {
+        } else if (categoryId != null) {
             events = eventRepository.findByCategoryId(categoryId);
         } else if (eventName != null && !eventName.isEmpty()) {
             events = eventRepository.findByEventNameContaining(eventName);
@@ -49,5 +50,16 @@ public class EventService {
 
         // Save the updated event entity back to the repository and return the response
         return eventMapper.toEventResponse(eventRepository.save(event));
+    }
+    public Event createEvent(EventCreationRequest request){
+        Event event = new Event();
+        event.setCreatedAt(request.getCreatedAt());
+        event.setEventName(request.getEventName());
+        event.setDescription(request.getDescription());
+        event.setFlowerEventRelationships(request.getFlowerEventRelationships());
+        event.setImage(request.getImage());
+        event.setStartDate(request.getStartDate());
+        event.setEndDate(request.getEndDate());
+        return eventRepository.save(event);
     }
 }
