@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,7 +69,7 @@ public class EventService {
         event.setImage(request.getImage());
         event.setStartDate(request.getStartDate());
         event.setEndDate(request.getEndDate());
-
+        //nếu ID bị lỗi thì t cũng bó tay ngồi sữa cả ngày nay chả biết bi gì
         // Fetch user by ID and set it
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -93,6 +92,6 @@ public class EventService {
     @Transactional
     public Event getEventById(Integer eventId) {
         return eventRepository.findById(eventId)
-                .orElseThrow(() -> new AppException(ErrorCode.EVENT_NOT_EXISTED)); // Handle not found
+                .orElseThrow(() -> new AppException(ErrorCode.EVENT_NOT_EXISTED));
     }
 }

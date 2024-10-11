@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +22,7 @@ public class FlowerService {
     private final FlowerMapper flowerMapper;
     private final UserRepository userRepository;
 
-    // Constructor injection for all dependencies
+
     public FlowerService(final FlowerRepository flowerRepository, final FlowerMapper flowerMapper, final UserRepository userRepository) {
         this.flowerRepository = flowerRepository;
         this.flowerMapper = flowerMapper;
@@ -51,6 +50,7 @@ public class FlowerService {
 
     @Transactional
     public FlowerResponse createFlower(FlowerCreateRequest request) {
+        //nếu ID bị lỗi thì t cũng bó tay ngồi sữa cả ngày nay chả biết bi gì
         Flower flower = new Flower();
         flower.setFlowerName(request.getFlowerName());
         flower.setOrigin(request.getOrigin());
@@ -58,7 +58,7 @@ public class FlowerService {
 
         // Fetch user by ID and set it
         User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)); // Handle user not found
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         flower.setUser(user);
 
@@ -70,7 +70,7 @@ public class FlowerService {
     @Transactional
     public FlowerResponse updateFlower(Integer flowerId, FlowerUpdateRequest request) {
         Flower flower = flowerRepository.findById(flowerId)
-                .orElseThrow(() -> new AppException(ErrorCode.FLOWER_NOT_EXISTED)); // Handle flower not found
+                .orElseThrow(() -> new AppException(ErrorCode.FLOWER_NOT_EXISTED));
 
         // Update fields
         if (request.getFlowerName() != null) {
@@ -90,13 +90,13 @@ public class FlowerService {
 
     public void deleteFlower(Integer flowerId) {
         if (!flowerRepository.existsById(flowerId)) {
-            throw new AppException(ErrorCode.FLOWER_NOT_EXISTED); // Custom exception for not found
+            throw new AppException(ErrorCode.FLOWER_NOT_EXISTED);
         }
         flowerRepository.deleteById(flowerId);
     }
     public FlowerResponse getFlowerById(Integer flowerId) {
         Flower flower = flowerRepository.findById(flowerId)
-                .orElseThrow(() -> new AppException(ErrorCode.FLOWER_NOT_EXISTED)); // Custom exception for not found
+                .orElseThrow(() -> new AppException(ErrorCode.FLOWER_NOT_EXISTED));
         return flowerMapper.toFlowerResponse(flower); // Convert to response DTO
     }
 }

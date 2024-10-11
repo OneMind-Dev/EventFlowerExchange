@@ -37,12 +37,12 @@ public class FlowerController {
         return ResponseEntity.ok(updatedFlower); // Return the updated flower
     }
 
-    @DeleteMapping("/DeleteFlower/{flowerId}") // Corrected path variable
+    @DeleteMapping("/DeleteFlower/{flowerId}")
     public ResponseEntity<Void> deleteFlower(@PathVariable("flowerId") Integer flowerId) {
         flowerService.deleteFlower(flowerId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-    @GetMapping("/GetFlower/{flowerId}") // Ensure this path matches your request
+    @GetMapping("/GetFlower/{flowerId}")
     public ResponseEntity<FlowerResponse> getFlower(@PathVariable("flowerId") Integer flowerId) {
         FlowerResponse flowerResponse = flowerService.getFlowerById(flowerId);
         return ResponseEntity.ok(flowerResponse);
