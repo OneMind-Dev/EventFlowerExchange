@@ -11,7 +11,6 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <Header />
       <div className="admin-container">
         <h1 className="title">Dashboard</h1>
         <div className="dashboard-content">
@@ -25,7 +24,6 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

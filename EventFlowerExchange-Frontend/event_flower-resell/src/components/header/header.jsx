@@ -74,7 +74,12 @@ function Header() {
               placeholder="Tìm kiếm"
               prefix={<SearchOutlined />}
             />
-            <ShoppingCartOutlined className="header___container-search--cart" />
+            <ShoppingCartOutlined
+              onClick={() => {
+                navigate("/cart");
+              }}
+              className="header___container-search--cart"
+            />
           </div>
 
           <div>
