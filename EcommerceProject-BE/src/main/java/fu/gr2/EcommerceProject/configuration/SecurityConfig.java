@@ -45,7 +45,6 @@ public class SecurityConfig {
 
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
-
     //config truy cap duong dan cua cac role
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -55,6 +54,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()  // Không yêu cầu JWT
                         .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()   // Không yêu cầu JWT
                         .requestMatchers(HttpMethod.GET, "/users").hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/admin/AdminRegister").hasAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE).hasAuthority("SCOPE_ADMIN")
                         .anyRequest().authenticated()  // Yêu cầu JWT với các request khác
                 )
