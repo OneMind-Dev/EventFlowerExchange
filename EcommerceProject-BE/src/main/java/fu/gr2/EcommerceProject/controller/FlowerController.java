@@ -16,7 +16,7 @@ import java.util.List;
 public class FlowerController {
     private final FlowerService flowerService;
 
-    @GetMapping("/api/flowers")
+    @GetMapping("/Getflowers")
     public ResponseEntity<List<FlowerResponse>> getAllFlowers(
             @RequestParam(required = false) String flowerName,
             @RequestParam(required = false) String color) {
