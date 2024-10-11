@@ -146,7 +146,6 @@ public class UserRegistrationService {
         } catch (IllegalArgumentException e) {
             throw new AppException(ErrorCode.BANNED);
         }
-
         //Check xem user đã có role request chưa
         if(existingUser.getRole().contains(requestedRole))
             throw new AppException(ErrorCode.ALREADYHAVEROLE);

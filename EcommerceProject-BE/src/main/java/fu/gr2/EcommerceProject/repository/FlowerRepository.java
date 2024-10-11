@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface FlowerRepository extends JpaRepository<Flower, UUID> {
+public interface FlowerRepository extends JpaRepository<Flower, Integer> {
     List<Flower> findByFlowerNameContainingAndColor(String flowerName, String color);
     List<Flower> findByFlowerNameContaining(String flowerName);
     List<Flower> findByColor(String color);

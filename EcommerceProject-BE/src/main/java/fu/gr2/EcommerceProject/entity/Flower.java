@@ -18,7 +18,7 @@ public class Flower {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "flower_id")
-     UUID flowerId;
+    Integer  flowerId;
     @Column(name = "flower_name")
      String flowerName;
     @ManyToOne

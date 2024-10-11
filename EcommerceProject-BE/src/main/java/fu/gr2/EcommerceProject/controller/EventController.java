@@ -20,6 +20,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import fu.gr2.EcommerceProject.dto.request.EventCreateRequest;
+import fu.gr2.EcommerceProject.entity.Event;
+import fu.gr2.EcommerceProject.service.EventService;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class EventController {
@@ -42,4 +49,29 @@ public class EventController {
     }
 
 
+    @PutMapping("/UpdateEvent/{eventId}")
+    public ResponseEntity<EventResponse> updateEvent(
+            @PathVariable Integer eventId,
+            @RequestBody @Valid EventUpdateRequest request) {
+        EventResponse updatedEvent = eventService.updateEvent(eventId, request);
+        return ResponseEntity.ok(updatedEvent);
+    }
+
+    @PostMapping("/CreateEvent")
+    public ResponseEntity<EventResponse> createEvent(@RequestBody @Valid EventCreateRequest request) {
+        logger.info("Creating a new event");
+        EventResponse eventResponse = eventService.createEvent(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventResponse);
+    } //remember to take admin token :skull:
+    @DeleteMapping("/DeleteEvent/{eventId}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable Integer eventId) {
+        eventService.deleteEvent(eventId);
+        return ResponseEntity.noContent().build();
+    }//delete thì cái ID nó cũng không xuống đâu (chắc vậy) tại vì cái Data Integrity (chắc vậy)
+
+    @GetMapping("/SelectEvent/{eventId}")
+    public ResponseEntity<Event> getEventById(@PathVariable Integer eventId) {
+        Event event = eventService.getEventById(eventId);
+        return ResponseEntity.ok(event);
+    } // t thấy cái này nhìn ok hơn nếu không thích thì t sẽ chỉnh lại giống cái flower
 }

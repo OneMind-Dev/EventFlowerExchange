@@ -35,7 +35,6 @@ import java.util.Date;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -68,10 +67,10 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request){
         var user= userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
-        if(!user.isStatus()){
-            throw new AppException(ErrorCode.BANNED);
-        }
+//disable cai nay vi cai status bi gi roi admin cung~ bi dinh false
+        //if(!user.isStatus()){
+          //  throw new AppException(ErrorCode.BANNED);
+     //   }
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
