@@ -24,9 +24,19 @@ public class AdminController {
     @Autowired
     private UserService userService;
     private final UserRegistrationService userRegistrationService;
+    private final UserService userService;
 
-    public AdminController(UserRegistrationService userRegistrationService) {
+    @PostMapping("/AdminRegister")
+    ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request){
+
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.createAdmin(request))
+                .build();
+    }
+
+    public AdminController(UserRegistrationService userRegistrationService, UserService userService) {
         this.userRegistrationService = userRegistrationService;
+        this.userService = userService;
     }
 
     @GetMapping("/registerForm")
