@@ -17,13 +17,12 @@ import UserProfile from "./pages/userProfile/userProfile";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Test from "./pages/test";
-
-import Admin from "./pages/admin/adminManager";
 import ShopProfile from "./pages/shopProfile/shopProfile";
+import CartPage from "./pages/cart/cart";
 const App = () => {
   const ProtectRouteAuth = ({ children }) => {
     const user = useSelector((store) => store.user);
-    if (user != null && user.role.includes("ADMIN")) {
+    if (user && user.role.includes("ADMIN")) {
       return children;
     }
     toast.error("Trang này đã bị khóa!");
@@ -32,10 +31,10 @@ const App = () => {
 
   const ProtectRouteAuth1 = ({ children }) => {
     const user = useSelector((store) => store.user);
-    if (user != null) {
+    if (user == null) {
       return children;
     }
-    toast.error("Trang này đã bị khóa!");
+    toast.error("Đăng nhập để truy cập!");
     return <Navigate to={"/"} />;
   };
 
@@ -59,6 +58,10 @@ const App = () => {
           <Test />
         </ProtectRouteAuth1>
       ),
+    },
+    {
+      path: "cart",
+      element: <CartPage />,
     },
     {
       path: "login",
@@ -112,10 +115,7 @@ const App = () => {
       path: "/:id",
       element: <ShopProfile />,
     },
-    {
-      path: "admin",
-      element: <Admin />,
-    },
+
     {
       path: "profile",
       element: <UserProfile />,

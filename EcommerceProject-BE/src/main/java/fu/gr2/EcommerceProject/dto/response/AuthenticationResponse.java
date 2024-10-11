@@ -15,6 +15,7 @@ public class AuthenticationResponse {
     String token;
     boolean authenticated;
     String username;
+    String userId;
     String email;
     String phone;
     String address;
