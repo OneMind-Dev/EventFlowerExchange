@@ -17,7 +17,7 @@ import UserProfile from "./pages/userProfile/userProfile";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Test from "./pages/test";
-
+import Payment from "./pages/payment/payment";
 import Admin from "./pages/admin/adminManager";
 import ShopProfile from "./pages/shopProfile/shopProfile";
 const App = () => {
@@ -120,6 +120,10 @@ const App = () => {
       path: "profile",
       element: <UserProfile />,
     },
+    {
+      path: "payment",
+      element: <Payment />,
+    }
   ]);
 
   return <RouterProvider router={router} />;
