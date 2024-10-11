@@ -79,7 +79,7 @@ function Payment() {
                         <h3>Xác nhận thanh toán</h3>
                         <p>Bạn có chắc chắn muốn thanh toán?</p>
                         <button className='confirm-button' onClick={handleConfirmPayment}>Xác nhận</button>
-                        <button className='cancel-button' onClick={handleCancelClick}>Hủy</button>
+                        <button className='payment-cancel' onClick={handleCancelClick}>Hủy</button>
                     </div>
                 </div>
             )}

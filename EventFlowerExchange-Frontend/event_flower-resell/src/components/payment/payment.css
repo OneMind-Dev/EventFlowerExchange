@@ -49,13 +49,15 @@ th, td {
 .payment-button, .cancel-button {
     background-color: #EE6262;
     color: white;
-    padding: 10px 20px;
+    padding: 10px;
     border: none;
     cursor: pointer;
     font-size: 18px;
+    position: relative; /* hoặc absolute nếu cần */
+    z-index: 10; /* Đảm bảo nút nằm trên các phần tử khác */
 }
 
-.payment-button:hover, .cancel-button:hover {
+.payment-button:hover, .cancel-button:hover, .confirm-button:hover {
     background-color: #CC7A7A;
 }
 
@@ -78,10 +80,10 @@ th, td {
     text-align: center;
 }
 
-.confirm-button, .cancel-button {
+.confirm-button, .payment-cancel {
     color: white;
     border: none;
-    background-color: #CC7A7A;
+    background-color: #EE6262;
     margin: 10px;
     padding: 10px 20px;
 }
