@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="59f1ea8c-0c7e-4cfd-b8ee-b647ce647ca5" name="Changes" comment="load fix">
-      <change beforePath="$PROJECT_DIR$/EcommerceProject-BE/EcommerceProject-BE/src/main/java/fu/gr2/EcommerceProject/configuration/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/EcommerceProject-BE/EcommerceProject-BE/src/main/java/fu/gr2/EcommerceProject/configuration/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c3be34e4-1318-48ae-8feb-92a5eb0dec37.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c3be34e4-1318-48ae-8feb-92a5eb0dec37/storage_v2/_src_/schema/eventflowerexchange.mFqcPg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +66,7 @@
     "Spring Boot.EcommerceProjectBeApplication.executor": "Run",
     "git-widget-placeholder": "ThanhHiep1",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/EcommerceProject-BE",
+    "last_opened_file_path": "D:/New folder/EcommerceProject-BE",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -108,6 +111,7 @@
       <workItem from="1728269446732" duration="4952000" />
       <workItem from="1728292506948" duration="218000" />
       <workItem from="1728387435373" duration="100000" />
+      <workItem from="1728639054736" duration="17000" />
     </task>
     <task id="LOCAL-00001" summary="load fix">
       <option name="closed" value="true" />
