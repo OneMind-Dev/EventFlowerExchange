@@ -29,7 +29,6 @@ public class AdminController {
     @Autowired
     private UserService userService;
     private final UserRegistrationService userRegistrationService;
-    private final UserService userService;
 
     @PostMapping("/AdminRegister")
     ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request){
@@ -61,11 +60,4 @@ public class AdminController {
         return  userRegistrationService.rejectRegistration(formId,reason);
     }
 
-    @PostMapping("/AdminRegister")
-    ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request){
-
-        return ApiResponse.<UserResponse>builder()
-                .result(userService.createAdmin(request))
-                .build();
-    }
 }

@@ -43,10 +43,10 @@ public class EventController {
         return ResponseEntity.ok(this.eventService.getAllEvents(categoryId, eventName));
     }
 
-    @PutMapping({"/events/eventId"})
-    public ResponseEntity<EventResponse> updateEvent(@PathVariable UUID eventId, @RequestBody @Valid EventUpdateRequest request) {
-        return ResponseEntity.ok(this.eventService.updateEvent(eventId, request));
-    }
+//    @PutMapping({"/events/eventId"})
+//    public ResponseEntity<EventResponse> updateEvent(@PathVariable UUID eventId, @RequestBody @Valid EventUpdateRequest request) {
+//        return ResponseEntity.ok(this.eventService.updateEvent(eventId, request));
+//    }
 
 
     @PutMapping("/UpdateEvent/{eventId}")
