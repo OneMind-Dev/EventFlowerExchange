@@ -48,7 +48,6 @@ public class EventController {
 //        return ResponseEntity.ok(this.eventService.updateEvent(eventId, request));
 //    }
 
-
     @PutMapping("/UpdateEvent/{eventId}")
     public ResponseEntity<EventResponse> updateEvent(
             @PathVariable Integer eventId,
