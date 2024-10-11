@@ -27,6 +27,6 @@ public class UserCreationRequest {
     @NotEmpty
     String address;
     String avatar;
-    boolean status_user=true;
+    boolean status=true;
     LocalDateTime created_at;
 }

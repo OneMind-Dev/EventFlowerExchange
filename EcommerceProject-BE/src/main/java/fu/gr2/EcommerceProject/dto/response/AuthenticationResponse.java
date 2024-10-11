@@ -1,7 +1,10 @@
 package fu.gr2.EcommerceProject.dto.response;
 
+import fu.gr2.EcommerceProject.enums.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -11,4 +14,9 @@ import lombok.experimental.FieldDefaults;
 public class AuthenticationResponse {
     String token;
     boolean authenticated;
+    String username;
+    String email;
+    String phone;
+    String address;
+    Set<Role> role;
 }

@@ -18,9 +18,9 @@ import java.util.UUID;
 @Builder
 public class Event {
    @Id
-   @GeneratedValue(strategy = GenerationType.AUTO)
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id")
-   UUID eventId;
+   Integer eventId;
    @Column(name = "category_id")
    String categoryId;
    String eventName;

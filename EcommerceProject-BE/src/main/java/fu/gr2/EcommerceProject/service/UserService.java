@@ -57,7 +57,7 @@ public class UserService {
 
         userMapper.updateUser(user,request);
 
-        user.setStatusUser(true);
+        user.setStatus(true);
         return userMapper.toUserResponse(userRepository.save(user));
     }
 

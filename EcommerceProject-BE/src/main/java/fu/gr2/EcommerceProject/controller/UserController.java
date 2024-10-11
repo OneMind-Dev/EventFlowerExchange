@@ -4,6 +4,7 @@ import fu.gr2.EcommerceProject.dto.request.ApiResponse;
 import fu.gr2.EcommerceProject.dto.request.UserCreationRequest;
 import fu.gr2.EcommerceProject.dto.request.UserRegistrationRequest;
 import fu.gr2.EcommerceProject.dto.request.UserUpdateRequest;
+import fu.gr2.EcommerceProject.dto.response.RegistrationFormResponse;
 import fu.gr2.EcommerceProject.dto.response.UserResponse;
 import fu.gr2.EcommerceProject.entity.User;
 import fu.gr2.EcommerceProject.exception.UserNotFound;
@@ -23,6 +24,7 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
     private UserRegistrationService userRegistrationService;
 
     @PostMapping("/register")
@@ -36,12 +38,12 @@ public class UserController {
     @GetMapping
     ApiResponse<List<UserResponse>> getUsers() {
 
-        var authentitcation = SecurityContextHolder.getContext().getAuthentication();
-
-        log.info("Username: {}",authentitcation.getName());
-        authentitcation.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
-
-
+//        var authentitcation = SecurityContextHolder.getContext().getAuthentication();
+//
+//        log.info("Username: {}",authentitcation.getName());
+//        authentitcation.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
+//
+//
 
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.getUser())
@@ -64,10 +66,10 @@ public class UserController {
         return "User has been deleted";
     }
 
-    @PostMapping("/registerRole")
-    public User registerUserRole(@RequestBody UserRegistrationRequest request) {
+    @PostMapping("/registerRole/{userId}")
+    public RegistrationFormResponse registerUserRole(@PathVariable String userId, @RequestBody UserRegistrationRequest request) {
         try {
-            return userRegistrationService.registerUserRole(request);
+            return userRegistrationService.registerUserRole(userId,request);
         } catch (UserNotFound e) {
             throw new UserNotFound("User with the provided details not found.");
         } catch (UnsupportedOperationException e) {

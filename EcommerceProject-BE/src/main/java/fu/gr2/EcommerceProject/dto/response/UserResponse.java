@@ -20,6 +20,6 @@ public class UserResponse {
     String address;
     String avatar;
     Set<String> role;
-    boolean status_user;
+    boolean status;
     LocalDateTime created_at;
 }

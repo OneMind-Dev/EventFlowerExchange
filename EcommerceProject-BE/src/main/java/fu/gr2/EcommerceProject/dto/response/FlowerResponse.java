@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class FlowerResponse {
-    private String flowerId;
+    private Integer flowerId;
     private String flowerName;
     private String userId;
     private String origin;

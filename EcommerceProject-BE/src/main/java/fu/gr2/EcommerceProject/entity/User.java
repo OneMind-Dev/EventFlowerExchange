@@ -41,11 +41,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     Set<Role> role;
 
-    boolean statusUser = true;
+    boolean status = true;
 
     @CreationTimestamp
     LocalDateTime createdAt;
 
-    boolean approvedByAdmin = false;
-    String rejectionReason;
 }

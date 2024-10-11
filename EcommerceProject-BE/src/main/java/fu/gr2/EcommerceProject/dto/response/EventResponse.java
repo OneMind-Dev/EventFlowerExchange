@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class EventResponse {
-    private String eventId;
+    private Integer eventId;
      private  String categoryId;
      private  String eventName;
      private String description;
