@@ -1,5 +1,6 @@
 package fu.gr2.EcommerceProject.dto.response;
 
+import fu.gr2.EcommerceProject.enums.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;

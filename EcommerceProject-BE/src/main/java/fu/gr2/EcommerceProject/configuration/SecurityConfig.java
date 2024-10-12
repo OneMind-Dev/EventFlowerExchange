@@ -38,7 +38,13 @@ public class SecurityConfig {
             "users/registerRole/{userId}",
             "/admin/approveRegistration/{formId}",
             "/admin/rejectRegistration/{formId}",
-            "/admin/registerForm",};
+            "/admin/registerForm",
+            "/AllEvents",
+            "/Getflowers",
+            "/CreateFlower",
+            "/CreateEvent",
+            "/AddFlowerToEvent"
+            };
 
     @Value("${jwt.signerKey}")
     private String signerKey;

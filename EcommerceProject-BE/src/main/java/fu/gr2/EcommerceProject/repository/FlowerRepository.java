@@ -11,5 +11,6 @@ import java.util.UUID;
 public interface FlowerRepository extends JpaRepository<Flower, Integer> {
     List<Flower> findByFlowerNameContainingAndColor(String flowerName, String color);
     List<Flower> findByFlowerNameContaining(String flowerName);
+    List<Flower> findByFlowerName(String flowerName);
     List<Flower> findByColor(String color);
 }

@@ -38,11 +38,9 @@ public class FlowerEventRelationship {
     @Column(name = "flower_price")
     BigDecimal floPrice;
 
-    @Column(name = "stock")
-    int stock;
 
     @Column(name = "created_at")
-    LocalDate createdAt;
+    LocalDate createdAt=getCreatedAt();
 
     @Column(name = "image")
     String image;
