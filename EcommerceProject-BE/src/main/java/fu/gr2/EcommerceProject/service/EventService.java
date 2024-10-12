@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,13 @@ public class EventService {
             events = eventRepository.findByEventNameContaining(eventName);
         } else {
             events = eventRepository.findAll();
+        }
+
+        for (Event event : events) {
+            LocalDateTime checkTime = LocalDateTime.now();
+            if(event.getEndDate().isAfter(checkTime)) {
+                events.remove(event);
+            }
         }
 
         return events.stream().map(eventMapper::toEventResponse).collect(Collectors.toList());
