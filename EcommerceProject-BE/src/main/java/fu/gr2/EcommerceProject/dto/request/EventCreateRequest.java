@@ -9,7 +9,6 @@ public class EventCreateRequest {
     private String categoryId;
     private String eventName;
     private String description;
-    private LocalDateTime createdAt;
     private String image;
     private LocalDateTime startDate;
     private LocalDateTime endDate;

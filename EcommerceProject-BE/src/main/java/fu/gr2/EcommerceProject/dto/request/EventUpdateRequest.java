@@ -1,11 +1,7 @@
 package fu.gr2.EcommerceProject.dto.request;
 
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -18,8 +14,6 @@ public class EventUpdateRequest {
     private String eventName;
     @NotBlank(message = "Category cannot be blank")
     private String description;
-    @NotNull(message = "Creation date must not be null")
-    private LocalDateTime createdAt;
     private String image;
     @NotNull(message = "Start date must not be null")
     private LocalDateTime startDate;

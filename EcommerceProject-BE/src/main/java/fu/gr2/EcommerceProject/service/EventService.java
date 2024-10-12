@@ -50,7 +50,6 @@ public class EventService {
         event.setCategoryId(request.getCategoryId());
         event.setEventName(request.getEventName());
         event.setDescription(request.getDescription());
-        event.setCreatedAt(request.getCreatedAt());
         event.setImage(request.getImage());
         event.setStartDate(request.getStartDate());
         event.setEndDate(request.getEndDate());
@@ -65,7 +64,6 @@ public class EventService {
         event.setCategoryId(request.getCategoryId());
         event.setEventName(request.getEventName());
         event.setDescription(request.getDescription());
-        event.setCreatedAt(request.getCreatedAt());
         event.setImage(request.getImage());
         event.setStartDate(request.getStartDate());
         event.setEndDate(request.getEndDate());
