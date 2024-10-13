@@ -25,6 +25,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = { "/users/register",
+            "/users/{userId}",
             "/auth/login",
             "/auth/introspect",
             "/auth/logout",
@@ -43,7 +44,8 @@ public class SecurityConfig {
             "/Getflowers",
             "/CreateFlower",
             "/CreateEvent",
-            "/AddFlowerToEvent"
+            "/AddFlowerToEvent",
+            "/GetFlowerFromEvent/{eventId}"
             };
 
     @Value("${jwt.signerKey}")
@@ -59,7 +61,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()  // Không yêu cầu JWT
-                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()   // Không yêu cầu JWT
+                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.PUT, PUBLIC_ENDPOINTS).permitAll()  // Không yêu cầu JWT
                         .requestMatchers(HttpMethod.GET, "/users").hasAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE).hasAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/admin/AdminRegister").hasAuthority("SCOPE_ADMIN")

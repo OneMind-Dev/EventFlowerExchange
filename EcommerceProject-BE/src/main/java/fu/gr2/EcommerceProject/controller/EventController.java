@@ -89,4 +89,9 @@ public class EventController {
             return flowerEventRelationshipService.addFlower(request);
     }
 
+    @GetMapping("/GetFlowerFromEvent/{eventId}")
+    public ApiResponse<List<FlowerEventResponse>> getFlower(@PathVariable int eventId){
+        return flowerEventRelationshipService.getFlower(eventId);
+    }
+
 }
