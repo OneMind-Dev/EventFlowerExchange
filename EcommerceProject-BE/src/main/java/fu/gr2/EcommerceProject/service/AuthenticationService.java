@@ -136,8 +136,6 @@ public class AuthenticationService {
 
         if(invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
-
-
         return signedJWT;
     }
 
