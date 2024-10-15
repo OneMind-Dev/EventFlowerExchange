@@ -44,7 +44,7 @@ public class ShoppingCartService {
 
         // Retrieve or create a shopping cart item for the flower
         ShoppingCartItem shoppingCartItem = shoppingCartItemRepository.findByShoppingCartAndFlowerEventRelationship(shoppingCart,flower);
-        if(shoppingCart==null){
+        if(shoppingCartItem==null){
             shoppingCartItem = shoppingCartItem.builder()
                     .flowerEventRelationship(flower)
                     .shoppingCart(shoppingCart)

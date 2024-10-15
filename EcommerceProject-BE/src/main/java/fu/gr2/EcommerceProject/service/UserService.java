@@ -59,7 +59,7 @@ public class UserService {
         roles.add(Role.valueOf(Role.USER.name()));
 
         user.setRole(roles);
-
+//        System.out.println("userId " +user.getUserId());
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
