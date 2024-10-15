@@ -18,6 +18,7 @@ import java.time.LocalDate;
 @Builder
 public class FlowerEventResponse {
 
+    int e_id;
     String eventname;
 
     String flowername;
