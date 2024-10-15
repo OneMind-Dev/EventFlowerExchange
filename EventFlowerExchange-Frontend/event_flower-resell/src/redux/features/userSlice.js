@@ -14,9 +14,8 @@ const userSlice = createSlice({
             return null;
         },
 
-        // Action mới để cập nhật thông tin người dùng
-        updateUserInfo: (state, action) => {
-            return { ...state, ...action.payload };
+        updateUser: (state, action) => {
+            return { ...state, ...action.payload }; 
         },
     },
 });
@@ -44,5 +43,27 @@ const userSlice = createSlice({
 //     }
 // };
 
-export const { login, logout, updateUserInfo } = userSlice.actions;
+// export const updateUserProfile = (userId, userData) => async (dispatch) => {
+//     try {
+//         const token = localStorage.getItem("token"); // Lấy token từ localStorage
+//         const config = {
+//             headers: {
+//                 Authorization: `Bearer ${token}`, // Thêm token vào headers nếu cần
+//                 "Content-Type": "application/json",
+//             },
+//         };
+
+//         const response = await api.put(`/users/${userId}`, userData, config); // Gọi API PUT để update user
+
+//         if (response.status === 200) {
+//             // Dispatch action updateUser để cập nhật thông tin người dùng trong Redux
+//             dispatch(updateUser(response.data));
+//             console.log("Cập nhật thông tin thành công");
+//         }
+//     } catch (error) {
+//         console.error("Cập nhật thông tin thất bại", error);
+//     }
+// };
+
+export const { login, logout, updateUser } = userSlice.actions;
 export default userSlice.reducer;

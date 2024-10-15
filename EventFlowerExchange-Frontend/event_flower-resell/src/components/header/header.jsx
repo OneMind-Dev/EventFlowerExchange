@@ -1,7 +1,11 @@
 import React from "react";
 import "./header.css";
 import { Input } from "antd";
-import { SearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  ShoppingCartOutlined,
+  BellOutlined,
+} from "@ant-design/icons";
 import { DownOutlined } from "@ant-design/icons";
 import { Dropdown, Space } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -80,6 +84,7 @@ function Header() {
               }}
               className="header___container-search--cart"
             />
+            <BellOutlined className="header___container-search--noti" />
           </div>
 
           <div>
@@ -102,14 +107,27 @@ function Header() {
                 </p>
               </div>
             ) : (
-              <div>
-                <button
-                  onClick={() => {
-                    navigate("/profile");
-                  }}
-                >
-                  UserProfile
-                </button>
+              <div className="header__user">
+                {!user.role.includes("SELLER") ? (
+                  <>
+                    <p>Trở thành Người bán</p>
+                    <button
+                      onClick={() => {
+                        navigate("/profile/userinfo");
+                      }}
+                    >
+                      UserProfile
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => {
+                      navigate("/profile/userinfo");
+                    }}
+                  >
+                    UserProfile
+                  </button>
+                )}
               </div>
             )}
           </div>

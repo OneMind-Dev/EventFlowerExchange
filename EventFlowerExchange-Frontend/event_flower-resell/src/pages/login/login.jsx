@@ -23,6 +23,7 @@ const Login = () => {
       localStorage.setItem("token", token);
 
       if (role.includes("ADMIN")) {
+        console.log("Include");
         navigate("/dashboard");
       } else {
         navigate("/");
