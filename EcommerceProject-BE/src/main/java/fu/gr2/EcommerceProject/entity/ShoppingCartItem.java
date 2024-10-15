@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
@@ -22,4 +24,5 @@ public class ShoppingCartItem {
     @JoinColumn(name = "e_id")
     FlowerEventRelationship flowerEventRelationship;
     int quantity;
+    BigDecimal ItemPrice;
 }

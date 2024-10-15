@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
@@ -19,4 +21,5 @@ public class ShoppingCart {
     @OneToOne
     @JoinColumn(name="user_id")
     User user;
+    BigDecimal totalPrice;
 }
