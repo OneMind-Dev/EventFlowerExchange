@@ -112,6 +112,7 @@ public class FlowerEventRelationshipService {
         for (FlowerEventRelationship relationship : flowerEventRelationships) {
             if (relationship.getQuantity() > 0) {
                 flowerEventResponses.add(FlowerEventResponse.builder()
+                                .e_id(relationship.getEId())
                         .flowername(relationship.getFlower().getFlowerName())
                         .origin(relationship.getFlower().getOrigin())
                         .color(relationship.getFlower().getColor())

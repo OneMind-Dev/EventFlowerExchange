@@ -84,7 +84,7 @@ public class AuthenticationService {
                 .token(token)
                 .authenticated(true)
                 .username(user.getUsername())
-                .userId(user.getUser_id())
+                .userId(user.getUserId())
                 .email(user.getEmail())
                 .phone(user.getPhone())
                 .address(user.getPhone())

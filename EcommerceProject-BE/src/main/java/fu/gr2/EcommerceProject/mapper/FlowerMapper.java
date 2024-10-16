@@ -8,6 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface FlowerMapper {
 
-    @Mapping(source = "user.user_id", target = "userId") // Make sure user_id correctly maps to userId of response
+    @Mapping(source = "user.userId", target = "userId") // Make sure user_id correctly maps to userId of response
     FlowerResponse toFlowerResponse(Flower flower);
 }

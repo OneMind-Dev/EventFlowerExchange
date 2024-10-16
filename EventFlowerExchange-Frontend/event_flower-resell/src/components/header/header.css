@@ -34,6 +34,22 @@
     opacity: 0.8;
 }
 
+.header__user {
+    display: flex;
+}
+
+.header__user p {
+    color: #CC7A7A;
+    font-size: 15px;
+    margin-right: 20px;
+}
+
+.header__user p:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
 .header___container-search {
     width: 50%;
     display: flex;
@@ -45,6 +61,13 @@
     color: #CC7A7A;
 }
 
+.header___container-search--noti {
+    font-size: 24px !important;
+    margin-left: 12px;
+    color: #CC7A7A;
+}
+
+.header___container-search--noti:hover,
 .header___container-search--cart:hover {
     cursor: pointer;
     opacity: 0.8;

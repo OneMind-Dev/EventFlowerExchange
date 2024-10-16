@@ -1,38 +1,49 @@
 import React, { useState } from "react";
-import Header from "../../components/header/header";
-import Footer from "../../components/footer/footer";
-import "./userProfile.css";
+import Header from "../../../components/header/header";
+import Footer from "../../../components/footer/footer";
+import "./userInfo.css";
 import { Form, Input, Button, Popconfirm } from "antd";
 import { FaCircleUser } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../redux/features/userSlice";
+import { logout } from "../../../redux/features/userSlice";
+import { useNavigate } from "react-router-dom";
+import api from "../../../components/config/axios";
+import { login } from "../../../redux/features/userSlice";
+import { toast } from "react-toastify";
 
-function UserProfile() {
+function UserInfo() {
   const [avatarUrl, setAvatarUrl] = useState(null);
-  const [editingField, setEditingField] = useState(null); // Track which field is being edited
+  const [editingField, setEditingField] = useState(null);
   const [form] = Form.useForm();
 
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   // const handleLogout = () => {
   //   dispatch(logoutUser());
   // };
 
   const handleEdit = (field) => {
-    setEditingField(field); // Set the field to edit
+    setEditingField(field);
   };
 
-  const handleSave = (field) => {
-    form
-      .validateFields([field])
-      .then((values) => {
-        console.log(`Saved ${field}:`, values[field]);
-        setEditingField(null); // Stop editing after saving
-      })
-      .catch((info) => {
-        console.log("Validate Failed:", info);
-      });
+  const handleSave = async (userId, field) => {
+    try {
+      const values = await form.validateFields([field]);
+      const updatedField = { [field]: values[field] };
+
+      const response = await api.put(`/users/${userId}`, updatedField);
+
+      console.log("Cập nhật thành công:", response.data);
+      dispatch(login(response.data));
+      setEditingField(null);
+      toast.success("Cập nhật thông tin thành công!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Cập nhật thông tin thất bại");
+    }
   };
 
   const handleCancel = () => {
@@ -85,6 +96,15 @@ function UserProfile() {
               <h3 className="privateInfor">Hồ sơ cá nhân</h3>
               <p>Thay đổi mật khẩu</p>
               <p>Đơn hàng</p>
+              {user.role && user.role.includes("SELLER") && (
+                <p
+                  onClick={() => {
+                    navigate("/profile/sellermanage");
+                  }}
+                >
+                  Quản lý sự kiện
+                </p>
+              )}
               <Popconfirm
                 onConfirm={() => dispatch(logout())}
                 title="Bạn muốn đăng xuất ?"
@@ -96,7 +116,7 @@ function UserProfile() {
             </div>
           </div>
           <div className="infor_container">
-            <h1>Thông tin cá nhân</h1>
+            <h1>Thông Tin Cá Nhân</h1>
             <Form layout="vertical" form={form}>
               {/* Username */}
               <div className="form-item">
@@ -120,7 +140,7 @@ function UserProfile() {
                   <>
                     <Button
                       type="primary"
-                      onClick={() => handleSave("username")}
+                      onClick={() => handleSave(user.user_id, "username")}
                     >
                       Lưu
                     </Button>
@@ -156,7 +176,10 @@ function UserProfile() {
                 )}
                 {editingField === "phone" ? (
                   <>
-                    <Button type="primary" onClick={() => handleSave("phone")}>
+                    <Button
+                      type="primary"
+                      onClick={() => handleSave(user.user_id, "phone")}
+                    >
                       Lưu
                     </Button>
                     <Button onClick={handleCancel}>Hủy</Button>
@@ -187,7 +210,10 @@ function UserProfile() {
                 )}
                 {editingField === "email" ? (
                   <>
-                    <Button type="primary" onClick={() => handleSave("email")}>
+                    <Button
+                      type="primary"
+                      onClick={() => handleSave(user.user_id, "email")}
+                    >
                       Lưu
                     </Button>
                     <Button onClick={handleCancel}>Hủy</Button>
@@ -220,7 +246,7 @@ function UserProfile() {
                   <>
                     <Button
                       type="primary"
-                      onClick={() => handleSave("address")}
+                      onClick={() => handleSave(user.user_id, "address")}
                     >
                       Lưu
                     </Button>
@@ -245,103 +271,4 @@ function UserProfile() {
   );
 }
 
-export default UserProfile;
-
-// import React, { useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import api from "../../components/config/axios";
-// import { updateUserInfo } from "../../redux/features/userSlice";
-
-// const UserProfile = () => {
-//   const user = useSelector((store) => store.user); // Lấy thông tin user từ Redux
-//   const dispatch = useDispatch();
-
-//   // Tạo state để lưu thông tin form
-//   const [formData, setFormData] = useState({
-//     username: user?.username || "",
-//     email: user?.email || "",
-//     phone: user?.phone || "",
-//     address: user?.address || "",
-//   });
-
-//   // Tạo state để lưu trạng thái thành công hoặc thất bại
-//   const [status, setStatus] = useState("");
-
-//   // Xử lý khi thay đổi dữ liệu form
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData({
-//       ...formData,
-//       [name]: value,
-//     });
-//   };
-
-//   // Xử lý khi nhấn nút "Save"
-//   const handleSave = async () => {
-//     try {
-//       // Gọi API PUT để cập nhật thông tin user
-//       const response = await api.put(`users/${user.userId}`, formData);
-
-//       // Cập nhật thông tin người dùng trong Redux nếu API thành công
-//       if (response.status === 200) {
-//         dispatch(updateUserInfo(formData));
-//         setStatus("Cập nhật thông tin thành công!");
-//       }
-//     } catch (error) {
-//       console.error("Lỗi khi cập nhật thông tin:", error);
-//       setStatus("Cập nhật thông tin thất bại!");
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <h2>User Information</h2>
-//       <form>
-//         <div>
-//           <label>Username:</label>
-//           <input
-//             type="text"
-//             name="username"
-//             value={formData.username}
-//             onChange={handleChange}
-//           />
-//         </div>
-//         <div>
-//           <label>Email:</label>
-//           <input
-//             type="email"
-//             name="email"
-//             value={formData.email}
-//             onChange={handleChange}
-//           />
-//         </div>
-//         <div>
-//           <label>Phone:</label>
-//           <input
-//             type="text"
-//             name="phone"
-//             value={formData.phone}
-//             onChange={handleChange}
-//           />
-//         </div>
-//         <div>
-//           <label>Address:</label>
-//           <input
-//             type="text"
-//             name="address"
-//             value={formData.address}
-//             onChange={handleChange}
-//           />
-//         </div>
-//         <button type="button" onClick={handleSave}>
-//           Save
-//         </button>
-//       </form>
-
-//       {/* Hiển thị trạng thái sau khi lưu */}
-//       {status && <p>{status}</p>}
-//     </div>
-//   );
-// };
-
-// export default UserProfile;
+export default UserInfo;

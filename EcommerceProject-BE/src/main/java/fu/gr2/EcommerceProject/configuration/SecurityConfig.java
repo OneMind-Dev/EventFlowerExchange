@@ -53,7 +53,9 @@ public class SecurityConfig {
             "/CreateFlower",
             "/CreateEvent",
             "/AddFlowerToEvent",
-            "/GetFlowerFromEvent/{eventId}"
+            "/GetFlowerFromEvent/{eventId}",
+            "/addFlowerToCart/{userId}/{flowerEventId}",
+            "/GetShoppingCart/{userId}"
             };
 
     @Value("${jwt.signerKey}")

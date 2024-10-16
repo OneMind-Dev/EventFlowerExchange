@@ -51,7 +51,6 @@ public class EventService {
         // Remove events that have not ended
         LocalDateTime checkTime = LocalDateTime.now();
         events.removeIf(event -> event.getEndDate().isBefore(checkTime));  // Corrected: This safely removes the event.
-        events.removeIf(event -> event.getStartDate().isAfter(checkTime));
 
 
         return events.stream().map(eventMapper::toEventResponse).collect(Collectors.toList());

@@ -1,0 +1,12 @@
+.infor_container-header {
+    color: #CC7A7A;
+    display: flex;
+    justify-content: center;
+    font-size: 25px;
+    font-weight: 600;
+    margin: 20px 0;
+}
+
+.infor_container-category {
+    width: 100%;
+}

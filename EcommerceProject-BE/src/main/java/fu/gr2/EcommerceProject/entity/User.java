@@ -19,12 +19,11 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-public class User {
+public class User implements Serializable{
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    String user_id;
-    //BE cần chuyển đổi gerateType thành IDENTITY để tự động tạo ra Id không bị trùng và thứ tự tăng dần
-    // ngoài ra cần implement toàn bộ các đối tượng lưu dưới dạng Serializable vào Database
+    String userId;
 
     @Column(unique = true, nullable = false)
     String username;
@@ -48,5 +47,4 @@ public class User {
 
     @CreationTimestamp
     LocalDateTime createdAt;
-
 }

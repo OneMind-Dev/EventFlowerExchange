@@ -1,7 +1,6 @@
 .background {
     background-color: #F4F4F4;
     min-height: 100vh; 
-    padding: 20px; 
     display: flex;            
     justify-content: start;
     align-items: flex-start;  
@@ -10,10 +9,8 @@
 
 .user_container {
     background-color: white;
-    width: 17%;
-    margin-left: 5%;
     padding: 15px; 
-    border-radius: 10px;
+    border-radius: 15px;
     padding-bottom: 2%;
     text-align: center; 
 }
@@ -62,14 +59,16 @@
 
 .infor_container {
     background-color: white;
-    width: 70%; 
+    width: 100%; 
     padding: 15px; 
-    border-radius: 10px;
+    border-radius: 15px;
     padding-bottom: 1%;
 }
 
 .infor_container h1 {
-    margin: 15px 0px 5% 6%;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-bottom: 20px;
     color: #CC7A7A;
 }
 

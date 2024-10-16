@@ -13,8 +13,10 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
+@Getter
+@Setter
 public class UserResponse {
-    String user_id;
+    private String userId;
     String username;
     String email;
     String phone;
