@@ -13,12 +13,14 @@ import Events from "./pages/see-all/events/allEvents/allEvents";
 import Flowers from "./pages/see-all/flowers/allFlowers/allFlowers";
 import EventDetail from "./pages/see-all/events/eventDetail/eventDetail";
 import FlowerDetail from "./pages/see-all/flowers/flowerDetail/flowerDetail";
-import UserProfile from "./pages/userProfile/userProfile";
+import UserInfo from "./pages/userProfile/userInfo/userInfo";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Test from "./pages/test";
 import ShopProfile from "./pages/shopProfile/shopProfile";
 import CartPage from "./pages/cart/cart";
+import SellerManage from "./pages/userProfile/sellerManagement/sellerManage";
+import SellerRegister from "./pages/sellerRegister/sellerRegister";
 const App = () => {
   const ProtectRouteAuth = ({ children }) => {
     const user = useSelector((store) => store.user);
@@ -31,7 +33,7 @@ const App = () => {
 
   const ProtectRouteAuth1 = ({ children }) => {
     const user = useSelector((store) => store.user);
-    if (user == null) {
+    if (user != null) {
       return children;
     }
     toast.error("Đăng nhập để truy cập!");
@@ -42,7 +44,17 @@ const App = () => {
     const user = useSelector((store) => store.user);
     if (user == null) {
       return children;
+    } else if (user && !user.role.includes("ADMIN")) {
+      return <Navigate to={"/"} />;
     }
+  };
+
+  const ProtectRouteAuth3 = ({ children }) => {
+    const user = useSelector((store) => store.user);
+    if (user && !user.role.includes("SELLER")) {
+      return children;
+    }
+    toast.error("Trở thành Người bán để truy cập!");
     return <Navigate to={"/"} />;
   };
 
@@ -88,10 +100,22 @@ const App = () => {
       ),
     },
     {
-      path: "profile",
+      path: "profile/userinfo",
       element: (
         <ProtectRouteAuth1>
-          <UserProfile />
+          <UserInfo />
+        </ProtectRouteAuth1>
+      ),
+    },
+    {
+      path: "sellerRegister",
+      element: <SellerRegister />,
+    },
+    {
+      path: "profile/sellermanage",
+      element: (
+        <ProtectRouteAuth1>
+          <SellerManage />
         </ProtectRouteAuth1>
       ),
     },
@@ -114,11 +138,6 @@ const App = () => {
     {
       path: "/:id",
       element: <ShopProfile />,
-    },
-
-    {
-      path: "profile",
-      element: <UserProfile />,
     },
   ]);
 
