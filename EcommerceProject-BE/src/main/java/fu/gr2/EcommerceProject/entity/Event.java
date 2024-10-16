@@ -22,7 +22,8 @@ public class Event {
     @Column(name = "event_id")
    Integer eventId;
    @Column(name = "category_id")
-   String categoryId;
+   Integer categoryId;
+   @Column(name = "Event_name")
    String eventName;
    String description;
    @CreationTimestamp
@@ -34,6 +35,7 @@ public class Event {
    User user;
    LocalDateTime startDate;
    LocalDateTime endDate;
+   String Address;
    @OneToMany(mappedBy = "event", cascade = {CascadeType.ALL}, orphanRemoval = true)
        List<FlowerEventRelationship> flowerEventRelationships;
 }

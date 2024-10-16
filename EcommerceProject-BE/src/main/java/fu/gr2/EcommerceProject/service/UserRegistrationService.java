@@ -14,12 +14,15 @@ import fu.gr2.EcommerceProject.exception.UserNotFound;
 import fu.gr2.EcommerceProject.mapper.RegistrationFormMapper;
 import fu.gr2.EcommerceProject.repository.RegistrationFormRepository;
 import fu.gr2.EcommerceProject.repository.UserRepository;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class UserRegistrationService {
 
     private final UserRepository userRepository;

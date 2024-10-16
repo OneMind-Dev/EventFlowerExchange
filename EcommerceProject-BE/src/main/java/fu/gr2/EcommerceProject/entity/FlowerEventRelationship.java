@@ -18,15 +18,12 @@ public class FlowerEventRelationship {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "e_id")
-    int eId;
-
     @ManyToOne
     @JoinColumn(name = "event_id")
     Event event;
 
     @ManyToOne
-    @JoinColumn(name = "flower_id")
+    @JoinColumn(name = "flo_id")
     Flower flower;
 
     @Column(name = "quantity")
@@ -35,14 +32,12 @@ public class FlowerEventRelationship {
     @Column(name = "description")
     String description;
 
-    @Column(name = "flower_price")
+    @Column(name = "flo_price")
     BigDecimal floPrice;
 
-    @Column(name = "stock")
-    int stock;
 
     @Column(name = "created_at")
-    LocalDate createdAt;
+    LocalDate createdAt=getCreatedAt();
 
     @Column(name = "image")
     String image;

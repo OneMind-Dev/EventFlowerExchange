@@ -2,7 +2,9 @@ package fu.gr2.EcommerceProject.service;
 
 import fu.gr2.EcommerceProject.dto.request.EventCreateRequest;
 import fu.gr2.EcommerceProject.dto.request.EventUpdateRequest;
+import fu.gr2.EcommerceProject.dto.request.FlowerEventRequest;
 import fu.gr2.EcommerceProject.dto.response.EventResponse;
+import fu.gr2.EcommerceProject.dto.response.FlowerEventResponse;
 import fu.gr2.EcommerceProject.entity.Event;
 import fu.gr2.EcommerceProject.entity.User;
 import fu.gr2.EcommerceProject.exception.AppException;
@@ -10,21 +12,29 @@ import fu.gr2.EcommerceProject.exception.ErrorCode;
 import fu.gr2.EcommerceProject.exception.EventNotFoundException;
 import fu.gr2.EcommerceProject.mapper.EventMapper;
 import fu.gr2.EcommerceProject.repository.EventRepository;
+import fu.gr2.EcommerceProject.repository.FlowerRepository;
 import fu.gr2.EcommerceProject.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class EventService {
-    private final EventRepository eventRepository;
-    private final EventMapper eventMapper;
-    private final UserRepository userRepository;
+    EventRepository eventRepository;
+    EventMapper eventMapper;
+    UserRepository userRepository;
+    FlowerRepository flowerRepository;
+
     public List<EventResponse> getAllEvents(String categoryId, String eventName) {
         List<Event> events;
 
@@ -38,6 +48,12 @@ public class EventService {
             events = eventRepository.findAll();
         }
 
+        // Remove events that have not ended
+        LocalDateTime checkTime = LocalDateTime.now();
+        events.removeIf(event -> event.getEndDate().isBefore(checkTime));  // Corrected: This safely removes the event.
+        events.removeIf(event -> event.getStartDate().isAfter(checkTime));
+
+
         return events.stream().map(eventMapper::toEventResponse).collect(Collectors.toList());
     }
     @Transactional
@@ -47,7 +63,7 @@ public class EventService {
 
         // Update fields based on the request
 
-        event.setCategoryId(request.getCategoryId());
+        event.setCategoryId(Integer.valueOf(request.getCategoryId()));
         event.setEventName(request.getEventName());
         event.setDescription(request.getDescription());
         event.setImage(request.getImage());
@@ -61,7 +77,7 @@ public class EventService {
     @Transactional
     public EventResponse createEvent(@Valid EventCreateRequest request) {
         Event event = new Event();
-        event.setCategoryId(request.getCategoryId());
+        event.setCategoryId(Integer.valueOf(request.getCategoryId()));
         event.setEventName(request.getEventName());
         event.setDescription(request.getDescription());
         event.setImage(request.getImage());
@@ -92,4 +108,5 @@ public class EventService {
         return eventRepository.findById(eventId)
                 .orElseThrow(() -> new AppException(ErrorCode.EVENT_NOT_EXISTED));
     }
+
 }

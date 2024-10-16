@@ -17,9 +17,9 @@ import java.util.UUID;
 public class Flower {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "flower_id")
+    @Column(name = "flo_id")
     Integer  flowerId;
-    @Column(name = "flower_name")
+    @Column(name = "flo_name")
      String flowerName;
     @ManyToOne
     @JoinColumn(name = "user_id")

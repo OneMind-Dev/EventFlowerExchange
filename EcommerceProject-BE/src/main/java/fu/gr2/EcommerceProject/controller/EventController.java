@@ -5,12 +5,20 @@
 
 package fu.gr2.EcommerceProject.controller;
 
+import fu.gr2.EcommerceProject.dto.request.ApiResponse;
 import fu.gr2.EcommerceProject.dto.request.EventUpdateRequest;
+import fu.gr2.EcommerceProject.dto.request.FlowerEventRequest;
 import fu.gr2.EcommerceProject.dto.response.EventResponse;
+import fu.gr2.EcommerceProject.dto.response.FlowerEventResponse;
 import fu.gr2.EcommerceProject.service.EventService;
+import fu.gr2.EcommerceProject.service.FlowerEventRelationshipService;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +37,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class EventController {
-    private final EventService eventService;
-    private final Logger logger = LoggerFactory.getLogger(EventController.class);
+    EventService eventService;
+    Logger logger = LoggerFactory.getLogger(EventController.class);
+    FlowerEventRelationshipService flowerEventRelationshipService;
 
-    public EventController(EventService eventService) {
-        this.eventService = eventService;
-    }
 
     @GetMapping({"/AllEvents"})
     public ResponseEntity<List<EventResponse>> getAllEvents(@RequestParam(required = false) String categoryId, @RequestParam(required = false) String eventName) {
@@ -73,4 +81,16 @@ public class EventController {
         Event event = eventService.getEventById(eventId);
         return ResponseEntity.ok(event);
     } // t thấy cái này nhìn ok hơn nếu không thích thì t sẽ chỉnh lại giống cái flower
+
+
+    @PostMapping("/AddFlowerToEvent")
+    public ApiResponse<FlowerEventResponse> addFlowerToEvent(@RequestBody FlowerEventRequest request){
+            return flowerEventRelationshipService.addFlower(request);
+    }
+
+    @GetMapping("/GetFlowerFromEvent/{eventId}")
+    public ApiResponse<List<FlowerEventResponse>> getFlower(@PathVariable int eventId){
+        return flowerEventRelationshipService.getFlower(eventId);
+    }
+
 }
