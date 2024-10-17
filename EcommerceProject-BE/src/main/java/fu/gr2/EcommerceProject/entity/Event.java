@@ -19,11 +19,10 @@ import java.util.List;
 public class Event {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "event_id")
-   Integer eventId;
+   @Column(name = "event_id")
+    Integer eventId;
    @Column(name = "category_id")
-   Integer categoryId;
-   @Column(name = "Event_name")
+   String categoryId;
    String eventName;
    String description;
    @CreationTimestamp
@@ -35,7 +34,6 @@ public class Event {
    User user;
    LocalDateTime startDate;
    LocalDateTime endDate;
-   String Address;
    @OneToMany(mappedBy = "event", cascade = {CascadeType.ALL}, orphanRemoval = true)
-       List<FlowerEventRelationship> flowerEventRelationships;
+   List<FlowerEventRelationship> flowerEventRelationships;
 }

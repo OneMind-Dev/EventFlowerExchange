@@ -18,12 +18,15 @@ public class FlowerEventRelationship {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "R_Id")
+    Integer relationshipID;
+
     @ManyToOne
-    @JoinColumn(name = "event_id")
+    @JoinColumn(name = "event_id", nullable = false)
     Event event;
 
     @ManyToOne
-    @JoinColumn(name = "flo_id")
+    @JoinColumn(name = "flo_id", nullable = false)
     Flower flower;
 
     @Column(name = "quantity")

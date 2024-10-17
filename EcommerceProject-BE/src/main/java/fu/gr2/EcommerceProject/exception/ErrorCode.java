@@ -21,7 +21,8 @@ public enum ErrorCode {
     ALREADYHAVEROLE(1009,"You already have this role, try another role"),
     FORM_NOT_EXISTED(1010,"form not existed"),
     EVENT_NOT_EXISTED(1011,"Event not existed"),
-    FLOWER_NOT_EXISTED(1012,"Flower not existed" ),;
+    FLOWER_NOT_EXISTED(1012,"Flower not existed" ),
+    REVIEW_NOT_EXISTED(1013,"Review not existed"),;
     int code;
     String message;
 }

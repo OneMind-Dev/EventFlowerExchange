@@ -2,9 +2,7 @@ package fu.gr2.EcommerceProject.service;
 
 import fu.gr2.EcommerceProject.dto.request.EventCreateRequest;
 import fu.gr2.EcommerceProject.dto.request.EventUpdateRequest;
-import fu.gr2.EcommerceProject.dto.request.FlowerEventRequest;
 import fu.gr2.EcommerceProject.dto.response.EventResponse;
-import fu.gr2.EcommerceProject.dto.response.FlowerEventResponse;
 import fu.gr2.EcommerceProject.entity.Event;
 import fu.gr2.EcommerceProject.entity.User;
 import fu.gr2.EcommerceProject.exception.AppException;
@@ -19,7 +17,6 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -62,7 +59,7 @@ public class EventService {
 
         // Update fields based on the request
 
-        event.setCategoryId(Integer.valueOf(request.getCategoryId()));
+        event.setCategoryId(request.getCategoryId());
         event.setEventName(request.getEventName());
         event.setDescription(request.getDescription());
         event.setImage(request.getImage());
@@ -76,7 +73,7 @@ public class EventService {
     @Transactional
     public EventResponse createEvent(@Valid EventCreateRequest request) {
         Event event = new Event();
-        event.setCategoryId(Integer.valueOf(request.getCategoryId()));
+        event.setCategoryId(request.getCategoryId());
         event.setEventName(request.getEventName());
         event.setDescription(request.getDescription());
         event.setImage(request.getImage());

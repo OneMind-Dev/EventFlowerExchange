@@ -5,22 +5,23 @@
 
 package fu.gr2.EcommerceProject.controller;
 
-import fu.gr2.EcommerceProject.dto.request.ApiResponse;
-import fu.gr2.EcommerceProject.dto.request.EventUpdateRequest;
-import fu.gr2.EcommerceProject.dto.request.FlowerEventRequest;
+import fu.gr2.EcommerceProject.dto.request.*;
 import fu.gr2.EcommerceProject.dto.response.EventResponse;
 import fu.gr2.EcommerceProject.dto.response.FlowerEventResponse;
+import fu.gr2.EcommerceProject.entity.Review;
+import fu.gr2.EcommerceProject.entity.User;
 import fu.gr2.EcommerceProject.service.EventService;
 import fu.gr2.EcommerceProject.service.FlowerEventRelationshipService;
+import fu.gr2.EcommerceProject.service.ReviewService;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,12 +29,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import fu.gr2.EcommerceProject.dto.request.EventCreateRequest;
 import fu.gr2.EcommerceProject.entity.Event;
-import fu.gr2.EcommerceProject.service.EventService;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -43,7 +41,8 @@ public class EventController {
     EventService eventService;
     Logger logger = LoggerFactory.getLogger(EventController.class);
     FlowerEventRelationshipService flowerEventRelationshipService;
-
+    @Autowired
+    private ReviewService reviewService;
 
     @GetMapping({"/AllEvents"})
     public ResponseEntity<List<EventResponse>> getAllEvents(@RequestParam(required = false) String categoryId, @RequestParam(required = false) String eventName) {
@@ -70,6 +69,7 @@ public class EventController {
         EventResponse eventResponse = eventService.createEvent(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(eventResponse);
     } //remember to take admin token :skull:
+
     @DeleteMapping("/DeleteEvent/{eventId}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Integer eventId) {
         eventService.deleteEvent(eventId);
@@ -84,13 +84,47 @@ public class EventController {
 
 
     @PostMapping("/AddFlowerToEvent")
-    public ApiResponse<FlowerEventResponse> addFlowerToEvent(@RequestBody FlowerEventRequest request){
-            return flowerEventRelationshipService.addFlower(request);
+    public ApiResponse<FlowerEventResponse> addFlowerToEvent(@RequestBody FlowerEventRequest request) {
+        return flowerEventRelationshipService.addFlower(request);
     }
 
     @GetMapping("/GetFlowerFromEvent/{eventId}")
-    public ApiResponse<List<FlowerEventResponse>> getFlower(@PathVariable int eventId){
+    public ApiResponse<List<FlowerEventResponse>> getFlower(@PathVariable int eventId) {
         return flowerEventRelationshipService.getFlower(eventId);
     }
 
+    @PostMapping("/{eventId}/Review")
+    public Review addComment(@PathVariable Integer eventId,
+                             @Valid @RequestBody CommentRequest commentRequest) {
+        return reviewService.addComment(eventId, commentRequest);
+    } //create
+
+    @PutMapping("/Review/{reviewId}")
+    public Review updateComment(@PathVariable Integer reviewId,
+                                @Valid @RequestBody CommentRequest commentRequest) {
+        return reviewService.updateComment(reviewId, commentRequest);
+    }
+
+    @DeleteMapping("/Review/{reviewId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Integer reviewId) {
+        reviewService.deleteComment(reviewId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{eventId}/Review")
+    public List<Review> getCommentsForEvent(@PathVariable Integer eventId) {
+        return reviewService.getCommentsForEvent(eventId);
+    }
+
+    @GetMapping("/Review/{reviewId}")
+    public Review getCommentById(@PathVariable Integer reviewId) {
+        return reviewService.getCommentById(reviewId);
+    }
+
+    @GetMapping("/Review/{user}")
+    public ResponseEntity<List<Review>> getReviewsByUserId(@PathVariable User user) {
+        List<Review> reviews = reviewService.getReviewsByUserId(user);
+        return ResponseEntity.ok(reviews);
+    }
+    //cái này t chịu rồi  Hibernate: select count(*) from invalidated_token it1_0 where it1_0.id=?
 }
