@@ -87,7 +87,7 @@ public class AuthenticationService {
                 .userId(user.getUserId())
                 .email(user.getEmail())
                 .phone(user.getPhone())
-                .address(user.getPhone())
+                .address(user.getAddress())
                 .role(user.getRole())
                 .build();
     }
