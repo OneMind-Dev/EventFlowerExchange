@@ -10,6 +10,7 @@ import fu.gr2.EcommerceProject.entity.User;
 import fu.gr2.EcommerceProject.exception.AppException;
 import fu.gr2.EcommerceProject.exception.ErrorCode;
 import fu.gr2.EcommerceProject.repository.*;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -86,16 +87,18 @@ public class ShoppingCartService {
         for (ShoppingCartItem i: shoppingCarts){
                 if(i.getFlowerEventRelationship().getEvent().getEndDate().isAfter(LocalDateTime.now())){
                     String flowerName = i.getFlowerEventRelationship().getFlower().getFlowerName();
+
                     ShoppingCartResponse shoppingCartResponse = ShoppingCartResponse.builder()
                             .item_id(i.getItem_id())
                             .flowerName(flowerName)
                             .quantity(i.getQuantity())
-                            .item_price(i.getItemPrice())
+                            .item_price(i.getFlowerEventRelationship().getFloPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
                             .build();
                     shoppingCartResponses.add(shoppingCartResponse);
-                    totalPrice.add(i.getItemPrice());
+                    totalPrice=totalPrice.add(shoppingCartResponse.getItem_price());
                 }
         }
+        System.out.println("total :"+totalPrice);
         shoppingCart.setTotalPrice(totalPrice);
         shoppingCartRepository.save(shoppingCart);
         return  ApiResponse.<List<ShoppingCartResponse>>builder()
@@ -104,67 +107,24 @@ public class ShoppingCartService {
                 .build();
     }
 
-//    public ApiResponse<List<ShoppingCartResponse>> updateCart(String userId, List<UpdateCartRequest> updateCartRequests) {
-//        // Lấy người dùng từ repository hoặc ném ngoại lệ nếu không tồn tại
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-//
-//        // Lấy giỏ hàng của người dùng
-//        ShoppingCart shoppingCart = shoppingCartRepository.findByUser_userId(userId);
-//        if (shoppingCart == null) {
-//            throw new AppException(ErrorCode.CART_NOT_FOUND);
-//        }
-//
-//        // Duyệt qua danh sách cập nhật từ người dùng
-//        for (UpdateCartRequest updateRequest : updateCartRequests) {
-//            FlowerEventRelationship flowerEventRelationship = flowerEventRelationshipRepository.findById(updateRequest.getFlowerEventId())
-//                    .orElseThrow(() -> new AppException(ErrorCode.FLOWER_EVENT_NOT_FOUND));
-//
-//            ShoppingCartItem shoppingCartItem = shoppingCartItemRepository.findByShoppingCartAndFlowerEventRelationship(shoppingCart, flowerEventRelationship);
-//
-//            if (shoppingCartItem == null && updateRequest.getQuantity() > 0) {
-//                // Nếu mặt hàng chưa có trong giỏ và số lượng lớn hơn 0 thì thêm mới
-//                shoppingCartItem = ShoppingCartItem.builder()
-//                        .shoppingCart(shoppingCart)
-//                        .flowerEventRelationship(flowerEventRelationship)
-//                        .quantity(updateRequest.getQuantity())
-//                        .itemPrice(flowerEventRelationship.getFlower().getPrice().multiply(BigDecimal.valueOf(updateRequest.getQuantity())))
-//                        .build();
-//                shoppingCartItemRepository.save(shoppingCartItem);
-//            } else if (shoppingCartItem != null && updateRequest.getQuantity() > 0) {
-//                // Nếu mặt hàng đã có trong giỏ, cập nhật số lượng và giá tiền
-//                shoppingCartItem.setQuantity(updateRequest.getQuantity());
-//                shoppingCartItem.setItemPrice(flowerEventRelationship.getFlower().getPrice().multiply(BigDecimal.valueOf(updateRequest.getQuantity())));
-//                shoppingCartItemRepository.save(shoppingCartItem);
-//            } else if (shoppingCartItem != null && updateRequest.getQuantity() == 0) {
-//                // Nếu số lượng bằng 0, xóa mặt hàng khỏi giỏ
-//                shoppingCartItemRepository.delete(shoppingCartItem);
-//            }
-//        }
-//
-//        // Tính lại tổng giá của giỏ hàng
-//        BigDecimal totalPrice = shoppingCartItemRepository.findByShoppingCart(shoppingCart).stream()
-//                .map(ShoppingCartItem::getItemPrice)
-//                .reduce(BigDecimal.ZERO, BigDecimal::add);
-//        shoppingCart.setTotalPrice(totalPrice);
-//        shoppingCartRepository.save(shoppingCart);
-//
-//        // Chuẩn bị phản hồi với danh sách các mặt hàng sau khi cập nhật
-//        List<ShoppingCartResponse> shoppingCartResponses = new ArrayList<>();
-//        List<ShoppingCartItem> shoppingCartItems = shoppingCartItemRepository.findByShoppingCart(shoppingCart);
-//        for (ShoppingCartItem item : shoppingCartItems) {
-//            ShoppingCartResponse response = ShoppingCartResponse.builder()
-//                    .item_id(item.getItem_id())
-//                    .flowerName(item.getFlowerEventRelationship().getFlower().getFlowerName())
-//                    .quantity(item.getQuantity())
-//                    .item_price(item.getItemPrice())
-//                    .build();
-//            shoppingCartResponses.add(response);
-//        }
-//
-//        return ApiResponse.<List<ShoppingCartResponse>>builder()
-//                .result(shoppingCartResponses)
-//                .message("Cart updated successfully. Total Price: " + shoppingCart.getTotalPrice().toString())
-//                .build();
-//    }
+    @Transactional
+    public void updateCart(String userId, List<UpdateCartRequest> updateCartRequests) {
+        // Lấy người dùng từ repository hoặc ném ngoại lệ nếu không tồn tại
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        // Lấy giỏ hàng của người dùng
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUser_userId(userId);
+        if (shoppingCart == null) {
+            throw new AppException(ErrorCode.CART_NOT_FOUND);
+        }
+        // Duyệt qua danh sách cập nhật từ người dùng
+        for(UpdateCartRequest i : updateCartRequests){
+            System.out.println("Quantity: "+i.getQuantity());
+            System.out.println("item id: "+i.getItemId());
+            ShoppingCartItem shoppingCartItem =  shoppingCartItemRepository.findById(i.getItemId()).orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND));
+            shoppingCartItem.setQuantity(i.getQuantity());
+            shoppingCartItemRepository.save(shoppingCartItem);
+        }
+    }
 }

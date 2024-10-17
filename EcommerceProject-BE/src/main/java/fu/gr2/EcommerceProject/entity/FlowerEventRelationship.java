@@ -1,5 +1,6 @@
 package fu.gr2.EcommerceProject.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -23,6 +24,7 @@ public class FlowerEventRelationship {
 
     @ManyToOne
     @JoinColumn(name = "event_id")
+    @JsonBackReference
     Event event;
 
     @ManyToOne

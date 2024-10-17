@@ -1,5 +1,7 @@
 package fu.gr2.EcommerceProject.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -34,5 +36,7 @@ public class Event {
    LocalDateTime startDate;
    LocalDateTime endDate;
    @OneToMany(mappedBy = "event", cascade = {CascadeType.ALL}, orphanRemoval = true)
+   @JsonManagedReference
+   @JsonIgnore
        List<FlowerEventRelationship> flowerEventRelationships;
 }
