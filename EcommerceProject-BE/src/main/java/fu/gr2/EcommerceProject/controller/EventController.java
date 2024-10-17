@@ -71,7 +71,7 @@ public class EventController {
         EventResponse eventResponse = eventService.createEvent(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(eventResponse);
     } //remember to take admin token :skull:
-    @DeleteMapping("/DeleteEvent/{eventId}")
+    @DeleteMapping("/deactive/{eventId}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Integer eventId) {
         eventService.deleteEvent(eventId);
         return ResponseEntity.noContent().build();

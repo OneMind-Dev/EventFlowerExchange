@@ -6,12 +6,14 @@ import fu.gr2.EcommerceProject.dto.request.FlowerEventRequest;
 import fu.gr2.EcommerceProject.dto.response.EventResponse;
 import fu.gr2.EcommerceProject.dto.response.FlowerEventResponse;
 import fu.gr2.EcommerceProject.entity.Event;
+import fu.gr2.EcommerceProject.entity.FlowerEventRelationship;
 import fu.gr2.EcommerceProject.entity.User;
 import fu.gr2.EcommerceProject.exception.AppException;
 import fu.gr2.EcommerceProject.exception.ErrorCode;
 import fu.gr2.EcommerceProject.exception.EventNotFoundException;
 import fu.gr2.EcommerceProject.mapper.EventMapper;
 import fu.gr2.EcommerceProject.repository.EventRepository;
+import fu.gr2.EcommerceProject.repository.FlowerEventRelationshipRepository;
 import fu.gr2.EcommerceProject.repository.FlowerRepository;
 import fu.gr2.EcommerceProject.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -20,6 +22,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,6 +37,8 @@ public class EventService {
     EventMapper eventMapper;
     UserRepository userRepository;
     FlowerRepository flowerRepository;
+    FlowerEventRelationshipRepository flowerEventRelationshipRepository;
+
 
     public List<EventResponse> getAllEvents(String categoryId, String eventName) {
         List<Event> events;
@@ -95,13 +100,17 @@ public class EventService {
         return eventMapper.toEventResponse(savedEvent);
     }
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteEvent(Integer eventId) {
         // Check if the event exists
         if (!eventRepository.existsById(eventId)) {
             throw new EventNotFoundException(eventId);
         }
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new AppException(ErrorCode.EVENT_NOT_EXISTED));
+        event.setEndDate(LocalDateTime.of(1999,1,1,1,1));
 
-        eventRepository.deleteById(eventId);
+
+        eventRepository.save(event);
     }
 
     @Transactional
