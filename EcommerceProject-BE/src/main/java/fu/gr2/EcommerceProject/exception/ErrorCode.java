@@ -23,7 +23,10 @@ public enum ErrorCode {
     EVENT_NOT_EXISTED(1011,"Event not existed"),
     FLOWER_NOT_EXISTED(1012,"Flower not existed" ),
     CART_NOT_FOUND(1013,"Cart not exist"),
-    ITEM_NOT_FOUND(1014,"Item from cart not found");
+    ITEM_NOT_FOUND(1014,"Item from cart not found"),
+    ACCOUNT_BANNED(1015,"account has been banned"),
+    ACCOUNT_NOT_BANNED(1016,"account has not been banned")
+    ;
     int code;
     String message;
 }

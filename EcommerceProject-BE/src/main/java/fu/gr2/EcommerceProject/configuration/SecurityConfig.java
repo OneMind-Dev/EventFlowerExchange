@@ -70,6 +70,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/users").hasAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE).hasAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/admin/AdminRegister").hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/users/ban/{userId}").hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/users/unban/{userId}").hasAuthority("SCOPE_ADMIN")
                         .anyRequest().authenticated()  // Yêu cầu JWT với các request khác
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder)))

@@ -76,4 +76,19 @@ public class UserController {
             throw new RuntimeException("Operation is not supported.");
         }
     }
+
+    @PostMapping("/ban/{userId}")
+    public ApiResponse<Void> banUser(@PathVariable String userId){
+        userService.banUser(userId);
+        return  ApiResponse.<Void>builder()
+                .message("Ban user thành công")
+                .build();
+    }
+    @PostMapping("/unban/{userId}")
+    public ApiResponse<Void> unbanUser(@PathVariable String userId){
+        userService.unbanUser(userId);
+        return  ApiResponse.<Void>builder()
+                .message("Unban user thành công")
+                .build();
+    }
 }

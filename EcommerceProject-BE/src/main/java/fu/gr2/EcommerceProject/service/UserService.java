@@ -85,5 +85,18 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
+    public void banUser(String userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        if(!user.isStatus()) throw new AppException(ErrorCode.ACCOUNT_BANNED);
+        user.setStatus(false);
+        userRepository.save(user);
+    }
+
+    public void unbanUser(String userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        if(user.isStatus()) throw new AppException(ErrorCode.ACCOUNT_NOT_BANNED);
+        user.setStatus(true);
+        userRepository.save(user);
+    }
 
 }
