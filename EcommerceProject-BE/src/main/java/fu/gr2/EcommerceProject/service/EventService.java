@@ -62,4 +62,8 @@ public class EventService {
         event.setEndDate(request.getEndDate());
         return eventRepository.save(event);
     }
+    public List<EventResponse> getEventByFlowerId(UUID flowerId) {
+        List<Event> events = eventRepository.findFlowerEventRelationShop_Flower_FlowerId(flowerId);
+        return events.stream().map(eventMapper::toEventResponse).collect(Collectors.toList());
+    }
 }
