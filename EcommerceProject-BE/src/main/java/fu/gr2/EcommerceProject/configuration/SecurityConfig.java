@@ -49,7 +49,8 @@ public class SecurityConfig {
             "/addFlowerToCart/{userId}/{flowerEventId}",
             "/GetShoppingCart/{userId}",
             "/SelectEvent/{eventId}",
-            "/updateCart/{userId}"
+            "/updateCart/{userId}",
+            "/order/shipcode/{userId}"
             };
 
     @Value("${jwt.signerKey}")
