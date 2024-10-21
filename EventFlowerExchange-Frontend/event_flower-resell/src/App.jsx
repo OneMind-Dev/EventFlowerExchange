@@ -21,6 +21,7 @@ import ShopProfile from "./pages/shopProfile/shopProfile";
 import CartPage from "./pages/cart/cart";
 import SellerManage from "./pages/userProfile/sellerManagement/sellerManage";
 import SellerRegister from "./pages/sellerRegister/sellerRegister";
+import Managers from "./pages/admin/adminManagers";
 const App = () => {
   const ProtectRouteAuth = ({ children }) => {
     const user = useSelector((store) => store.user);
@@ -118,6 +119,12 @@ const App = () => {
           <SellerManage />
         </ProtectRouteAuth1>
       ),
+    },
+    {
+      path: "manager",
+      element: (<ProtectRouteAuth1>
+        <Managers />
+      </ProtectRouteAuth1>)
     },
     {
       path: "events",

@@ -11,11 +11,12 @@ const AdminDashboard = () => {
 
   return (
     <>
+      <Header />
       <div className="admin-container">
         <h1 className="title">Dashboard</h1>
         <div className="dashboard-content">
           <div className="left-content">
-            <button onClick={() => navigate("/admin")} className="admin-button">
+            <button onClick={() => navigate("/manager")} className="admin-button">
               User List
             </button>
           </div>
@@ -24,6 +25,7 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 };
