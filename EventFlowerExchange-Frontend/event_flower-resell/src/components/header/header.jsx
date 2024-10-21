@@ -110,7 +110,13 @@ function Header() {
               <div className="header__user">
                 {!user.role.includes("SELLER") ? (
                   <>
-                    <p>Trở thành Người bán</p>
+                    <p
+                      onClick={() => {
+                        navigate("/sellerRegister");
+                      }}
+                    >
+                      Trở thành Người bán
+                    </p>
                     <button
                       onClick={() => {
                         navigate("/profile/userinfo");

@@ -17,16 +17,16 @@ import { FaCircleUser } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../redux/features/userSlice";
 import Header from "../../../components/header/header";
-import { useForm } from "antd/es/form/Form";
 import { toast } from "react-toastify";
 import { PlusOutlined } from "@ant-design/icons";
 import uploadFile from "../../../components/ultils/file";
 import api from "../../../components/config/axios";
+import { useNavigate } from "react-router-dom";
 
 function SellerManage() {
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [form] = Form.useForm();
-  const [students, setStudents] = useState([]);
+  const [events, setEvents] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -35,6 +35,8 @@ function SellerManage() {
 
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -55,7 +57,7 @@ function SellerManage() {
     const response = await api.get("/AllEvents");
 
     console.log(response.data);
-    setStudents(response.data);
+    setEvents(response.data);
   };
 
   useEffect(() => {
@@ -65,8 +67,8 @@ function SellerManage() {
   const columns = [
     {
       title: "ID",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "eventId",
+      key: "eventId",
     },
     {
       title: "Hình Ảnh",
@@ -93,6 +95,13 @@ function SellerManage() {
       render: (eventId) => {
         return (
           <>
+            <Button
+              onClick={() => {
+                navigate(`/events/${eventId}`);
+              }}
+            >
+              Chi tiết
+            </Button>
             <Popconfirm
               title="Xóa sự kiện"
               description="Bạn muốn xóa sự kiện này?"
@@ -116,34 +125,29 @@ function SellerManage() {
     setOpenModal(false);
   };
 
-  const handleSubmitEvent = async (student) => {
-    // xu ly lay thong tin student trong form
-    //post xuong API
-    // console.log(student);
-    student.userId = user.userId;
+  const handleSubmitEvent = async (event) => {
+    event.userId = user.userId;
 
     if (fileList.length > 0) {
       const file = fileList[0];
       console.log(file);
       const url = await uploadFile(file.originFileObj);
-      student.image = url;
+      event.image = url;
     }
 
-    if (student.startDate) {
-      student.startDate = student.startDate.toISOString();
+    if (event.startDate) {
+      event.startDate = event.startDate.toISOString();
     }
-    if (student.endDate) {
-      student.endDate = student.endDate.toISOString();
+    if (event.endDate) {
+      event.endDate = event.endDate.toISOString();
     }
 
-    //day data xuong cho BE
     try {
       setSubmitting(true); //bat dau load
-      const response = await api.post("/CreateEvent", student);
-      // => thanh cong
+      const response = await api.post("/CreateEvent", event);
+      console.log(response.data);
       toast.success("Tạo sự kiện thành công!");
       setOpenModal(false);
-      //clear du lieu cu
       form.resetFields();
       fetchEvent();
     } catch (err) {
@@ -155,11 +159,13 @@ function SellerManage() {
 
   const handleDeleteEvent = async (eventId) => {
     try {
-      const response = await api.delete(`DeleteEvent/${eventId}`);
-      toast.success("Xóa thành công");
+      const response = await api.delete(`deactive/${eventId}`);
+      console.log(response.data);
+      toast.success("Xóa sự kiện thành công");
       fetchEvent();
-    } catch (ex) {
-      toast.error("Failed to delete student");
+    } catch (err) {
+      console.log(err);
+      toast.error("Xóa sự kiện thất bại");
     }
   };
 
@@ -205,9 +211,9 @@ function SellerManage() {
         <div className="background">
           <div className="user_container">
             <div className="user_infor">
-              {avatarUrl ? (
+              {user.avatar ? (
                 <img
-                  src={avatarUrl}
+                  src={user.avatar}
                   alt="User Avatar"
                   className="user_avatar"
                 />
@@ -242,7 +248,7 @@ function SellerManage() {
           <div className="infor_container">
             <h1>Quản Lý Sự Kiện</h1>
             <Button onClick={handleOpenModal}>Tạo Sự Kiện Mới</Button>
-            <Table columns={columns} dataSource={students} />
+            <Table columns={columns} dataSource={events} />
             {/* {neu true => modal hien, false => an} */}
             <Modal
               confirmLoading={submitting}
@@ -262,7 +268,10 @@ function SellerManage() {
                     },
                   ]}
                 >
-                  <Input placeholder="Tên sự kiện" />
+                  <Input
+                    className="infor_container-input"
+                    placeholder="Tên sự kiện"
+                  />
                 </Form.Item>
 
                 <Form.Item
@@ -308,7 +317,10 @@ function SellerManage() {
                     },
                   ]}
                 >
-                  <Input placeholder="Mô tả" />
+                  <Input
+                    className="infor_container-input"
+                    placeholder="Mô tả"
+                  />
                 </Form.Item>
 
                 <Form.Item
@@ -318,6 +330,7 @@ function SellerManage() {
                   ]}
                 >
                   <DatePicker
+                    className="infor_container-input"
                     showTime={{ format: "HH:mm" }}
                     format="YYYY-MM-DD HH:mm"
                     placeholder="Thời gian bắt đầu"
@@ -331,6 +344,7 @@ function SellerManage() {
                   ]}
                 >
                   <DatePicker
+                    className="infor_container-input"
                     showTime={{ format: "HH:mm" }}
                     format="YYYY-MM-DD HH:mm"
                     placeholder="Thời gian kết thúc"
