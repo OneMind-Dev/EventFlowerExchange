@@ -23,6 +23,12 @@
     color: #CC7A7A;
 }
 
+.authen-template__form h2 {
+    font-size: 30px;
+    margin-bottom: 20px;
+    color: #CC7A7A;
+}
+
 .authen-template__form .input-box input {
     height: 50px;
     border: none;
