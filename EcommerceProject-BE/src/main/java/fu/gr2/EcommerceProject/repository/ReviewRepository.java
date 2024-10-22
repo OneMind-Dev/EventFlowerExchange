@@ -12,5 +12,5 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     // Use 'findByEvent' to refer to the Event object directly
     List<Review> findByEvent(Event event); // This method should match the entity definition
 
-    List<Review> findByUser(User user);
+    List<Review> findByUser(User userId);
 }

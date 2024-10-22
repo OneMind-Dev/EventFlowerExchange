@@ -14,8 +14,24 @@ spring:
       ddl-auto: update
       dialect: org.hibernate.dialect.MySQLDialect  # or MySQL8Dialect if using MySQL 8.x
     show-sql: true
+  security:
+    oauth2:
+          client:
+            registration:
+              google:
+                client-id: 394824863031-2e4dcm18unjeo0vom3nf2ir35300qsfq.apps.googleusercontent.com
+                client-secret: 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
+                scope: openid, profile, email
+                redirect-uri: "http://localhost:8080/login/oauth2/code/google"
+            provider:
+              google:
+                authorization-uri: https://accounts.google.com/o/oauth2/auth
+                token-uri: https://oauth2.googleapis.com/token
+                user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
 
 jwt:
   signerKey: "1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
   valid-duration: 3600 # in seconds
   refreshable-duration: 36000 # in seconds
+
+

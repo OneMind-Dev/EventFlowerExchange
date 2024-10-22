@@ -70,8 +70,8 @@ import java.util.List;
                 .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_EXISTED));
     }
 
-    public List<Review> getReviewsByUserId(User user) {
+    public List<Review> getReviewsByUserId(User userId) {
         // Fetch reviews by the User object
-        return reviewRepository.findByUser(user);
+        return reviewRepository.findByUser(userId);
     }
 }

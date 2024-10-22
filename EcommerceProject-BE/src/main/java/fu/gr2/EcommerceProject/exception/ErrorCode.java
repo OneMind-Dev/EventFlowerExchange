@@ -22,7 +22,9 @@ public enum ErrorCode {
     FORM_NOT_EXISTED(1010,"form not existed"),
     EVENT_NOT_EXISTED(1011,"Event not existed"),
     FLOWER_NOT_EXISTED(1012,"Flower not existed" ),
-    REVIEW_NOT_EXISTED(1013,"Review not existed"),;
+    REVIEW_NOT_EXISTED(1013,"Review not existed"),
+    Retrieve_user_infoFail(1014,"Retrieve user info failed"),
+    ;
     int code;
     String message;
 }

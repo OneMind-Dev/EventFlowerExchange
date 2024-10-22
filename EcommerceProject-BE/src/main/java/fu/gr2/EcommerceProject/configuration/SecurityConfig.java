@@ -66,23 +66,29 @@ public class SecurityConfig {
 
     //config truy cap duong dan cua cac role
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()  // Không yêu cầu JWT
+                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.PUT, PUBLIC_ENDPOINTS).permitAll()  // Không yêu cầu JWT
+                        .requestMatchers(HttpMethod.PUT, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, "/users").hasAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE).hasAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/admin/AdminRegister").hasAuthority("SCOPE_ADMIN")
-                        .anyRequest().authenticated()  // Yêu cầu JWT với các request khác
+                        .anyRequest().authenticated()
                 )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder)))
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login") // Custom login page if needed
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder))
+                )
                 .csrf(AbstractHttpConfigurer::disable);
 
-        return httpSecurity.build();
+        return http.build();
     }
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -109,4 +115,30 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(10);
     }
+
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+////        http
+////                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+////                .authorizeHttpRequests(auth -> auth
+////                        .requestMatchers("/login", "/oauth2/**").permitAll()
+////                        .anyRequest().authenticated()
+////                )
+////                .oauth2Login(oauth2 -> oauth2
+////                        .loginPage("/login") // Custom login page if needed
+////                )
+////                .csrf(csrf -> csrf.disable());
+////
+////        return http.build();
+//        return http
+//                .authorizeHttpRequests(registry -> {
+//                    registry.requestMatchers("/").permitAll()
+//                            .anyRequest().authenticated();
+//                })
+//                .oauth2Login(Customizer.withDefaults())
+//                .formLogin(Customizer.withDefaults())
+//                .build();
+//    }
+
+
 }
