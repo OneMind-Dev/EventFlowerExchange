@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
@@ -18,6 +20,11 @@ public class OrderController {
     @PostMapping("/shipcode/{userId}")
     ApiResponse<OrderResponse> orderCreate(@PathVariable String userId, @RequestBody OrderRequest request){
         return orderService.createOrder(userId,request);
+    }
+
+    @GetMapping("/{userId}")
+    ApiResponse<List<OrderResponse>> getOrder(@PathVariable String userId){
+        return orderService.getOrder(userId);
     }
 
 }

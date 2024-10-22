@@ -81,4 +81,29 @@ public class OrderService {
                 .result(orderResponse)
                 .build();
     }
+
+    public ApiResponse<List<OrderResponse>> getOrder(String userId){
+        List<Order> orders = orderRepository.findByUser_userId(userId);
+        if(orders==null){
+            throw new AppException(ErrorCode.NO_ORDER);
+        }
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        for(Order order: orders){
+            OrderResponse orderResponse = OrderResponse.builder()
+                    .orderId(order.getOrderId())
+                    .method(order.getMethod())
+                    .orderDate(order.getOrderDate())
+                    .orderStatus(order.getOrderStatus())
+                    .totalPrice(order.getTotalPrice())
+                    .address(order.getAddress())
+                    .name(order.getName())
+                    .phone(order.getPhone())
+                    .build();
+            orderResponses.add(orderResponse);
+        }
+        return ApiResponse.<List<OrderResponse>>builder()
+                .result(orderResponses)
+                .build();
+    }
+
 }

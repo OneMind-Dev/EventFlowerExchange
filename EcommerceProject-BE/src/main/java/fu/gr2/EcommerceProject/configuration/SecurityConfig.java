@@ -50,7 +50,8 @@ public class SecurityConfig {
             "/GetShoppingCart/{userId}",
             "/SelectEvent/{eventId}",
             "/updateCart/{userId}",
-            "/order/shipcode/{userId}"
+            "/order/shipcode/{userId}",
+            "/order/{userId}"
             };
 
     @Value("${jwt.signerKey}")
