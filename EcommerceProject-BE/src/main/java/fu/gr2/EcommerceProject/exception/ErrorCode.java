@@ -26,7 +26,8 @@ public enum ErrorCode {
     ITEM_NOT_FOUND(1014,"Item from cart not found"),
     ACCOUNT_BANNED(1015,"account has been banned"),
     ACCOUNT_NOT_BANNED(1016,"account has not been banned"),
-    EMPTY_CART(1017,"không có sản phẩm trong giỏ hàng")
+    EMPTY_CART(1017,"không có sản phẩm trong giỏ hàng"),
+    NO_INFO(1017,"không có đủ thông tin cần thiết")
     ;
     int code;
     String message;

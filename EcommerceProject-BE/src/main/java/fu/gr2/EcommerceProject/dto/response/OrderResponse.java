@@ -24,4 +24,7 @@ public class OrderResponse {
     LocalDateTime orderDate;
 
     String orderStatus;
+    String phone;
+    String name;
+    String address;
 }

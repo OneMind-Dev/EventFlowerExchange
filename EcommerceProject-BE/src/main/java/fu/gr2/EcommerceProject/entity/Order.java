@@ -27,6 +27,10 @@ public class Order {
     @JoinColumn(name = "user_id")
     User user;
 
+    String phone;
+    String name;
+    String address;
+
     private BigDecimal totalPrice;
 
     private LocalDateTime orderDate;
