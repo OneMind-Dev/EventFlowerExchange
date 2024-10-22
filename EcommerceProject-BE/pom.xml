@@ -47,11 +47,12 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<!-- Spring Boot Starter for Web -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<groupId>io.github.cdimascio</groupId>
+			<artifactId>dotenv-java</artifactId>
+			<version>2.2.0</version> <!-- Check for the latest version -->
 		</dependency>
+
 
 		<!-- Spring Boot Starter for OAuth2 Client -->
 		<dependency>
