@@ -1,29 +1,19 @@
 import React from "react";
 import "./header.css";
 import { Input } from "antd";
-import {
-  SearchOutlined,
-  ShoppingCartOutlined,
-  BellOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined, ShoppingCartOutlined, BellOutlined } from "@ant-design/icons";
 import { DownOutlined } from "@ant-design/icons";
 import { Dropdown, Space } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
+import { FaCircleUser } from "react-icons/fa6";
 function Header() {
   const navigate = useNavigate();
-
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
-
   const events = [
     {
-      label: (
-        <a className="hihi" href="#">
-          ĐÁM CƯỚI
-        </a>
-      ),
+      label: <a className="hihi" href="#">ĐÁM CƯỚI</a>,
       key: "1",
     },
     {
@@ -39,7 +29,6 @@ function Header() {
       key: "4",
     },
   ];
-
   const flowers = [
     {
       label: <a href="#">HOA ĐÁM CƯỚI</a>,
@@ -58,7 +47,6 @@ function Header() {
       key: "4",
     },
   ];
-
   return (
     <>
       <header className="header">
@@ -71,7 +59,6 @@ function Header() {
               onClick={() => navigate("/")}
             />
           </div>
-
           <div className="header___container-search">
             <Input
               className="search"
@@ -86,7 +73,6 @@ function Header() {
             />
             <BellOutlined className="header___container-search--noti" />
           </div>
-
           <div>
             {user == null ? (
               <div className="header__login-register">
@@ -111,28 +97,27 @@ function Header() {
                 {!user.role.includes("SELLER") ? (
                   <>
                     <p>Trở thành Người bán</p>
-                    <button
+                    <FaCircleUser
                       onClick={() => {
                         navigate("/profile/userinfo");
                       }}
-                    >
-                      UserProfile
-                    </button>
+                      className="header__user-icon" // Optional class for styling
+                      size={30} // You can adjust the size
+                    />
                   </>
                 ) : (
-                  <button
+                  <FaCircleUser
                     onClick={() => {
                       navigate("/profile/userinfo");
                     }}
-                  >
-                    UserProfile
-                  </button>
+                    className="header__user-icon" // Optional class for styling
+                    size={30} // Adjust the size as per design
+                  />
                 )}
               </div>
             )}
           </div>
         </div>
-
         <div className="header__navbar">
           <p
             onClick={() => {
@@ -142,7 +127,6 @@ function Header() {
           >
             TRANG CHỦ
           </p>
-
           <div className="header__navbar-events">
             <Dropdown
               menu={{
@@ -157,7 +141,6 @@ function Header() {
               </a>
             </Dropdown>
           </div>
-
           <div className="header__navbar-flowers">
             <Dropdown
               menu={{
@@ -172,9 +155,7 @@ function Header() {
               </a>
             </Dropdown>
           </div>
-
           <p className="header__navbar-us">VỀ CHÚNG TÔI</p>
-
           <p className="header__navbar-feedback">GÓP Ý</p>
         </div>
       </header>
