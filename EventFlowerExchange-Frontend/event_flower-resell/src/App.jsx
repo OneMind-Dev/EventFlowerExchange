@@ -105,7 +105,7 @@ const App = () => {
       path: "managers",
       element: (
         <ProtectRouteAuth>
-          <AdminManagers />
+          <Managers />
         </ProtectRouteAuth>
       ),
     },
