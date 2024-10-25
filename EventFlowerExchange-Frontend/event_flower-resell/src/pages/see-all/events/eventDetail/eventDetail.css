@@ -83,3 +83,26 @@
     border: 2px solid #f4f4f4;
     margin: 20px 0;
 }
+
+.wrapper__event--detail {
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-new-flower-btn {
+    border: none;
+    border-radius: 10px;
+    width: 110px;
+    height: 40px;
+    font-size: 14px;
+    margin-right: 10px;
+    background: #F4DDDD;
+    color: #CC7A7A;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.add-new-flower-btn:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}

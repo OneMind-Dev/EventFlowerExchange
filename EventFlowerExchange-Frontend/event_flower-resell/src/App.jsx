@@ -21,6 +21,7 @@ import ShopProfile from "./pages/shopProfile/shopProfile";
 import CartPage from "./pages/cart/cart";
 import SellerManage from "./pages/userProfile/sellerManagement/sellerManage";
 import SellerRegister from "./pages/sellerRegister/sellerRegister";
+import AddFlowerToEvent from "./pages/addFlowerToEvent/addFlowerToEvent";
 import Managers from "./pages/admin/adminManagers";
 const App = () => {
   const ProtectRouteAuth = ({ children }) => {
@@ -101,6 +102,14 @@ const App = () => {
       ),
     },
     {
+      path: "managers",
+      element: (
+        <ProtectRouteAuth>
+          <AdminManagers />
+        </ProtectRouteAuth>
+      ),
+    },
+    {
       path: "profile/userinfo",
       element: (
         <ProtectRouteAuth1>
@@ -131,7 +140,7 @@ const App = () => {
       element: <Events />,
     },
     {
-      path: "events/:id",
+      path: "events/:eventId",
       element: <EventDetail />,
     },
     {
@@ -141,6 +150,10 @@ const App = () => {
     {
       path: "flowers/:id",
       element: <FlowerDetail />,
+    },
+    {
+      path: "addFlowerToEvent/:id",
+      element: <AddFlowerToEvent />,
     },
     {
       path: "/:id",

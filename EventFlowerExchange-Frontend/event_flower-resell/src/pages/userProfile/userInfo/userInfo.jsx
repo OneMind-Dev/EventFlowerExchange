@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Header from "../../../components/header/header";
 import Footer from "../../../components/footer/footer";
 import "./userInfo.css";
@@ -21,6 +21,8 @@ function UserInfo() {
 
   const navigate = useNavigate();
 
+  console.log(user.address);
+
   // const handleLogout = () => {
   //   dispatch(logoutUser());
   // };
@@ -36,10 +38,10 @@ function UserInfo() {
 
       const response = await api.put(`/users/${userId}`, updatedField);
 
-      console.log("Cập nhật thành công:", response.data);
+      console.log(response.data);
       dispatch(login(response.data));
       setEditingField(null);
-      toast.success("Cập nhật thông tin thành công!");
+      toast.success("Cập nhật thông tin thành công");
     } catch (error) {
       console.error(error);
       toast.error("Cập nhật thông tin thất bại");
@@ -47,7 +49,7 @@ function UserInfo() {
   };
 
   const handleCancel = () => {
-    setEditingField(null); // Cancel editing
+    setEditingField(null);
   };
 
   const handleImageChange = (event) => {
@@ -146,7 +148,7 @@ function UserInfo() {
                   <>
                     <Button
                       type="primary"
-                      onClick={() => handleSave(user.user_id, "username")}
+                      onClick={() => handleSave(user.userId, "username")}
                     >
                       Lưu
                     </Button>
@@ -184,7 +186,7 @@ function UserInfo() {
                   <>
                     <Button
                       type="primary"
-                      onClick={() => handleSave(user.user_id, "phone")}
+                      onClick={() => handleSave(user.userId, "phone")}
                     >
                       Lưu
                     </Button>
@@ -218,7 +220,7 @@ function UserInfo() {
                   <>
                     <Button
                       type="primary"
-                      onClick={() => handleSave(user.user_id, "email")}
+                      onClick={() => handleSave(user.userId, "email")}
                     >
                       Lưu
                     </Button>
@@ -252,7 +254,7 @@ function UserInfo() {
                   <>
                     <Button
                       type="primary"
-                      onClick={() => handleSave(user.user_id, "address")}
+                      onClick={() => handleSave(user.userId, "address")}
                     >
                       Lưu
                     </Button>

@@ -19,8 +19,6 @@ const FlowerDetail = () => {
   let eventDetail = null;
   let userDetail = null;
 
-  // Tìm hoa, sự kiện chứa hoa đó và user sở hữu hoa đó
-
   EventData.forEach((event) => {
     const flower = event.flowers.find((f) => f.flower_id === parseInt(id));
     if (flower) {

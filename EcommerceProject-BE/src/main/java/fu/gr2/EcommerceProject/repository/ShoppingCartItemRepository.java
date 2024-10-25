@@ -12,5 +12,5 @@ import java.util.List;
 public interface ShoppingCartItemRepository extends JpaRepository<ShoppingCartItem,Integer>{
     ShoppingCartItem findByShoppingCartAndFlowerEventRelationship(ShoppingCart shoppingCart, FlowerEventRelationship flowerEventRelationship);
     List<ShoppingCartItem> findByShoppingCart(ShoppingCart shoppingCart);
-
+    void deleteByShoppingCart(ShoppingCart shoppingCart);
 }
