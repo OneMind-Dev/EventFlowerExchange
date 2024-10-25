@@ -1,3 +1,9 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 .footer {
     background-color: #F4DDDD; /* Footer background color */
     height: 60px; /* Height of the footer */
