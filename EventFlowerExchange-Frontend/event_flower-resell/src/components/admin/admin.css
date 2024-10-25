@@ -11,7 +11,7 @@
     font-size: 24px;
 }
 
-.admin-button {
+.user-button {
     margin: 20px;
     padding: 10px 20px;
     background-color: #0088FE;
@@ -22,7 +22,22 @@
     transition: background-color 0.3s ease;
 }
 
-.admin-button:hover {
+.user-button:hover {
+    background-color: #005bb5;
+}
+
+.seller-button {
+    margin: 20px;
+    padding: 10px 20px;
+    background-color: #0088FE;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.seller-button:hover {
     background-color: #005bb5;
 }
 
@@ -33,25 +48,24 @@
     flex-direction: column;
     text-align: center;
 }
-
 .dashboard-content {
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 20px;
+    justify-content: space-between; /* Space between left and right sections */
+    flex-wrap: nowrap; /* Prevent wrapping to keep them in a single line */
+    gap: 20px; /* Add gap between left and right content */
     margin-top: 20px;
 }
 
-.left-content,
-.right-content {
-    flex: 1;
-    min-width: 250px;
+/* You may want to ensure both left and right contents have equal heights */
+.left-content, .right-content {
+    flex: 1; /* Allow both to grow equally */
+    min-width: 250px; /* Set minimum width to maintain design */
+    max-width: 400px; /* Optional: Limit maximum width */
 }
 
-.right-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* Center the buttons within the left-content section */
+.left-content {
+    display: flex;              /* Keep it flex for alignment */
+    flex-direction: column;     /* Stack items vertically */
+    align-items: center;        /* Center items horizontally */
 }
-
-
