@@ -3,6 +3,7 @@ import { Input, Button, Space, Table, Tag, message, Spin } from "antd";
 import Header from "../../components/header/header";
 import Footer from "../../components/footer/footer";
 import api from "../../components/config/axios";
+import { CiSearch } from "react-icons/ci";
 import "../../components/admin/admin.css";
 
 function AdminManagers() {
@@ -128,7 +129,7 @@ function AdminManagers() {
             <div>
                 <Header />
                 <div className="admin-container">
-                    <p>There was an error loading the users.</p>
+                    <p>Đã có lỗi xảy ra khi tải danh sách người dùng.</p>
                 </div>
                 <Footer />
             </div>
@@ -139,17 +140,17 @@ function AdminManagers() {
         <div>
             <Header />
             <div className="admin-container">
-                <h1 className="title">Users List</h1>
+                <h1 className="title">Danh sách người dùng</h1>
                 {/* Search Bar */}
                 <div className="search-container">
                     <Input
                         placeholder="Search by username or email"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        style={{ width: 200, marginRight: 10 }}
+                        style={{ width: 220, marginRight: 10 }}
                     />
                     <Button type="primary" onClick={handleSearch}>
-                        Search
+                        Tìm kiếm
                     </Button>
                 </div>
                 {/* Users Table */}

@@ -94,6 +94,12 @@ function UserInfo() {
             </div>
             <div className="user_interact">
               <h3 className="privateInfor">Hồ sơ cá nhân</h3>
+              {user.role?.includes("ADMIN") && (
+                <>
+                  <p onClick={() => navigate("/dashboard")}>Bảng thống kê</p>
+                  <p onClick={() => navigate("/manager")}>Danh sách người dùng</p>
+                </>
+              )}
               <p>Thay đổi mật khẩu</p>
               <p>Đơn hàng</p>
               {user.role && user.role.includes("SELLER") && (

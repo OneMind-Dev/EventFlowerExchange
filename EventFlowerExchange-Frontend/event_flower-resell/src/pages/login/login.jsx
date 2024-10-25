@@ -24,7 +24,7 @@ const Login = () => {
 
       if (role.includes("ADMIN")) {
         console.log("Include");
-        navigate("/dashboard");
+        navigate("/");
       } else {
         navigate("/");
       }
