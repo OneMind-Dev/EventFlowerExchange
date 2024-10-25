@@ -49,7 +49,7 @@ function Dashboard() {
   return (
     <div className="dashboard-container">
       <h2 className="title">Thống Kê Người Đăng Ký</h2>
-      <PieChart width={400} height={400}>
+      <PieChart width={650} height={400}>
         <Pie
           data={data}
           cx="50%"
