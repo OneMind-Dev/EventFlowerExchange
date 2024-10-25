@@ -95,6 +95,7 @@ function UserInfo() {
                 <>
                   <p onClick={() => navigate("/dashboard")}>Bảng thống kê</p>
                   <p onClick={() => navigate("/manager")}>Danh sách người dùng</p>
+                  <p onClick={() => navigate("/approve")}>Danh sách đăng ký seller</p>
                 </>
               )}
               <p>Thay đổi mật khẩu</p>

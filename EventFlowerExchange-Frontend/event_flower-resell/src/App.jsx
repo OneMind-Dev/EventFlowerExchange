@@ -23,6 +23,7 @@ import SellerManage from "./pages/userProfile/sellerManagement/sellerManage";
 import SellerRegister from "./pages/sellerRegister/sellerRegister";
 import AddFlowerToEvent from "./pages/addFlowerToEvent/addFlowerToEvent";
 import Managers from "./pages/admin/adminManagers";
+import Approve from "./pages/admin/adminApprove";
 const App = () => {
   const ProtectRouteAuth = ({ children }) => {
     const user = useSelector((store) => store.user);
@@ -106,6 +107,14 @@ const App = () => {
       element: (
         <ProtectRouteAuth>
           <Managers />
+        </ProtectRouteAuth>
+      ),
+    },
+    {
+      path: "approve",
+      element: (
+        <ProtectRouteAuth>
+          <Approve />
         </ProtectRouteAuth>
       ),
     },

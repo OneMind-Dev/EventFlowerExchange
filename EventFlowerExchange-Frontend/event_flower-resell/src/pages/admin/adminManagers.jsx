@@ -3,7 +3,6 @@ import { Input, Button, Space, Table, Tag, message, Spin } from "antd";
 import Header from "../../components/header/header";
 import Footer from "../../components/footer/footer";
 import api from "../../components/config/axios";
-import { CiSearch } from "react-icons/ci";
 import "../../components/admin/admin.css";
 
 function AdminManagers() {
@@ -78,12 +77,20 @@ function AdminManagers() {
     };
 
     const columns = [
-        { title: "Username", dataIndex: "username", key: "username" },
+        { title: "Tài khoản", dataIndex: "username", key: "username" },
         { title: "Email", dataIndex: "email", key: "email" },
-        { title: "Address", dataIndex: "address", key: "address" },
-        { title: "Role", dataIndex: "role", key: "role" }, // Role column added here
+        { title: "Địa chỉ", dataIndex: "address", key: "address" },
         {
-            title: "Status",
+            title: "Vai trò",
+            dataIndex: "role",
+            key: "role",
+            render: (role) => {
+                const sellerRole = role.includes("SELLER") ? "SELLER" : role;
+                return sellerRole;
+            },
+        },
+        {
+            title: "Trạng thái",
             key: "status",
             dataIndex: "status",
             render: (_, { status }) => {
@@ -93,13 +100,11 @@ function AdminManagers() {
             },
         },
         {
-            title: "Action",
+            title: "Hành động",
             key: "action",
             render: (_, record) => (
                 <Space size="middle">
-                    <a
-                        onClick={() => toggleBanStatus(record.userId, record.status)}
-                    >
+                    <a onClick={() => toggleBanStatus(record.userId, record.status)}>
                         {record.status === true ? "Ban" : "Unban"}
                     </a>
                 </Space>
