@@ -53,19 +53,14 @@ function AdminManagers() {
     const toggleBanStatus = async (userId, status) => {
         try {
             const token = localStorage.getItem("token");
-            // If the user is inactive (banned), call the unban API, otherwise call the ban API
             const action = status ? "ban" : "unban";
             const apiUrl = `http://localhost:8080/swp391/users/${action}/${userId}`;
-
             await api.post(apiUrl, null, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
-
             message.success(`${status ? "Banned" : "Unbanned"} user successfully!`);
-
-            // Update the local state to reflect the status change
             setData((prevData) =>
                 prevData.map((user) =>
                     user.userId === userId ? { ...user, status: !status } : user
@@ -82,11 +77,11 @@ function AdminManagers() {
         }
     };
 
-
     const columns = [
         { title: "Username", dataIndex: "username", key: "username" },
         { title: "Email", dataIndex: "email", key: "email" },
         { title: "Address", dataIndex: "address", key: "address" },
+        { title: "Role", dataIndex: "role", key: "role" }, // Role column added here
         {
             title: "Status",
             key: "status",
