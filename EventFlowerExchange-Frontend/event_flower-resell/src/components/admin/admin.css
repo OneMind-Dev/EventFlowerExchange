@@ -60,7 +60,7 @@
 .left-content, .right-content {
     flex: 1; /* Allow both to grow equally */
     min-width: 250px; /* Set minimum width to maintain design */
-    max-width: 400px; /* Optional: Limit maximum width */
+    max-width: 200; /* Optional: Limit maximum width */
 }
 
 /* Center the buttons within the left-content section */
