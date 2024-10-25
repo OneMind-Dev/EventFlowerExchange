@@ -77,6 +77,11 @@ public class UserService {
 
         userMapper.updateUser(user,request);
 
+        String password = request.getPassword();
+        if(password!=null){
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+
         user.setStatus(true);
         return userMapper.toUserResponse(userRepository.save(user));
     }

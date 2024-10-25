@@ -27,4 +27,8 @@ public class OrderController {
         return orderService.getOrder(userId);
     }
 
+//    @GetMapping("/seller/{userId}")
+//    ApiResponse<List<OrderResponse>> sellerGetOrder(@PathVariable String userId){
+//
+//    }
 }

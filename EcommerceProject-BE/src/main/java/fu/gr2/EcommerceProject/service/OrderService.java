@@ -28,6 +28,7 @@ public class OrderService {
     OrderDetailRepository orderDetailRepository;
     OrderRepository orderRepository;
     UserRepository userRepository;
+    EventRepository eventRepository;
 
     @Transactional
     public ApiResponse<OrderResponse> createOrder(String userId, OrderRequest request){
@@ -105,5 +106,10 @@ public class OrderService {
                 .result(orderResponses)
                 .build();
     }
+
+//    public ApiResponse<List<OrderResponse>> sellerGetOrder(String userId){
+//        List<Event> events = eventRepository.findByUser_userId(userId);
+//
+//    }
 
 }
