@@ -53,6 +53,10 @@
     margin-bottom: 30px; 
 }
 
+.bold {
+    font-weight: bold;
+  }
+
 .privateInfor {
     color: #CC7A7A;
     cursor: pointer;
@@ -128,4 +132,36 @@
 .edit-button {
     background-color: #F4DDDD;
     color: #CC7A7A;
+}
+
+/* Password input fields styling */
+.password-field-container .form-item {
+    display: flex;
+    align-items: center;
+    justify-content: start; /* Align the label and input fields */
+    margin: 15px 0;
+}
+
+.password-field-container label {
+    width: 150px;
+    margin-left: 2%;
+    color: #CC7A7A;
+}
+
+.password-field-container .ant-form-item {
+    flex: 1;
+}
+
+.password-field-container .ant-input-password {
+    width: 50%; /* Adjust width as needed */
+    padding: 8px; /* Adjust padding for better look */
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    transition: border-color 0.3s;
+}
+
+.password-field-container .ant-input-password:hover, 
+.password-field-container .ant-input-password:focus {
+    border-color: #CC7A7A; /* Change border color on hover or focus */
+    box-shadow: 0 0 5px rgba(204, 122, 122, 0.3); /* Optional: subtle shadow effect */
 }

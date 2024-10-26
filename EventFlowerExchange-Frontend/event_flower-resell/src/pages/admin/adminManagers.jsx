@@ -53,8 +53,8 @@ function AdminManagers() {
         try {
             const token = localStorage.getItem("token");
             const action = status ? "ban" : "unban";
-            const apiUrl = `http://localhost:8080/swp391/users/${action}/${userId}`;
-            await api.post(apiUrl, null, {
+            console.log(userId);
+            await api.post(`/users/${action}/${userId}`, null, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

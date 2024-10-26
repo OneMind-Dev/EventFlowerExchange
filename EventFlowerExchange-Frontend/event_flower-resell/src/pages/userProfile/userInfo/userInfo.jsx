@@ -15,6 +15,7 @@ function UserInfo() {
   const [editingField, setEditingField] = useState(null);
   const [form] = Form.useForm();
   const user = useSelector((store) => store.user);
+  const [activeSection, setActiveSection] = useState("profile");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -25,12 +26,27 @@ function UserInfo() {
   const handleSave = async (userId, field) => {
     try {
       const values = await form.validateFields([field]);
+
+      // Kiểm tra mật khẩu mới khác với mật khẩu cũ nếu đang cập nhật mật khẩu
+      if (field === 'password') {
+        if (values.newPassword === user.password) {
+          console.log(user.password);
+          toast.error("Mật khẩu mới không được trùng với mật khẩu cũ!");
+          return;
+        }
+        if (values.newPassword !== values.confirmPassword) {
+          toast.error("Mật khẩu xác nhận không khớp với mật khẩu mới!");
+          return;
+        }
+      }
+
       const updatedField = { [field]: values[field] };
       const response = await api.put(`/users/${userId}`, updatedField);
       dispatch(login(response.data));
       setEditingField(null);
       toast.success("Cập nhật thông tin thành công");
     } catch (error) {
+      console.error(error.response?.data || error);
       console.error(error);
       toast.error("Cập nhật thông tin thất bại");
     }
@@ -38,6 +54,10 @@ function UserInfo() {
 
   const handleCancel = () => {
     setEditingField(null);
+  };
+
+  const togglePasswordChange = () => {
+    setIsPasswordChanging((prev) => !prev);
   };
 
   const handleImageChange = (event) => {
@@ -90,7 +110,12 @@ function UserInfo() {
               />
             </div>
             <div className="user_interact">
-              <h3 className="privateInfor">Hồ sơ cá nhân</h3>
+              <p
+                className={activeSection === "profile" ? "privateInfor bold" : "privateInfor"}
+                onClick={() => setActiveSection("profile")}
+              >
+                Hồ sơ cá nhân
+              </p>
               {user.role?.includes("ADMIN") && (
                 <>
                   <p onClick={() => navigate("/dashboard")}>Bảng thống kê</p>
@@ -98,7 +123,15 @@ function UserInfo() {
                   <p onClick={() => navigate("/approve")}>Danh sách đăng ký seller</p>
                 </>
               )}
-              <p>Thay đổi mật khẩu</p>
+              <p
+                className={activeSection === "password" ? "privateInfor bold" : "privateInfor"}
+                onClick={() => {
+                  setActiveSection("password");
+                  // Add logic for changing password if needed
+                }}
+              >
+                Thay đổi mật khẩu
+              </p>
               <p>Đơn hàng</p>
               {user.role && user.role.includes("SELLER") && (
                 <p onClick={() => navigate("/profile/sellermanage")}>
@@ -117,94 +150,132 @@ function UserInfo() {
           </div>
 
           <div className="infor_container">
-            <h1>Thông Tin Cá Nhân</h1>
+            <h1>{activeSection === "password" ? "Thay đổi mật khẩu" : "Thông Tin Cá Nhân"}</h1>
             <Form layout="vertical" form={form}>
-              {/* Username */}
-              <div className="form-item">
-                <label htmlFor="username">Tên tài khoản</label>
-                <p>{user.username}</p>
-              </div>
+              {activeSection === "password" ? (
+                // Password change fields
+                <div className="password-field-container">
+                  <div className="form-item">
+                    <label htmlFor="newPassword">Mật khẩu mới</label>
+                    <Form.Item
+                      name="newPassword"
+                      rules={[{ required: true, message: "Vui lòng nhập mật khẩu mới!" }]}
+                    >
+                      <Input.Password placeholder="Mật khẩu mới" />
+                    </Form.Item>
+                  </div>
 
-              {/* Phone */}
-              <div className="form-item">
-                <label htmlFor="phone">Số điện thoại</label>
-                {editingField === "phone" ? (
-                  <Form.Item
-                    name="phone"
-                    rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }]}
-                  >
-                    <Input placeholder="Số điện thoại" defaultValue={user.phone} />
-                  </Form.Item>
-                ) : (
-                  <p>{user.phone}</p>
-                )}
-                {editingField === "phone" ? (
-                  <>
-                    <Button type="primary" onClick={() => handleSave(user.userId, "phone")}>
-                      Lưu
-                    </Button>
-                    <Button onClick={handleCancel}>Hủy</Button>
-                  </>
-                ) : (
-                  <Button className="edit-button" onClick={() => handleEdit("phone")}>
-                    Thay đổi
-                  </Button>
-                )}
-              </div>
+                  <div className="form-item">
+                    <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
+                    <Form.Item
+                      name="confirmPassword"
+                      dependencies={['newPassword']}
+                      rules={[
+                        { required: true, message: "Vui lòng nhập lại mật khẩu mới!" },
+                        ({ getFieldValue }) => ({
+                          validator(_, value) {
+                            if (!value || getFieldValue('newPassword') === value) {
+                              return Promise.resolve();
+                            }
+                            return Promise.reject(new Error("Mật khẩu xác nhận không khớp với mật khẩu mới!"));
+                          },
+                        }),
+                      ]}
+                    >
+                      <Input.Password placeholder="Xác nhận mật khẩu mới" />
+                    </Form.Item>
+                  </div>
 
-              {/* Email */}
-              <div className="form-item">
-                <label htmlFor="email">Email</label>
-                {editingField === "email" ? (
-                  <Form.Item
-                    name="email"
-                    rules={[{ required: true, message: "Vui lòng nhập email!" }]}
-                  >
-                    <Input placeholder="Email" defaultValue={user.email} />
-                  </Form.Item>
-                ) : (
-                  <p>{user.email}</p>
-                )}
-                {editingField === "email" ? (
-                  <>
-                    <Button type="primary" onClick={() => handleSave(user.userId, "email")}>
-                      Lưu
+                  <Form.Item>
+                    <Button type="primary" onClick={() => handleSave(user.userId, "password")}>
+                      Thay đổi
                     </Button>
-                    <Button onClick={handleCancel}>Hủy</Button>
-                  </>
-                ) : (
-                  <Button className="edit-button" onClick={() => handleEdit("email")}>
-                    Thay đổi
-                  </Button>
-                )}
-              </div>
-
-              {/* Address */}
-              <div className="form-item">
-                <label htmlFor="address">Địa chỉ</label>
-                {editingField === "address" ? (
-                  <Form.Item
-                    name="address"
-                    rules={[{ required: true, message: "Vui lòng nhập địa chỉ!" }]}
-                  >
-                    <Input placeholder="Địa chỉ" defaultValue={user.address} />
                   </Form.Item>
-                ) : (
-                  <p>{user.address}</p>
-                )}
-                {editingField === "address" ? (
-                  <>
-                    <Button type="primary" onClick={() => handleSave(user.userId, "address")}>
-                      Lưu
-                    </Button>
-                    <Button onClick={handleCancel}>Hủy</Button>
-                  </>
-                ) : (
-                  <Button className="edit-button" onClick={() => handleEdit("address")}>
-                    Thay đổi
-                  </Button>
-                )}
-              </div>
+                </div>
+              ) : (
+                // User information fields
+                <>
+                  <div className="form-item">
+                    <label htmlFor="username">Tên tài khoản</label>
+                    <p>{user.username}</p>
+                  </div>
+                  <div className="form-item">
+                    <label htmlFor="phone">Số điện thoại</label>
+                    {editingField === "phone" ? (
+                      <Form.Item
+                        name="phone"
+                        rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }]}
+                      >
+                        <Input placeholder="Số điện thoại" defaultValue={user.phone} />
+                      </Form.Item>
+                    ) : (
+                      <p>{user.phone}</p>
+                    )}
+                    {editingField === "phone" ? (
+                      <>
+                        <Button type="primary" onClick={() => handleSave(user.userId, "phone")}>
+                          Lưu
+                        </Button>
+                        <Button onClick={handleCancel}>Hủy</Button>
+                      </>
+                    ) : (
+                      <Button className="edit-button" onClick={() => handleEdit("phone")}>
+                        Thay đổi
+                      </Button>
+                    )}
+                  </div>
+                  <div className="form-item">
+                    <label htmlFor="email">Email</label>
+                    {editingField === "email" ? (
+                      <Form.Item
+                        name="email"
+                        rules={[{ required: true, message: "Vui lòng nhập email!" }]}
+                      >
+                        <Input placeholder="Email" defaultValue={user.email} />
+                      </Form.Item>
+                    ) : (
+                      <p>{user.email}</p>
+                    )}
+                    {editingField === "email" ? (
+                      <>
+                        <Button type="primary" onClick={() => handleSave(user.userId, "email")}>
+                          Lưu
+                        </Button>
+                        <Button onClick={handleCancel}>Hủy</Button>
+                      </>
+                    ) : (
+                      <Button className="edit-button" onClick={() => handleEdit("email")}>
+                        Thay đổi
+                      </Button>
+                    )}
+                  </div>
+                  <div className="form-item">
+                    <label htmlFor="address">Địa chỉ</label>
+                    {editingField === "address" ? (
+                      <Form.Item
+                        name="address"
+                        rules={[{ required: true, message: "Vui lòng nhập địa chỉ!" }]}
+                      >
+                        <Input placeholder="Địa chỉ" defaultValue={user.address} />
+                      </Form.Item>
+                    ) : (
+                      <p>{user.address}</p>
+                    )}
+                    {editingField === "address" ? (
+                      <>
+                        <Button type="primary" onClick={() => handleSave(user.userId, "address")}>
+                          Lưu
+                        </Button>
+                        <Button onClick={handleCancel}>Hủy</Button>
+                      </>
+                    ) : (
+                      <Button className="edit-button" onClick={() => handleEdit("address")}>
+                        Thay đổi
+                      </Button>
+                    )}
+                  </div>
+                </>
+              )}
             </Form>
           </div>
         </div>
@@ -212,6 +283,6 @@ function UserInfo() {
       <Footer />
     </>
   );
-}
+};
 
 export default UserInfo;
