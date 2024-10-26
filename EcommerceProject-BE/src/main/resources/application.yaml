@@ -28,7 +28,7 @@ payment:
     url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
     tmnCode: "65ECNUA0"
     secretKey: "TLBTCNB3L17LF5LQLIZ8XT876R62EPC2"
-    returnUrl: "https://a390-125-235-238-223.ngrok-free.app"
+    returnUrl: "http://localhost:8080/swp391"
     version: "2.1.0"
     command: "pay"
     orderType: "other"
