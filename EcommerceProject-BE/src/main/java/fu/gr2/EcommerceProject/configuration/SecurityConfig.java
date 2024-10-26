@@ -30,7 +30,8 @@ public class SecurityConfig {
                                                 "/auth/logout",
                                                 "/auth/introspect   ",
                                                 "/AllEvents",
-                                                   "/api/flowers" };
+                                                   "/api/flowers"
+                                                    };
 
     @Value("${jwt.signerKey}")
     private String signerKey;

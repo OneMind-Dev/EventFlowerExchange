@@ -41,10 +41,6 @@ public class EventController {
     public ResponseEntity<EventResponse> updateEvent(@PathVariable UUID eventId, @RequestBody @Valid EventUpdateRequest request) {
         return ResponseEntity.ok(this.eventService.updateEvent(eventId, request));
     }
-    @GetMapping("/events/{flowerId}")
-    public List<EventResponse> getEventsByFlowerId(@PathVariable UUID flowerId) {
-        return eventService.getEventByFlowerId(flowerId);
-    }
 
 
 }

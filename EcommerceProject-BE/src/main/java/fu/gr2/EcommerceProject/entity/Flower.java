@@ -3,6 +3,7 @@ package fu.gr2.EcommerceProject.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -18,14 +19,16 @@ public class Flower {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "flower_id")
-     UUID flowerId;
+    UUID flowerId;
     @Column(name = "flower_name")
-     String flowerName;
+    String flowerName;
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
-     String origin;
-     String color;
+    String origin;
+    String color;
     @OneToMany(mappedBy = "flower", cascade = {CascadeType.ALL}, orphanRemoval = true)
-     List<FlowerEventRelationship> flowerEventRelationships;
+    List<FlowerEventRelationship> flowerEventRelationships;
+    @OneToOne(mappedBy = "flower") // This indicates the relationship is owned by OrderDetail
+    private OrderDetail orderDetail;
 }

@@ -12,5 +12,4 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     List<Event> findByCategoryIdAndEventNameContaining(UUID categoryId, String eventName);
     List<Event> findByCategoryId(UUID categoryId);
     List<Event> findByEventNameContaining(String eventName);
-    List<Event> findFlowerEventRelationShop_Flower_FlowerId(UUID flowerId);
 }
