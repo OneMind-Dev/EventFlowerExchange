@@ -6,14 +6,12 @@ import fu.gr2.EcommerceProject.dto.request.UserRegistrationRequest;
 import fu.gr2.EcommerceProject.dto.request.UserUpdateRequest;
 import fu.gr2.EcommerceProject.dto.response.RegistrationFormResponse;
 import fu.gr2.EcommerceProject.dto.response.UserResponse;
-import fu.gr2.EcommerceProject.entity.User;
 import fu.gr2.EcommerceProject.exception.UserNotFound;
 import fu.gr2.EcommerceProject.service.UserRegistrationService;
 import fu.gr2.EcommerceProject.service.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -75,5 +73,20 @@ public class UserController {
         } catch (UnsupportedOperationException e) {
             throw new RuntimeException("Operation is not supported.");
         }
+    }
+
+    @PostMapping("/ban/{userId}")
+    public ApiResponse<Void> banUser(@PathVariable String userId){
+        userService.banUser(userId);
+        return  ApiResponse.<Void>builder()
+                .message("Ban user thành công")
+                .build();
+    }
+    @PostMapping("/unban/{userId}")
+    public ApiResponse<Void> unbanUser(@PathVariable String userId){
+        userService.unbanUser(userId);
+        return  ApiResponse.<Void>builder()
+                .message("Unban user thành công")
+                .build();
     }
 }

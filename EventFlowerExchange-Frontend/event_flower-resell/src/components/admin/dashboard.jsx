@@ -1,15 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
-import "../admin/admin.css"; // Import file CSS
+import "../admin/admin.css"; // Import CSS file
+import api from "../../components/config/axios";
 
-const data = [
-  { name: "Đã Đăng Ký", value: 400 },
-  { name: "Khách Truy Cập", value: 600 },
-];
-
-const COLORS = ["#0088FE", "#00C49F"];
+const COLORS = ["#00C49F", "#FF7F50"];
 
 function Dashboard() {
+  const [data, setData] = useState([
+    { name: "Đã Đăng Ký", value: 0 },
+    { name: "Bị Ban", value: 0 },
+  ]);
+
+  // Fetch user data from the API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await api.get("/users", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        console.log("API Response Data:", response.data);
+
+        if (response.data) {
+          const registeredCount = response.data.result.filter(
+            (user) => user.status === true
+          ).length;
+          const bannedCount = response.data.result.filter(
+            (user) => user.status === false
+          ).length;
+
+          setData([
+            { name: "Đã Đăng Ký", value: registeredCount },
+            { name: "Bị Ban", value: bannedCount },
+          ]);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="dashboard-container">
       <h2 className="title">Thống Kê Người Đăng Ký</h2>

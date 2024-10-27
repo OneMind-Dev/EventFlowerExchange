@@ -26,7 +26,7 @@ public class FlowerEventRelationship {
     Event event;
 
     @ManyToOne
-    @JoinColumn(name = "flo_id", nullable = false)
+    @JoinColumn(name = "flower_id", nullable = false)
     Flower flower;
 
     @Column(name = "quantity")
@@ -35,7 +35,7 @@ public class FlowerEventRelationship {
     @Column(name = "description")
     String description;
 
-    @Column(name = "flo_price")
+    @Column(name = "flower_price")
     BigDecimal floPrice;
 
 

@@ -2,20 +2,21 @@
 import React from "react";
 import Header from "../../components/header/header";
 import Footer from "../../components/footer/footer";
-import Dashboard from "../../components/admin/dashboard"; // Đảm bảo đường dẫn đúng với chữ "D" viết hoa
-import { useNavigate } from "react-router-dom"; // Import hook useNavigate
-import "../../components/admin/admin.css"; // Import file CSS
+import Dashboard from "../../components/admin/dashboard"; // Ensure path is correct
+import { useNavigate } from "react-router-dom"; // Import navigate hook
+import "../../components/admin/admin.css"; // Import CSS file
 
 const AdminDashboard = () => {
-  const navigate = useNavigate(); // Khởi tạo hàm navigate
+  const navigate = useNavigate(); // Initialize navigate function
 
   return (
     <>
+      <Header />
       <div className="admin-container">
-        <h1 className="title">Dashboard</h1>
+        <h1 className="title">Bảng thống kê</h1>
         <div className="dashboard-content">
           <div className="left-content">
-            <button onClick={() => navigate("/admin")} className="admin-button">
+            <button onClick={() => navigate("/manager")} className="admin-button">
               User List
             </button>
           </div>
@@ -24,6 +25,7 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 };

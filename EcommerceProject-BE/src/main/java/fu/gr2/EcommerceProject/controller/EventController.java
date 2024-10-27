@@ -14,6 +14,7 @@ import fu.gr2.EcommerceProject.service.FlowerEventRelationshipService;
 import fu.gr2.EcommerceProject.service.ReviewService;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -38,11 +39,10 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class EventController {
     EventService eventService;
-
     Logger logger = LoggerFactory.getLogger(EventController.class);
     FlowerEventRelationshipService flowerEventRelationshipService;
     @Autowired
-    private ReviewService reviewService;
+    ReviewService reviewService;
 
     @GetMapping({"/AllEvents"})
     public ResponseEntity<List<EventResponse>> getAllEvents(@RequestParam(required = false) String categoryId, @RequestParam(required = false) String eventName) {
@@ -54,6 +54,7 @@ public class EventController {
 //    public ResponseEntity<EventResponse> updateEvent(@PathVariable UUID eventId, @RequestBody @Valid EventUpdateRequest request) {
 //        return ResponseEntity.ok(this.eventService.updateEvent(eventId, request));
 //    }
+
 
     @PutMapping("/UpdateEvent/{eventId}")
     public ResponseEntity<EventResponse> updateEvent(
@@ -84,31 +85,41 @@ public class EventController {
 
 
     @PostMapping("/AddFlowerToEvent")
-    public ApiResponse<FlowerEventResponse> addFlowerToEvent(@RequestBody FlowerEventRequest request) {
-        return flowerEventRelationshipService.addFlower(request);
+    public ApiResponse<FlowerEventResponse> addFlowerToEvent(@RequestBody FlowerEventRequest request){
+            return flowerEventRelationshipService.addFlower(request);
     }
 
     @GetMapping("/GetFlowerFromEvent/{eventId}")
-    public ApiResponse<List<FlowerEventResponse>> getFlower(@PathVariable int eventId) {
+    public ApiResponse<List<FlowerEventResponse>> getFlower(@PathVariable int eventId){
         return flowerEventRelationshipService.getFlower(eventId);
     }
 
-    @PostMapping("/{eventId}/Review")
-    public Review addComment(@PathVariable Integer eventId,
-                             @Valid @RequestBody CommentRequest commentRequest) {
-        return reviewService.addComment(eventId, commentRequest);
-    } //create
 
-    @PutMapping("/Review/{reviewId}")
-    public Review updateComment(@PathVariable Integer reviewId,
-                                @Valid @RequestBody CommentRequest commentRequest) {
-        return reviewService.updateComment(reviewId, commentRequest);
+    @PostMapping("/{eventId}/comments")
+    public ResponseEntity<ApiResponse<Review>> addComment(@PathVariable Integer eventId, @RequestBody CommentRequest commentRequest) {
+        // Call the service method
+        ApiResponse<Review> response = reviewService.addComment(eventId, commentRequest);
+
+        // Return the response
+        return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/Review/{reviewId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Integer reviewId) {
-        reviewService.deleteComment(reviewId);
-        return ResponseEntity.noContent().build();
+    @PutMapping("/comments/{reviewId}")
+    public ResponseEntity<ApiResponse<Review>> updateComment(@PathVariable Integer reviewId, @RequestBody CommentRequest commentRequest) {
+        // Call the service method
+        ApiResponse<Review> response = reviewService.updateComment(reviewId, commentRequest);
+
+        // Return the response
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/comments/{reviewId}")
+    public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable Integer reviewId) {
+        // Call the service method
+        ApiResponse<Void> response = reviewService.deleteComment(reviewId);
+
+        // Return the response
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{eventId}/Review")
@@ -128,5 +139,5 @@ public class EventController {
 //        List<Review> reviews = reviewService.getReviewsByUserId(user);
 //        return ResponseEntity.ok(reviews);
 //    } Error
-    
+
 }

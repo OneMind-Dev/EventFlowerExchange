@@ -1,10 +1,10 @@
 package fu.gr2.EcommerceProject.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,13 +19,12 @@ import java.util.List;
 public class Event {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
-   @Column(name = "event_id")
-    Integer eventId;
+    @Column(name = "event_id")
+   Integer eventId;
    @Column(name = "category_id")
    String categoryId;
    String eventName;
    String description;
-   @CreationTimestamp
    @Column(name = "created_at")
    LocalDateTime createdAt;
    String image;
@@ -35,5 +34,7 @@ public class Event {
    LocalDateTime startDate;
    LocalDateTime endDate;
    @OneToMany(mappedBy = "event", cascade = {CascadeType.ALL}, orphanRemoval = true)
-   List<FlowerEventRelationship> flowerEventRelationships;
+   @JsonManagedReference
+   @JsonIgnore
+       List<FlowerEventRelationship> flowerEventRelationships;
 }

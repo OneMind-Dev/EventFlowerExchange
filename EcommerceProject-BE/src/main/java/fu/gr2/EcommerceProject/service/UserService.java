@@ -1,6 +1,5 @@
 package fu.gr2.EcommerceProject.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fu.gr2.EcommerceProject.entity.User;
 import fu.gr2.EcommerceProject.dto.request.UserCreationRequest;
 import fu.gr2.EcommerceProject.dto.request.UserUpdateRequest;
@@ -16,12 +15,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -83,6 +79,11 @@ public class UserService {
 
         userMapper.updateUser(user,request);
 
+        String password = request.getPassword();
+        if(password!=null){
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+
         user.setStatus(true);
         return userMapper.toUserResponse(userRepository.save(user));
     }
@@ -91,55 +92,68 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-
-
-    public User handleGoogleLogin(String accessToken) {
-        String userInfoEndpoint = "https://www.googleapis.com/oauth2/v3/userinfo";
-
-        // Retrieve user info from Google
-        RestTemplate restTemplate = new RestTemplate();
-        String response;
-        try {
-            response = restTemplate.getForObject(userInfoEndpoint + "?access_token=" + accessToken, String.class);
-        } catch (HttpClientErrorException e) {
-            // Handle HTTP errors (e.g., 4xx, 5xx)
-            throw new AppException(ErrorCode.Retrieve_user_infoFail);
-        } catch (Exception e) {
-            throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
-        }
-        // Parse the response into UserResponse
-        UserResponse userResponse;
-        try {
-            userResponse = parseUserInfo(response);
-        } catch (RuntimeException e) {
-            throw new AppException(ErrorCode.INVALID_KEY);
-        }
-        // Check if user already exists
-        User user = userRepository.findByEmail(userResponse.getEmail())
-                .map(existingUser -> {
-                    existingUser.setAvatar(userResponse.getAvatar());
-                    existingUser.setUsername(userResponse.getUsername());
-                    return existingUser;
-                })
-                .orElseGet(() -> User.builder()
-                        .username(userResponse.getUsername())
-                        .email(userResponse.getEmail())
-                        .avatar(userResponse.getAvatar())
-                        .role(Set.of(Role.USER)) // Assign the USER role
-                        .status(true) // Set user status to active
-                        .build());
-
-        // Save user to the database
-        return userRepository.save(user);
+    public void banUser(String userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        if(!user.isStatus()) throw new AppException(ErrorCode.ACCOUNT_BANNED);
+        user.setStatus(false);
+        userRepository.save(user);
     }
 
-    private UserResponse parseUserInfo(String response) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(response, UserResponse.class);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to parse user info from Google", e);
-        }
+    public void unbanUser(String userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        if(user.isStatus()) throw new AppException(ErrorCode.ACCOUNT_NOT_BANNED);
+        user.setStatus(true);
+        userRepository.save(user);
     }
+
+
+//    public User handleGoogleLogin(String accessToken) {
+//        String userInfoEndpoint = "https://www.googleapis.com/oauth2/v3/userinfo";
+//
+//        // Retrieve user info from Google
+//        RestTemplate restTemplate = new RestTemplate();
+//        String response;
+//        try {
+//            response = restTemplate.getForObject(userInfoEndpoint + "?access_token=" + accessToken, String.class);
+//        } catch (HttpClientErrorException e) {
+//            // Handle HTTP errors (e.g., 4xx, 5xx)
+//            throw new AppException(ErrorCode.Retrieve_user_infoFail);
+//        } catch (Exception e) {
+//            throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
+//        }
+//        // Parse the response into UserResponse
+//        UserResponse userResponse;
+//        try {
+//            userResponse = parseUserInfo(response);
+//        } catch (RuntimeException e) {
+//            throw new AppException(ErrorCode.INVALID_KEY);
+//        }
+//        // Check if user already exists
+//        User user = userRepository.findByEmail(userResponse.getEmail())
+//                .map(existingUser -> {
+//                    existingUser.setAvatar(userResponse.getAvatar());
+//                    existingUser.setUsername(userResponse.getUsername());
+//                    return existingUser;
+//                })
+//                .orElseGet(() -> User.builder()
+//                        .username(userResponse.getUsername())
+//                        .email(userResponse.getEmail())
+//                        .avatar(userResponse.getAvatar())
+//                        .role(Set.of(Role.USER)) // Assign the USER role
+//                        .status(true) // Set user status to active
+//                        .build());
+//
+//        // Save user to the database
+//        return userRepository.save(user);
+//    }
+//
+//    private UserResponse parseUserInfo(String response) {
+//        try {
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            return objectMapper.readValue(response, UserResponse.class);
+//        } catch (Exception e) {
+//            throw new RuntimeException("Failed to parse user info from Google", e);
+//        }
+//    }
 
 }

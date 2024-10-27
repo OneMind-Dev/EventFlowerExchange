@@ -3,9 +3,12 @@ package fu.gr2.EcommerceProject.dto.request;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-
+@Getter
+@Setter
 @Data
 public class EventCreateRequest {
 
@@ -15,6 +18,7 @@ public class EventCreateRequest {
     private String eventName;
     @NotEmpty
     private String description;
+    private LocalDateTime createdAt;
     private String image;
     @NotEmpty @NotEmpty(message = "Year/Month/date Time")
     private LocalDateTime startDate;

@@ -38,7 +38,7 @@
 
 .username {
     color: blue;
-    
+    cursor: pointer;
     margin-top: 10px;
 }
 
@@ -49,11 +49,13 @@
 
 .user_interact p {
     color: #CC7A7A;
+    cursor: pointer;
     margin-bottom: 30px; 
 }
 
 .privateInfor {
     color: #CC7A7A;
+    cursor: pointer;
     margin-bottom: 30px;
 }
 

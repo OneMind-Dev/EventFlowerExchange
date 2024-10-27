@@ -31,15 +31,7 @@ public class SecurityConfig {
             "/auth/logout",
             "/auth/introspect   ",
             "/AllEvents",
-            "/UpdateEvent/{eventId}",
-            "/CreateEvent",
-            "/DeleteEvent/{eventId}",
-            "/SelectEvent/{eventId}",
-            "/Getflowers",
-            "/CreateFlower",
-            "/UpdateFlower/{flowerId}",
-            "/DeleteFlower/{flowerId}",
-            "/GetFlower/{flowerId}",
+            "/api/flowers",
             "/v3/api-docs",
             "/swagger-resources/**",
             "/swagger-ui/**",
@@ -66,13 +58,13 @@ public class SecurityConfig {
 
     //config truy cap duong dan cua cac role
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()  // Không yêu cầu JWT
                         .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.PUT, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.PUT, PUBLIC_ENDPOINTS).permitAll()  // Không yêu cầu JWT
                         .requestMatchers(HttpMethod.GET, "/users").hasAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE).hasAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/admin/AdminRegister").hasAuthority("SCOPE_ADMIN")
@@ -81,14 +73,11 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
                 )
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder))
-                )
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder)))
                 .csrf(AbstractHttpConfigurer::disable);
 
-        return http.build();
+        return httpSecurity.build();
     }
-
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

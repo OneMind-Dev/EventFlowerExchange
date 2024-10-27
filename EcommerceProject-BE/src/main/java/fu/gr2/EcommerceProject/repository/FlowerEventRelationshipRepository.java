@@ -16,4 +16,5 @@ public interface FlowerEventRelationshipRepository extends JpaRepository<FlowerE
     Optional<FlowerEventRelationship>  findByFlowerAndEvent(Flower flower,Event event);
     List<FlowerEventRelationship> findByEvent(Event event);
     List<FlowerEventRelationship> findByEvent_EventId(int eventId);
+    void deleteByEvent(Event event);
 }

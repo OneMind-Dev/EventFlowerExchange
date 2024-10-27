@@ -22,8 +22,14 @@ public enum ErrorCode {
     FORM_NOT_EXISTED(1010,"form not existed"),
     EVENT_NOT_EXISTED(1011,"Event not existed"),
     FLOWER_NOT_EXISTED(1012,"Flower not existed" ),
-    REVIEW_NOT_EXISTED(1013,"Review not existed"),
-    Retrieve_user_infoFail(1014,"Retrieve user info failed"),
+    CART_NOT_FOUND(1013,"Cart not exist"),
+    ITEM_NOT_FOUND(1014,"Item from cart not found"),
+    ACCOUNT_BANNED(1015,"account has been banned"),
+    ACCOUNT_NOT_BANNED(1016,"account has not been banned"),
+    EMPTY_CART(1017,"không có sản phẩm trong giỏ hàng"),
+    NO_INFO(1018,"không có đủ thông tin cần thiết"),
+    NO_ORDER(1019,"Chưa có order nào"),
+    REVIEW_NOT_EXISTED(1020,"review not existed"),
     ;
     int code;
     String message;
