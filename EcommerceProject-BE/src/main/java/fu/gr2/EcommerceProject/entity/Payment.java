@@ -20,7 +20,6 @@ public class Payment {
     int paymentId;
     BigDecimal amount;
     String paymentStatus;  // e.g., SUCCESS, FAILED, PENDING
-    String transactionId;
     LocalDateTime paymentDate;
     @OneToOne
     @JoinColumn(name = "order_id")
