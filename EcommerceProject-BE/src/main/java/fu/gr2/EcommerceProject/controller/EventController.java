@@ -14,7 +14,6 @@ import fu.gr2.EcommerceProject.service.FlowerEventRelationshipService;
 import fu.gr2.EcommerceProject.service.ReviewService;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -97,28 +96,25 @@ public class EventController {
 
     @PostMapping("/{eventId}/comments")
     public ResponseEntity<ApiResponse<Review>> addComment(@PathVariable Integer eventId, @RequestBody CommentRequest commentRequest) {
-        // Call the service method
         ApiResponse<Review> response = reviewService.addComment(eventId, commentRequest);
 
-        // Return the response
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/comments/{reviewId}")
     public ResponseEntity<ApiResponse<Review>> updateComment(@PathVariable Integer reviewId, @RequestBody CommentRequest commentRequest) {
-        // Call the service method
+
         ApiResponse<Review> response = reviewService.updateComment(reviewId, commentRequest);
 
-        // Return the response
+
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/comments/{reviewId}")
     public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable Integer reviewId) {
-        // Call the service method
+
         ApiResponse<Void> response = reviewService.deleteComment(reviewId);
 
-        // Return the response
         return ResponseEntity.ok(response);
     }
 
