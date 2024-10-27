@@ -9,7 +9,6 @@ import fu.gr2.EcommerceProject.dto.request.*;
 import fu.gr2.EcommerceProject.dto.response.EventResponse;
 import fu.gr2.EcommerceProject.dto.response.FlowerEventResponse;
 import fu.gr2.EcommerceProject.entity.Review;
-import fu.gr2.EcommerceProject.entity.User;
 import fu.gr2.EcommerceProject.service.EventService;
 import fu.gr2.EcommerceProject.service.FlowerEventRelationshipService;
 import fu.gr2.EcommerceProject.service.ReviewService;
@@ -39,6 +38,7 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class EventController {
     EventService eventService;
+
     Logger logger = LoggerFactory.getLogger(EventController.class);
     FlowerEventRelationshipService flowerEventRelationshipService;
     @Autowired
@@ -68,7 +68,7 @@ public class EventController {
         logger.info("Creating a new event");
         EventResponse eventResponse = eventService.createEvent(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(eventResponse);
-    } //remember to take admin token :skull:
+    }
 
     @DeleteMapping("/DeleteEvent/{eventId}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Integer eventId) {
@@ -80,7 +80,7 @@ public class EventController {
     public ResponseEntity<Event> getEventById(@PathVariable Integer eventId) {
         Event event = eventService.getEventById(eventId);
         return ResponseEntity.ok(event);
-    } // t thấy cái này nhìn ok hơn nếu không thích thì t sẽ chỉnh lại giống cái flower
+    }
 
 
     @PostMapping("/AddFlowerToEvent")
@@ -121,10 +121,12 @@ public class EventController {
         return reviewService.getCommentById(reviewId);
     }
 
-    @GetMapping("/Review/{user}")
-    public ResponseEntity<List<Review>> getReviewsByUserId(@PathVariable User user) {
-        List<Review> reviews = reviewService.getReviewsByUserId(user);
-        return ResponseEntity.ok(reviews);
-    }
-    //cái này t chịu rồi  Hibernate: select count(*) from invalidated_token it1_0 where it1_0.id=?
+//    @GetMapping("/Review/{userId}")
+//    public ResponseEntity<List<Review>> getReviewsByUserId(@PathVariable("userId") String userId) {
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+//        List<Review> reviews = reviewService.getReviewsByUserId(user);
+//        return ResponseEntity.ok(reviews);
+//    } Error
+    
 }

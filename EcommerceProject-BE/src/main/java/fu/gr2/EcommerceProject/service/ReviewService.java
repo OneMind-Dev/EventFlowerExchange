@@ -25,7 +25,7 @@ import java.util.List;
     private EventRepository eventRepository;
 
     @Autowired
-    private UserRepository userRepository; // Inject UserRepository
+    private UserRepository userRepository;
 
     public Review addComment(Integer eventId, CommentRequest commentRequest) {
         Event event = eventRepository.findById(eventId)
@@ -70,8 +70,7 @@ import java.util.List;
                 .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_EXISTED));
     }
 
-    public List<Review> getReviewsByUserId(User userId) {
-        // Fetch reviews by the User object
-        return reviewRepository.findByUser(userId);
-    }
+//    public List<Review> getReviewsByUserId(User user) {
+//        return reviewRepository.findByUser(user);
+//    }
 }

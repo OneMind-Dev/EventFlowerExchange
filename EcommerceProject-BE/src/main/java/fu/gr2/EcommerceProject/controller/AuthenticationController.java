@@ -7,22 +7,13 @@ import fu.gr2.EcommerceProject.dto.request.IntrospectRequest;
 import fu.gr2.EcommerceProject.dto.request.LogoutRequest;
 import fu.gr2.EcommerceProject.dto.response.AuthenticationResponse;
 import fu.gr2.EcommerceProject.dto.response.IntrospectResponse;
-import fu.gr2.EcommerceProject.entity.User;
 import fu.gr2.EcommerceProject.service.AuthenticationService;
-import fu.gr2.EcommerceProject.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.HttpHeaders;
 import java.text.ParseException;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -30,7 +21,6 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationController {
     @Autowired
-    private UserService userService;
     AuthenticationService authenticationService;
 
     @PostMapping("/login")
@@ -56,38 +46,38 @@ public class AuthenticationController {
                 .build();
     }
 
-    @GetMapping("/login/oauth2/code/google")
-    public String googleLogin(@RequestParam("code") String code) {
-        String accessToken = exchangeCodeForToken(code);
-        User user = userService.handleGoogleLogin(accessToken);
+//    @GetMapping("/login/oauth2/code/google")
+//    public String googleLogin(@RequestParam("code") String code) {
+//        String accessToken = exchangeCodeForToken(code);
+//        User user = userService.handleGoogleLogin(accessToken);
+//
+//
+//        return "redirect:/dashboard";
+//    }
 
-        // Redirect to a dashboard or home page after successful login
-        return "redirect:/dashboard"; // Adjust the redirect as needed
+//    private String exchangeCodeForToken(String code) {
+//        String tokenUrl = "https://oauth2.googleapis.com/token";
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+//        requestBody.add("code", code);
+//        requestBody.add("client_id", "394824863031-2e4dcm18unjeo0vom3nf2ir35300qsfq.apps.googleusercontent.com\n");
+//        requestBody.add("client_secret", "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\n");
+//        requestBody.add("redirect_uri", "http://localhost:8080/login/oauth2/code/google");
+//        requestBody.add("grant_type", "authorization_code");
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+//        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
+//
+//        ResponseEntity<Map<String, Object>> responseEntity = restTemplate.exchange(
+//                tokenUrl, HttpMethod.POST, requestEntity, new ParameterizedTypeReference<Map<String, Object>>() {}
+//        );
+//
+//        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+//            return (String) responseEntity.getBody().get("access_token");
+//        } else {
+//            throw new RuntimeException("Failed to exchange code for token: " + responseEntity.getBody());
+//        }
     }
 
-    private String exchangeCodeForToken(String code) {
-        String tokenUrl = "https://oauth2.googleapis.com/token";
-        RestTemplate restTemplate = new RestTemplate();
-
-        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add("code", code);
-        requestBody.add("client_id", "394824863031-2e4dcm18unjeo0vom3nf2ir35300qsfq.apps.googleusercontent.com\n");
-        requestBody.add("client_secret", "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\n");
-        requestBody.add("redirect_uri", "http://localhost:8080/login/oauth2/code/google");
-        requestBody.add("grant_type", "authorization_code");
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
-
-        ResponseEntity<Map<String, Object>> responseEntity = restTemplate.exchange(
-                tokenUrl, HttpMethod.POST, requestEntity, new ParameterizedTypeReference<Map<String, Object>>() {}
-        );
-
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            return (String) responseEntity.getBody().get("access_token");
-        } else {
-            throw new RuntimeException("Failed to exchange code for token: " + responseEntity.getBody());
-        }
-    }
-}

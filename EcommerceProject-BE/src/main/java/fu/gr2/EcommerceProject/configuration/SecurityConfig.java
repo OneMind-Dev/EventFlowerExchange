@@ -79,7 +79,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/login") // Custom login page if needed
+                        .loginPage("/login")
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder))
@@ -116,29 +116,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder(10);
     }
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-////        http
-////                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-////                .authorizeHttpRequests(auth -> auth
-////                        .requestMatchers("/login", "/oauth2/**").permitAll()
-////                        .anyRequest().authenticated()
-////                )
-////                .oauth2Login(oauth2 -> oauth2
-////                        .loginPage("/login") // Custom login page if needed
-////                )
-////                .csrf(csrf -> csrf.disable());
-////
-////        return http.build();
-//        return http
-//                .authorizeHttpRequests(registry -> {
-//                    registry.requestMatchers("/").permitAll()
-//                            .anyRequest().authenticated();
-//                })
-//                .oauth2Login(Customizer.withDefaults())
-//                .formLogin(Customizer.withDefaults())
-//                .build();
-//    }
+
 
 
 }
