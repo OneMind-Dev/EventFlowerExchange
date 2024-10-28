@@ -74,9 +74,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/users").hasAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE).hasAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/admin/AdminRegister").hasAuthority("SCOPE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/users/ban/{userId}").hasAuthority("SCOPE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/users/unban/{userId}").hasAuthority("SCOPE_ADMIN")
-                        .anyRequest().authenticated()  // Yêu cầu JWT với các request khác
+                        .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder)))
                 .csrf(AbstractHttpConfigurer::disable);
@@ -109,4 +110,8 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(10);
     }
+
+
+
+
 }

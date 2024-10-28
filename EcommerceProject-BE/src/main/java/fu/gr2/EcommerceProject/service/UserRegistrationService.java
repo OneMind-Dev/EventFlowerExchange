@@ -8,7 +8,6 @@ import fu.gr2.EcommerceProject.entity.User;
 import fu.gr2.EcommerceProject.enums.Role;
 import fu.gr2.EcommerceProject.exception.AppException;
 import fu.gr2.EcommerceProject.exception.ErrorCode;
-import fu.gr2.EcommerceProject.exception.UserAlreadyApprovedException;
 import fu.gr2.EcommerceProject.exception.UserNotFound;
 
 import fu.gr2.EcommerceProject.mapper.RegistrationFormMapper;
@@ -28,6 +27,7 @@ public class UserRegistrationService {
     private final UserRepository userRepository;
     private RegistrationFormRepository registrationFormRepository;
     private RegistrationFormMapper registrationFormMapper;
+
     @Autowired
     public UserRegistrationService(UserRepository userRepository,
                                    RegistrationFormRepository registrationFormRepository,
@@ -46,6 +46,7 @@ public class UserRegistrationService {
     }
 
     public ApiResponse approveRegistration(int formId) {
+        List<String> notifications = new ArrayList<>();
         try {
             // Tìm kiếm form đăng ký dựa trên formId
             RegistrationForm registrationForm = registrationFormRepository.findById(formId)
@@ -78,10 +79,12 @@ public class UserRegistrationService {
 
             user.setRole(roles);
             userRepository.save(user);
-
+            String successMessage = "Registration form approved successfully for User: " + user.getUsername();
+            notifications.add(successMessage);
             // Trả về phản hồi thành công
             return ApiResponse.builder()
                     .message("Registration form approved successfully.")
+                    .notifications(notifications)
                     .build();
         } catch (AppException e) {
             // Xử lý lỗi liên quan đến AppException
@@ -101,6 +104,7 @@ public class UserRegistrationService {
 
 
     public ApiResponse rejectRegistration(int formId,String reason) {
+        List<String> notifications = new ArrayList<>();
         if(reason.isEmpty()||reason==null)
             throw new UserNotFound("No reason found");
         try {
@@ -114,10 +118,12 @@ public class UserRegistrationService {
 
             // Lưu lại thay đổi vào cơ sở dữ liệu
             registrationFormRepository.save(registrationForm);
-
+            String successMessage = "Registration form rejected successfully. Reason: " + reason;
+            notifications.add(successMessage);
             // Trả về phản hồi thành công
             return ApiResponse.builder()
-                    .message("Registration form reject successfully.")
+                    .message(successMessage)
+                    .notifications(notifications)
                     .build();
         } catch (AppException e) {
             // Xử lý lỗi liên quan đến AppException

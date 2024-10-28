@@ -1,10 +1,5 @@
 package fu.gr2.EcommerceProject.dto.response;
 
-import fu.gr2.EcommerceProject.entity.Event;
-import fu.gr2.EcommerceProject.entity.Flower;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,8 +12,7 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class FlowerEventResponse {
-
-    int e_id;
+    Integer relationshipID;
     String eventname;
 
     String flowername;

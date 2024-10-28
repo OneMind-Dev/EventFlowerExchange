@@ -18,10 +18,8 @@ import fu.gr2.EcommerceProject.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -112,7 +110,7 @@ public class FlowerEventRelationshipService {
         for (FlowerEventRelationship relationship : flowerEventRelationships) {
             if (relationship.getQuantity() > 0) {
                 flowerEventResponses.add(FlowerEventResponse.builder()
-                                .e_id(relationship.getEId())
+                                .relationshipID(relationship.getRelationshipID())
                         .flowername(relationship.getFlower().getFlowerName())
                         .origin(relationship.getFlower().getOrigin())
                         .color(relationship.getFlower().getColor())

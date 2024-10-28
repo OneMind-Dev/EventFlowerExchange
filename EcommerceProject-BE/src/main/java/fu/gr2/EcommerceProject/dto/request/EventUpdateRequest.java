@@ -1,11 +1,7 @@
 package fu.gr2.EcommerceProject.dto.request;
 
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDateTime;
