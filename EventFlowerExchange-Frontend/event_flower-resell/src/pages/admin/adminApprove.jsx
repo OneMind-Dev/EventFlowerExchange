@@ -54,10 +54,10 @@ function AdminApprove() {
             key: "action",
             render: (_, record) => (
                 <Space size="middle">
-                    {confirmedIds.has(record.id) ? (  // Check if ID is confirmed
-                        <CheckCircleOutlined style={{ color: 'green' }} />  // Show checkmark icon
-                    ) : declinedIds.has(record.id) ? (  // Check if ID is declined
-                        <CloseCircleOutlined style={{ color: 'red' }} />  // Show red X icon
+                    {confirmedIds.has(record.id) ? (
+                        <CheckCircleOutlined style={{ color: 'green' }} />
+                    ) : declinedIds.has(record.id) ? (
+                        <CloseCircleOutlined style={{ color: 'red' }} />
                     ) : (
                         <>
                             <Button type="primary" onClick={() => handleConfirm(record.id)}>Confirm</Button>
@@ -77,12 +77,15 @@ function AdminApprove() {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log("API Response:", response); // Log the entire response object
+
             if (response.data && response.data.code === 1000) {
-                const updatedConfirmedIds = new Set(confirmedIds).add(formId);
-                setConfirmedIds(updatedConfirmedIds);
-                localStorage.setItem("confirmedIds", JSON.stringify(Array.from(updatedConfirmedIds)));
-                fetchData();
+                setConfirmedIds(prevIds => {
+                    const updatedIds = new Set(prevIds);
+                    updatedIds.add(formId);
+                    localStorage.setItem("confirmedIds", JSON.stringify(Array.from(updatedIds)));
+                    return updatedIds;
+                });
+                fetchData(); // Fetch data again to ensure UI reflects the current state
             } else {
                 console.error("Error response:", response.data);
                 message.error("Failed to confirm registration.");
@@ -101,21 +104,24 @@ function AdminApprove() {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            if (response.data.code === 1000) {
-                const updatedDeclinedIds = new Set(declinedIds).add(formId);
-                setDeclinedIds(updatedDeclinedIds);
-                localStorage.setItem("declinedIds", JSON.stringify(Array.from(updatedDeclinedIds)));
-                message.success("Registration declined successfully!");
-                fetchData();  // Refresh the data after cancelling
+            if (response.data && response.data.code === 1000) {
+                setDeclinedIds(prevIds => {
+                    const updatedIds = new Set(prevIds);
+                    updatedIds.add(formId);
+                    localStorage.setItem("declinedIds", JSON.stringify(Array.from(updatedIds)));
+                    return updatedIds;
+                });
+                fetchData(); // Refresh the data
             } else {
                 console.error("Error response:", response.data);
-                message.error("Failed to cancel registration.");
+                message.error("Failed to decline registration.");
             }
         } catch (error) {
-            message.error("Error cancelling registration. Please try again.");
-            console.error(error);
+            message.error("Error declining registration. Please try again.");
+            console.error("Error details:", error);
         }
     };
+
 
     return (
         <div>
