@@ -119,4 +119,12 @@ public class EventService {
                 .orElseThrow(() -> new AppException(ErrorCode.EVENT_NOT_EXISTED));
     }
 
+    public void updateImage(int eventId, String imgPath) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException("Event không tồn tại"));
+        event.setImage(imgPath);
+
+        eventRepository.save(event);
+    }
+
 }

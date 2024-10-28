@@ -99,4 +99,11 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void updateAvatar(String userId, String avatarPath) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User không tồn tại"));
+        user.setAvatar(avatarPath);
+        userRepository.save(user);
+    }
+
 }
