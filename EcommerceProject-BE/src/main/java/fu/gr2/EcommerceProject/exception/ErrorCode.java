@@ -28,7 +28,8 @@ public enum ErrorCode {
     ACCOUNT_NOT_BANNED(1016,"account has not been banned"),
     EMPTY_CART(1017,"không có sản phẩm trong giỏ hàng"),
     NO_INFO(1018,"không có đủ thông tin cần thiết"),
-    NO_ORDER(1019,"Chưa có order nào")
+    NO_ORDER(1019,"Chưa có order nào"),
+    NO_ROLE_FOUND(1020,"không tìm thấy role")
     ;
     int code;
     String message;

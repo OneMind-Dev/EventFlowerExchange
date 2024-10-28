@@ -147,7 +147,7 @@ public class UserRegistrationService {
             // Kiểm tra xem chuỗi role truyền vào có hợp lệ không
             requestedRole = Role.valueOf(request.getRole().toUpperCase()); // Chuyển chuỗi sang chữ in hoa để so sánh với enum
         } catch (IllegalArgumentException e) {
-            throw new AppException(ErrorCode.BANNED);
+            throw new AppException(ErrorCode.NO_ROLE_FOUND);
         }
         //Check xem user đã có role request chưa
         if(existingUser.getRole().contains(requestedRole))
