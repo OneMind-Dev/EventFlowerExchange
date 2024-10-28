@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Form, Input, Button, Popconfirm } from "antd";
@@ -66,12 +66,17 @@ function UserInfo() {
       const reader = new FileReader();
       reader.onloadend = async () => {
         const base64Image = reader.result;
-        setAvatarUrl(base64Image);
+        setAvatarUrl(base64Image); // Update local state with new avatar URL
+        sessionStorage.setItem("userAvatar", base64Image); // Save to session storage
+
+        // Dispatch custom event to notify Header
+        window.dispatchEvent(new Event("avatarUpdated"));
+
         try {
           const response = await api.put(`/users/${user.userId}`, {
             avatar: base64Image,
           });
-          dispatch(login(response.data));
+          dispatch(login(response.data)); // Update user info in global state
           toast.success("Ảnh đại diện đã được cập nhật thành công!");
         } catch (error) {
           console.error("Error updating avatar:", error);
@@ -82,9 +87,18 @@ function UserInfo() {
     }
   };
 
+  // Function to trigger the file input click
   const triggerFileInput = () => {
     document.getElementById("fileInput").click();
   };
+
+  // Retrieve the avatar from session storage
+  useEffect(() => {
+    const storedAvatar = sessionStorage.getItem('userAvatar');
+    if (storedAvatar) {
+      setAvatarUrl(storedAvatar); // Set state from session storage
+    }
+  }, []);
 
   return (
     <>

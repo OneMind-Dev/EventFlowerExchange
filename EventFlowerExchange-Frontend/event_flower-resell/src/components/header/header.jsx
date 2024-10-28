@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./header.css";
 import { Input } from "antd";
 import { SearchOutlined, ShoppingCartOutlined, BellOutlined } from "@ant-design/icons";
@@ -11,7 +11,7 @@ import { FaCircleUser } from "react-icons/fa6";
 function Header() {
   const navigate = useNavigate();
   const user = useSelector((store) => store.user);
-  const dispatch = useDispatch();
+  const [avatarUrl, setAvatarUrl] = useState(null);
 
   const events = [
     { label: <a href="#">ĐÁM CƯỚI</a>, key: "1" },
@@ -26,6 +26,30 @@ function Header() {
     { label: <a href="#">HOA ??</a>, key: "3" },
     { label: <a href="#">KHÁC</a>, key: "4" },
   ];
+
+  useEffect(() => {
+    // Load avatar URL from sessionStorage on component mount
+    const storedAvatar = sessionStorage.getItem("userAvatar");
+    if (storedAvatar) {
+      console.log("Loaded avatar from sessionStorage:", storedAvatar); // Debug
+      setAvatarUrl(storedAvatar);
+    }
+
+    // Event listener for custom avatar update events
+    const handleAvatarUpdate = () => {
+      const updatedAvatar = sessionStorage.getItem("userAvatar");
+      console.log("Avatar updated in sessionStorage:", updatedAvatar); // Debug
+      setAvatarUrl(updatedAvatar);
+    };
+
+    window.addEventListener("avatarUpdated", handleAvatarUpdate);
+
+    // Cleanup on component unmount
+    return () => {
+      window.removeEventListener("avatarUpdated", handleAvatarUpdate);
+    };
+  }, []);
+
 
   return (
     <>
@@ -64,14 +88,14 @@ function Header() {
               </div>
             ) : (
               <div className="header__user">
-                {!user.role.includes("SELLER") ? (
+                {user.role.includes("USER") && !user.role.includes("SELLER") ? (
                   <>
                     <p onClick={() => navigate("/sellerRegister")}>
                       Trở thành Người bán
                     </p>
-                    {user.avatar ? (
+                    {avatarUrl ? (
                       <img
-                        src={user.avatar}
+                        src={avatarUrl}
                         alt="User Avatar"
                         onClick={() => navigate("/profile/userinfo")}
                         className="header__user-avatar"
@@ -80,16 +104,27 @@ function Header() {
                       <FaCircleUser
                         onClick={() => navigate("/profile/userinfo")}
                         className="header__user-icon"
-                        size={30} // Adjust size as needed
+                        size={30}
                       />
                     )}
                   </>
                 ) : (
-                  <FaCircleUser
-                    onClick={() => navigate("/profile/userinfo")}
-                    className="header__user-icon"
-                    size={30} // Adjust size as needed
-                  />
+                  <>
+                    {avatarUrl ? (
+                      <img
+                        src={avatarUrl}
+                        alt="User Avatar"
+                        onClick={() => navigate("/profile/userinfo")}
+                        className="header__user-avatar"
+                      />
+                    ) : (
+                      <FaCircleUser
+                        onClick={() => navigate("/profile/userinfo")}
+                        className="header__user-icon"
+                        size={30}
+                      />
+                    )}
+                  </>
                 )}
               </div>
             )}
