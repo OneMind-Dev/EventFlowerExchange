@@ -30,7 +30,8 @@ public class SecurityConfig {
                                                 "/auth/logout",
                                                 "/auth/introspect   ",
                                                 "/AllEvents",
-                                                   "/api/flowers"
+                                                   "/api/flowers",
+                                                    "/payment/vn-pay-callback"
                                                     };
 
     @Value("${jwt.signerKey}")

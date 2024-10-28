@@ -2,6 +2,8 @@ package fu.gr2.EcommerceProject.service;
 
 import fu.gr2.EcommerceProject.configuration.VNPAYConfig;
 import fu.gr2.EcommerceProject.dto.response.PaymentResponse;
+import fu.gr2.EcommerceProject.entity.Payment;
+import fu.gr2.EcommerceProject.repository.PaymentRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 @Service
 public class VNPayService {
+    @Autowired
+    private PaymentRepository repository;
     public static String hmacSHA512(final String key, final String data) {
         try {
             if (key == null || data == null) {
@@ -98,5 +102,11 @@ public class VNPayService {
                 .code("ok")
                 .message("success")
                 .paymentUrl(paymentUrl).build();
+    }
+    public void savePayment(HttpServletRequest request){
+        Payment payment = new Payment();
+        payment.setVnp_Amount(Double.valueOf(request.getParameter("vnp_Amount")));
+        payment.setVnp_OrderType(request.getParameter("other"));
+        repository.save(payment);
     }
 }

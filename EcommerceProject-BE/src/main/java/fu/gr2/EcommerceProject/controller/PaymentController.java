@@ -31,6 +31,7 @@ public class PaymentController {
     public ResponseObject<PaymentResponse> payCallbackHandler(HttpServletRequest request) {
         String status = request.getParameter("vnp_ResponseCode");
         if (status.equals("00")) {
+            vnPayService.savePayment(request);
             return new ResponseObject<>(HttpStatus.OK, "Success", new PaymentResponse("00", "Success", ""));
         } else {
             return new ResponseObject<>(HttpStatus.BAD_REQUEST, "Failed", null);

@@ -16,7 +16,7 @@ import java.util.UUID;
 @Setter
 @Builder
 @Table (name = "Orders")
-public class Order {
+public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column (name = "order_id")

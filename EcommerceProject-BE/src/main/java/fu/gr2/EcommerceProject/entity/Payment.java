@@ -17,7 +17,6 @@ public class Payment {
     private UUID PaymentId;
     @Column (name = "OrderType")
     private String vnp_OrderType;
-    @Column (name = "Description")
-    private String vnp_Description;
-
+    @Column (name = "Amount")
+    private double vnp_Amount;
 }
