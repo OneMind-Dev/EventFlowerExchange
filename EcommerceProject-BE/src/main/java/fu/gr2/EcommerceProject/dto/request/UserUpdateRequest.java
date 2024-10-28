@@ -9,12 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class UserUpdateRequest {
-
-    String password;
-    String email;
     String phone;
     String address;
     String avatar;
-    boolean status_user;
-    LocalDateTime created_at;
 }
