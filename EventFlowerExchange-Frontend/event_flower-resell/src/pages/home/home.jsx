@@ -8,6 +8,7 @@ import EventData from "../../components/config/eventData";
 
 import Footer from "../../components/footer/footer";
 import api from "../../components/config/axios";
+import { ToastContainer } from "react-toastify";
 const Home = () => {
   const [events, setEvents] = useState([]);
 
@@ -34,6 +35,8 @@ const Home = () => {
   return (
     <>
       <Header />
+      <ToastContainer /> {/* Toast container for notifications */}
+
       <div className="wrapper">
         <div className="wrapper__poster">
           <img
@@ -204,6 +207,7 @@ const Home = () => {
           </button>
         </div>
       </div>
+      <Footer />
     </>
   );
 };

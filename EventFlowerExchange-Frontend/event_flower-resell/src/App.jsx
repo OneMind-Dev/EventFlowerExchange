@@ -24,6 +24,7 @@ import SellerRegister from "./pages/sellerRegister/sellerRegister";
 import AddFlowerToEvent from "./pages/addFlowerToEvent/addFlowerToEvent";
 import Managers from "./pages/admin/adminManagers";
 import Approve from "./pages/admin/adminApprove";
+import Payment from "./pages/payment/payment";
 const App = () => {
   const ProtectRouteAuth = ({ children }) => {
     const user = useSelector((store) => store.user);
@@ -143,6 +144,11 @@ const App = () => {
       element: (<ProtectRouteAuth1>
         <Managers />
       </ProtectRouteAuth1>)
+    },
+    {
+      path: "payment",
+      element:
+        <Payment />
     },
     {
       path: "events",

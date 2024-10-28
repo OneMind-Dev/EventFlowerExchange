@@ -1,89 +1,87 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../../components/header/header';
 import Footer from '../../components/footer/footer';
-import "../../components/payment/payment.css";
-import flowerImg from '../../components/images/flower.jpg';
+import "../../components/payment/payment.css"; // Ensure to import your CSS
+import { Table, Button, Image, Modal } from 'antd';
+import { toast } from 'react-toastify';
 
 function Payment() {
-    const [isConfirming, setIsConfirming] = useState(false);
+    const [cartItems, setCartItems] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
 
-    const cartItems = [
-        { id: 1, image: flowerImg, name: 'Hoa hồng', quantity: 2, price: '20.000đ' },
-        { id: 2, image: flowerImg, name: 'Hoa tulip', quantity: 1, price: '15.000đ' }
+    useEffect(() => {
+        const storedCartItems = JSON.parse(sessionStorage.getItem("cart")) || [];
+        setCartItems(storedCartItems);
+        const total = storedCartItems.reduce((sum, item) => {
+            const priceValue = typeof item.price === 'string' ? item.price : String(item.price || 0);
+            return sum + (parseFloat(priceValue.replace(/\./g, '').replace('đ', '')) * item.quantity);
+        }, 0);
+        setTotalPrice(total.toLocaleString() + 'đ'); // Format total price
+    }, []);
+
+    const columns = [
+        {
+            title: "Image",
+            dataIndex: "flower_image",
+            key: "flower_image",
+            render: (src) => <Image width={50} src={src} alt="Flower Image" />,
+        },
+        { title: "Name", dataIndex: "flower_name", key: "flower_name" },
+        { title: "Price (VND)", dataIndex: "price", key: "price" },
+        { title: "Quantity", dataIndex: "quantity", key: "quantity" },
     ];
 
-    const totalPrice = '35.000đ';
-
-    // Function to handle payment click
-    const handlePaymentClick = () => {
-        setIsConfirming(true);
-    };
-
-    // Function to handle cancel button
-    const handleCancelClick = () => {
-        setIsConfirming(false);
-    };
-
     const handleConfirmPayment = () => {
-        // Logic for confirming payment goes here
-        alert("Thanh toán thành công!");
-        setIsConfirming(false);
+        toast.success("Thanh toán thành công!");
+        sessionStorage.removeItem("cart"); // Clear cart after payment
+        setCartItems([]);
+        setTotalPrice('0đ'); // Reset total price to 0đ
+    };
+
+    const handlePaymentClick = () => {
+        Modal.confirm({
+            title: 'Xác nhận thanh toán',
+            content: 'Bạn có chắc chắn muốn thanh toán?',
+            onOk: handleConfirmPayment,
+        });
+    };
+
+    const handleCancelPayment = () => {
+        sessionStorage.removeItem("cart"); // Clear cart on cancel
+        setCartItems([]);
+        setTotalPrice('0đ'); // Reset total price to 0đ
+        toast.info("Thanh toán đã bị hủy!"); // Notify the user
     };
 
     return (
         <>
-            <div className='payment-page'>
-                <Header />
-                <div className='container'>
-                    <h2 className='payment-title'>Payment Page</h2>
-                    <div className='buyer-info'>
-                        <h3>Thông tin người mua</h3>
-                        <p><strong>Tên:</strong> Đóm chúa</p>
-                        <p><strong>Địa chỉ:</strong> 97 No son, Quận bỏ con, Phường ăn cháo đá bát</p>
-                        <p><strong>Sđt:</strong> 05011</p>
-                    </div>
-                    <div className='cart-items'>
-                        <h3>Giỏ hàng</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Hình ảnh</th>
-                                    <th>Tên sản phẩm</th>
-                                    <th>Số lượng</th>
-                                    <th>Giá</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {cartItems.map(item => (
-                                    <tr key={item.id}>
-                                        <td><img src={item.image} alt={item.name} style={{ width: '50px' }} /></td>
-                                        <td>{item.name}</td>
-                                        <td>{item.quantity}</td>
-                                        <td>{item.price}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div className='total'>
-                        <h3>Tổng giá: {totalPrice}</h3>
-                    </div>
-                    <div className='button-group'>
-                        <button className='payment-button' onClick={handlePaymentClick}>Thanh toán</button>
-                        <button className='cancel-button' onClick={handleCancelClick}>Hủy</button>
-                    </div>
+            <Header />
+            <div className="payment-page">
+                <h2 className="payment-title">Trang thanh toán</h2>
+                <Table
+                    dataSource={cartItems}
+                    columns={columns}
+                    rowKey="flower_id"
+                    pagination={false}
+                    bordered
+                />
+                <h3 className="total-price">Tổng cộng: {totalPrice} VND</h3>
+                <div className="button-group">
+                    <Button
+                        className="payment-button"
+                        type="primary"
+                        onClick={handlePaymentClick}
+                    >
+                        Thanh toán
+                    </Button>
+                    <Button
+                        className="cancel-button"
+                        type="default"
+                        onClick={handleCancelPayment}
+                    >
+                        Hủy thanh toán
+                    </Button>
                 </div>
-
-                {isConfirming && (
-                    <div className="confirmation-modal">
-                        <div className="modal-content">
-                            <h3>Xác nhận thanh toán</h3>
-                            <p>Bạn có chắc chắn muốn thanh toán?</p>
-                            <button className='confirm-button' onClick={handleConfirmPayment}>Xác nhận</button>
-                            <button className='payment-cancel' onClick={handleCancelClick}>Hủy</button>
-                        </div>
-                    </div>
-                )}
             </div>
             <Footer />
         </>
