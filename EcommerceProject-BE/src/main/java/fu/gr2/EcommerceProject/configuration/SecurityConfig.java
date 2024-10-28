@@ -51,7 +51,9 @@ public class SecurityConfig {
             "/SelectEvent/{eventId}",
             "/updateCart/{userId}",
             "/order/shipcode/{userId}",
-            "/order/{userId}"
+            "/order/{userId}",
+            "/profile-picture",
+            "/event-image"
             };
 
     @Value("${jwt.signerKey}")

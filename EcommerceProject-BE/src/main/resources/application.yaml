@@ -15,6 +15,10 @@ spring:
       dialect: org.hibernate.dialect.MySQLDialect  # or MySQL8Dialect if using MySQL 8.x
     show-sql: true
 
+
+file:
+  uploadDir: "src/main/resources/static/uploads"
+
 jwt:
   signerKey: "1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
   valid-duration: 3600 # in seconds
@@ -30,5 +34,4 @@ payment:
     command: "pay"
     orderType: "other"
 
-file:
-  upload-dir: src/main/resources/static/uploads
+
