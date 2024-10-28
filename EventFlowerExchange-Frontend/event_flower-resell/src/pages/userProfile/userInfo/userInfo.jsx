@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Form, Input, Button, Popconfirm } from "antd";
+import { Form, Input, Button, Popconfirm, Image } from "antd";
 import { FaCircleUser } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import api from "../../../components/config/axios";
@@ -108,7 +108,7 @@ function UserInfo() {
           <div className="user_container">
             <div className="user_infor">
               {avatarUrl ? (
-                <img src={avatarUrl} alt="User Avatar" className="user_avatar" />
+                <Image src={avatarUrl} alt="User Avatar" className="user_avatar" />
               ) : (
                 <FaCircleUser className="user_icon" />
               )}
@@ -146,7 +146,9 @@ function UserInfo() {
               >
                 Thay đổi mật khẩu
               </p>
-              <p>Đơn hàng</p>
+              {user.role && user.role.includes("USER") && user.role.includes("SELLER") && (
+                <p>Đơn hàng</p>
+              )}
               {user.role && user.role.includes("SELLER") && (
                 <p onClick={() => navigate("/profile/sellermanage")}>
                   Quản lý sự kiện

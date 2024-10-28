@@ -154,8 +154,6 @@ function Header() {
               </a>
             </Dropdown>
           </div>
-          <p className="header__navbar-us">VỀ CHÚNG TÔI</p>
-          <p className="header__navbar-feedback">GÓP Ý</p>
         </div>
       </header>
       <div className="divide"></div>
