@@ -1,8 +1,5 @@
 package fu.gr2.EcommerceProject.dto.response;
 
-import fu.gr2.EcommerceProject.entity.User;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

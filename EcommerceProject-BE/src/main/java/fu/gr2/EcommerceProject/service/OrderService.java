@@ -29,20 +29,23 @@ public class OrderService {
     OrderRepository orderRepository;
     UserRepository userRepository;
     EventRepository eventRepository;
-
+     List<String> notifications;
     @Transactional
-    public ApiResponse<OrderResponse> createOrder(String userId, OrderRequest request){
-        if(request == null){
+    public ApiResponse<OrderResponse> createOrder(String userId, OrderRequest request) {
+        if (request == null) {
             throw new AppException(ErrorCode.NO_INFO);
         }
-        User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         ShoppingCart shoppingCart = shoppingCartRepository.findByUser_userId(userId);
-        if(shoppingCart==null){
+        if (shoppingCart == null) {
             throw new AppException(ErrorCode.CART_NOT_FOUND);
         }
         if (shoppingCart.getTotalPrice().compareTo(BigDecimal.ZERO) <= 0) {
             throw new AppException(ErrorCode.EMPTY_CART);
         }
+
         Order order = Order.builder()
                 .name(request.getName())
                 .phone(request.getPhone())
@@ -53,11 +56,15 @@ public class OrderService {
                 .user(user)
                 .totalPrice(shoppingCart.getTotalPrice())
                 .build();
+
         orderRepository.save(order);
-        List<OrderDetail> orderDetails= new ArrayList<>();
-        List<ShoppingCartItem> shoppingCartItems=shoppingCartItemRepository.findByShoppingCart(shoppingCart);
-        for(ShoppingCartItem i: shoppingCartItems){
-            OrderDetail orderDetail=new OrderDetail().builder()
+        String successMessage = "Order placed successfully! Order ID: " + order.getOrderId();
+        notifications.add(successMessage);
+
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        List<ShoppingCartItem> shoppingCartItems = shoppingCartItemRepository.findByShoppingCart(shoppingCart);
+        for (ShoppingCartItem i : shoppingCartItems) {
+            OrderDetail orderDetail = OrderDetail.builder()
                     .quantity(i.getQuantity())
                     .price(i.getItemPrice())
                     .flowerEventRelationship(i.getFlowerEventRelationship())
@@ -65,6 +72,7 @@ public class OrderService {
                     .build();
             orderDetailRepository.save(orderDetail);
         }
+
         shoppingCartItemRepository.deleteByShoppingCart(shoppingCart);
 
         OrderResponse orderResponse = OrderResponse.builder()
@@ -80,6 +88,8 @@ public class OrderService {
 
         return ApiResponse.<OrderResponse>builder()
                 .result(orderResponse)
+                .message(successMessage)
+                .notifications(notifications)
                 .build();
     }
 

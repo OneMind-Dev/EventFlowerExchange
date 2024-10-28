@@ -3,6 +3,8 @@ package fu.gr2.EcommerceProject.dto.request;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
+import java.util.List;
+
 @Builder
 @Getter
 @Setter
@@ -14,4 +16,5 @@ public class ApiResponse <T> {
     private int code = 1000;
     private String message;
     private T result;
+    private List<String> notifications;
 }

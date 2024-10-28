@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import fu.gr2.EcommerceProject.dto.request.FlowerCreateRequest;
 import fu.gr2.EcommerceProject.dto.request.FlowerUpdateRequest;
-import fu.gr2.EcommerceProject.service.FlowerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +37,7 @@ public class FlowerController {
             @PathVariable Integer flowerId,
             @RequestBody FlowerUpdateRequest request) {
         FlowerResponse updatedFlower = flowerService.updateFlower(flowerId, request);
-        return ResponseEntity.ok(updatedFlower); // Return the updated flower
+        return ResponseEntity.ok(updatedFlower);
     }
 
     @DeleteMapping("/DeleteFlower/{flowerId}")
