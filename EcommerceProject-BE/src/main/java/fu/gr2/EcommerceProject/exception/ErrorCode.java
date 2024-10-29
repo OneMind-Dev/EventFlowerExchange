@@ -29,8 +29,8 @@ public enum ErrorCode {
     EMPTY_CART(1017,"không có sản phẩm trong giỏ hàng"),
     NO_INFO(1018,"không có đủ thông tin cần thiết"),
     NO_ORDER(1019,"Chưa có order nào"),
-    NO_ROLE_FOUND(1020,"không tìm thấy role")
-    REVIEW_NOT_EXISTED(1021,"review not existed"),
+    NO_ROLE_FOUND(1020,"không tìm thấy role"),
+    REVIEW_NOT_EXISTED(1021,"review not existed")
     ;
     int code;
     String message;

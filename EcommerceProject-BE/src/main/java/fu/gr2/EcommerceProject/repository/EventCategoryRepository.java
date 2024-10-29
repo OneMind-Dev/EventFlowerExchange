@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface EventCategoryRepository extends JpaRepository<EventCategory, UUID> {
+public interface EventCategoryRepository extends JpaRepository<EventCategory, Integer> {
 }

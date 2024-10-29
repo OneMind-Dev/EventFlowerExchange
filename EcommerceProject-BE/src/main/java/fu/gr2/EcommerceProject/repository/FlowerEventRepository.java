@@ -9,6 +9,6 @@ import java.util.UUID;
 
 @Repository
 public interface FlowerEventRepository  extends JpaRepository<FlowerEventRelationship, Integer> {
-    public List<FlowerEventRelationship> findByEvent_EventId(UUID eventId);
+    public List<FlowerEventRelationship> findByEvent_EventId(Integer eventId);
 
 }

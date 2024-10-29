@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 public class EventUpdateRequest {
     @NotBlank(message = "Category cannot be blank")
-    private String categoryId;
+    private int categoryId;
     @NotBlank(message = "Event name cannot be blank")
     private String eventName;
     @NotBlank(message = "Category cannot be blank")

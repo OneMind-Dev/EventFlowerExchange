@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Builder
 public class EventResponse {
     private Integer eventId;
-     private  String categoryId;
+     private  String categoryName;
      private  String eventName;
      private String description;
      private LocalDateTime createdAt;

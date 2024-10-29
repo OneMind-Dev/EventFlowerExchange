@@ -24,9 +24,10 @@ public class Event {
    @Id
    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "event_id")
-   Integer eventId;
-   @Column(name = "category_id")
-   String categoryId;
+   int eventId;
+   @ManyToOne // Many events can belong to one category
+   @JoinColumn(name = "category_id") // Ensure this column references the correct ID
+   private EventCategory eventCategory; //
    String eventName;
    String description;
    @Column(name = "created_at")

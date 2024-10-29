@@ -43,12 +43,8 @@ public class EventController {
     @Autowired
     ReviewService reviewService;
 
-    @PostMapping("/event/create")
-    public Event createEvent(@RequestBody EventCreationRequest request){
-        return eventService.createEvent(request);
-    }
     @GetMapping({"/AllEvents"})
-    public ResponseEntity<List<EventResponse>> getAllEvents(@RequestParam(required = false) String categoryId, @RequestParam(required = false) String eventName) {
+    public ResponseEntity<List<EventResponse>> getAllEvents(@RequestParam(required = false) int categoryId, @RequestParam(required = false) String eventName) {
         this.logger.info("Getting all events with categoryId: {} and eventName: {}", categoryId, eventName);
         return ResponseEntity.ok(this.eventService.getAllEvents(categoryId, eventName));
     }
@@ -67,12 +63,12 @@ public class EventController {
         return ResponseEntity.ok(updatedEvent);
     }
 
-    @PostMapping("/CreateEvent")
-    public ResponseEntity<EventResponse> createEvent(@RequestBody @Valid EventCreateRequest request) {
-        logger.info("Creating a new event");
-        EventResponse eventResponse = eventService.createEvent(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventResponse);
-    }
+        @PostMapping("/CreateEvent")
+        public ResponseEntity<EventResponse> createEvent(@RequestBody @Valid EventCreateRequest request) {
+            logger.info("Creating a new event");
+            EventResponse eventResponse = eventService.createEvent(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(eventResponse);
+        }
 
     @DeleteMapping("/DeleteEvent/{eventId}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Integer eventId) {
@@ -81,8 +77,8 @@ public class EventController {
     }//delete thì cái ID nó cũng không xuống đâu (chắc vậy) tại vì cái Data Integrity (chắc vậy)
 
     @GetMapping("/SelectEvent/{eventId}")
-    public ResponseEntity<Event> getEventById(@PathVariable Integer eventId) {
-        Event event = eventService.getEventById(eventId);
+    public ResponseEntity<EventResponse> getEventById(@PathVariable Integer eventId) {
+        EventResponse event = eventService.getEventById(eventId);
         return ResponseEntity.ok(event);
     }
 

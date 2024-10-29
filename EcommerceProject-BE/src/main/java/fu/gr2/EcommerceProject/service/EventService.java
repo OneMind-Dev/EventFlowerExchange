@@ -1,22 +1,21 @@
 package fu.gr2.EcommerceProject.service;
 
-import fu.gr2.EcommerceProject.dto.request.EventCreationRequest;
+import fu.gr2.EcommerceProject.dto.request.EventCreateRequest;
 import fu.gr2.EcommerceProject.dto.request.EventUpdateRequest;
 import fu.gr2.EcommerceProject.dto.response.EventResponse;
 import fu.gr2.EcommerceProject.entity.Event;
+import fu.gr2.EcommerceProject.entity.EventCategory;
 import fu.gr2.EcommerceProject.entity.User;
-import fu.gr2.EcommerceProject.exception.AppException;
-import fu.gr2.EcommerceProject.exception.ErrorCode;
 import fu.gr2.EcommerceProject.exception.EventNotFoundException;
 import fu.gr2.EcommerceProject.mapper.EventMapper;
+import fu.gr2.EcommerceProject.repository.EventCategoryRepository;
 import fu.gr2.EcommerceProject.repository.EventRepository;
-import fu.gr2.EcommerceProject.repository.FlowerRepository;
 import fu.gr2.EcommerceProject.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,14 +27,16 @@ import java.util.stream.Collectors;
 public class EventService {
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
+    private final EventCategoryRepository eventCategoryRepository;
+    private final UserRepository userRepository;
 
-    public List<EventResponse> getAllEvents(UUID categoryId, String eventName) {
+    public List<EventResponse> getAllEvents(int categoryId, String eventName) {
         List<Event> events;
 
-        if (categoryId != null && eventName != null && !eventName.isEmpty()) {
-            events = eventRepository.findByCategoryIdAndEventNameContaining(categoryId, eventName);
-        } else if (categoryId != null) {
-            events = eventRepository.findByCategoryId(categoryId);
+        if (categoryId != 0 && eventName != null && !eventName.isEmpty()) {
+            events = eventRepository.findByEventCategory_CategoryIdAndEventName(categoryId, eventName);
+        } else if (categoryId != 0) {
+            events = eventRepository.findByEventCategory_CategoryId(categoryId);
         } else if (eventName != null && !eventName.isEmpty()) {
             events = eventRepository.findByEventNameContaining(eventName);
         } else {
@@ -56,7 +57,7 @@ public class EventService {
 
         // Update fields based on the request
 
-        event.setCategoryId(request.getCategoryId());
+        event.setEventCategory(eventCategoryRepository.findById(request.getCategoryId()).get());
         event.setEventName(request.getEventName());
         event.setDescription(request.getDescription());
         event.setCreatedAt(request.getCreatedAt());
@@ -68,16 +69,40 @@ public class EventService {
         return eventMapper.toEventResponse(eventRepository.save(event));
     }
     @Transactional
-    public Event createEvent(EventCreationRequest request){
+    public EventResponse createEvent(EventCreateRequest request){
         Event event = new Event();
+        // Retrieve the EventCategory safely
+        EventCategory eventCategory = eventCategoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new EntityNotFoundException("Event Category not found with id: " + request.getCategoryId()));
+        event.setEventCategory(eventCategory);
+
+        // Retrieve the User safely
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + request.getUserId()));
+        event.setUser(user);
+
         event.setCreatedAt(request.getCreatedAt());
         event.setEventName(request.getEventName());
         event.setDescription(request.getDescription());
-        event.setFlowerEventRelationships(request.getFlowerEventRelationships());
         event.setImage(request.getImage());
         event.setStartDate(request.getStartDate());
         event.setEndDate(request.getEndDate());
-        return eventRepository.save(event);
+        return eventMapper.toEventResponse(eventRepository.save(event));
+    }
+
+    public void deleteEvent(Integer eventId) {
+        eventRepository.deleteById(eventId);
+    }
+
+    public EventResponse getEventById(Integer eventId) {
+        return eventMapper.toEventResponse(eventRepository.findById(eventId).get());
+    }
+    public void updateImage(int eventId, String imgPath) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException("Event không tồn tại"));
+        event.setImage(imgPath);
+
+        eventRepository.save(event);
     }
 
 }

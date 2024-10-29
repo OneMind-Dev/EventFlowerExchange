@@ -12,7 +12,7 @@ import java.util.UUID;
 public class FlowerEventService {
     @Autowired
     private FlowerEventRepository flowerEventRepository;
-    public List<FlowerEventRelationship> getByEventId(UUID eventId) {
+    public List<FlowerEventRelationship> getByEventId(int eventId) {
         return flowerEventRepository.findByEvent_EventId(eventId);
     }
 }
