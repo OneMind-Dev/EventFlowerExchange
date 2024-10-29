@@ -11,19 +11,10 @@ function AdminApprove() {
     const [loading, setLoading] = useState(false);
     const [confirmedIds, setConfirmedIds] = useState(new Set()); // State to track confirmed IDs
     const [declinedIds, setDeclinedIds] = useState(new Set()); // State to track declined IDs
-    const [reasonData, setReasonData] = useState({}); // Store reasons for each record
     const addNewItem = (newItem) => {
         setData((prevData) => [newItem, ...prevData]); // Add new item at the beginning
     };
-
-    useEffect(() => {
-        fetchData();
-        const confirmedIdsFromStorage = JSON.parse(localStorage.getItem("confirmedIds")) || [];
-        setConfirmedIds(new Set(confirmedIdsFromStorage));
-        const declinedIdsFromStorage = JSON.parse(localStorage.getItem("declinedIds")) || [];
-        setDeclinedIds(new Set(declinedIdsFromStorage));
-    }, []);
-
+    // Fetch data from the API
     const fetchData = async () => {
         setLoading(true);
         try {
@@ -62,7 +53,7 @@ function AdminApprove() {
             title: "Image",
             dataIndex: "image",
             key: "image",
-            render: (image) => image ? <img src={image} alt="user" style={{ width: 50, height: 50 }} /> : "No Image",
+            render: (image) => image ? <img src={image} alt="user" style={{ width: 50, height: 50 }} /> : "No Image"
         },
         {
             title: "Reason",
@@ -71,15 +62,16 @@ function AdminApprove() {
             render: (_, record) => (
                 <Input
                     placeholder="Enter reason"
-                    value={reasonData[record.id] || ""}
                     onChange={(e) => handleReasonChange(record.id, e.target.value)}
-                    disabled={confirmedIds.has(record.id) || declinedIds.has(record.id)} // Disable input if confirmed and decline
+                    value={record.reason}
+                    disabled={confirmedIds.has(record.id)} // Disable if confirmed
                 />
             ),
         },
         {
             title: "Action",
             key: "action",
+            align: "center",
             render: (_, record) => (
                 <Space size="middle">
                     {confirmedIds.has(record.id) ? (
@@ -89,7 +81,13 @@ function AdminApprove() {
                     ) : (
                         <>
                             <Button type="primary" onClick={() => handleConfirm(record.id)}>Confirm</Button>
-                            <Button type="danger" onClick={() => handleDecline(record.id)}>Decline</Button>
+                            <Button
+                                type="danger"
+                                onClick={() => handleDecline(record.id)}
+                                disabled={!record.reason} // Disable if reason is empty
+                            >
+                                Decline
+                            </Button>
                         </>
                     )}
                 </Space>
@@ -97,12 +95,13 @@ function AdminApprove() {
         },
     ];
 
-    // Handle reason input change
-    const handleReasonChange = (id, value) => {
-        setReasonData(prev => ({ ...prev, [id]: value }));
+    const handleReasonChange = (id, reason) => {
+        setData((prevData) =>
+            prevData.map((item) => item.id === id ? { ...item, reason } : item)
+        );
     };
 
-    // Handle confirm function
+    // Confirm function
     const handleConfirm = async (formId) => {
         try {
             const token = localStorage.getItem("token");
@@ -110,13 +109,13 @@ function AdminApprove() {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.data && response.data.code === 1000) {
-                setConfirmedIds(prevIds => {
+                setConfirmedIds((prevIds) => {
                     const updatedIds = new Set(prevIds);
                     updatedIds.add(formId);
                     localStorage.setItem("confirmedIds", JSON.stringify(Array.from(updatedIds)));
                     return updatedIds;
                 });
-                fetchData(); // Refresh data to update UI
+                fetchData(); // Refresh data
             } else {
                 message.error("Failed to confirm registration.");
             }
@@ -125,16 +124,15 @@ function AdminApprove() {
         }
     };
 
-    // Handle decline function with reason validation
+    // Decline function with reason validation
     const handleDecline = async (formId) => {
-        // Check if the reason is provided
-        if (!reasonData[formId]) {
-            message.warning("Please provide a reason before declining.");
+        const record = data.find((item) => item.id === formId);
+        if (!record.reason) {
+            message.error("Please provide a reason before declining.");
             return;
         }
 
         try {
-            // Get the token from local storage
             const token = localStorage.getItem("token");
 
             // Prepare the API request
@@ -147,13 +145,13 @@ function AdminApprove() {
 
             // Check if the response indicates a successful decline
             if (response.data && response.data.code === 1000) {
-                setDeclinedIds(prevIds => {
+                setDeclinedIds((prevIds) => {
                     const updatedIds = new Set(prevIds);
                     updatedIds.add(formId);
                     localStorage.setItem("declinedIds", JSON.stringify(Array.from(updatedIds)));
                     return updatedIds;
                 });
-                fetchData(); // Refresh data to update UI
+                fetchData(); // Refresh data
             } else {
                 message.error("Failed to decline registration.");
             }
@@ -162,6 +160,7 @@ function AdminApprove() {
         }
     };
 
+    // Render component
     return (
         <div>
             <Header />
