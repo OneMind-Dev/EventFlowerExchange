@@ -1,9 +1,6 @@
 package fu.gr2.EcommerceProject.controller;
 
-import fu.gr2.EcommerceProject.dto.request.ApiResponse;
-import fu.gr2.EcommerceProject.dto.request.UserCreationRequest;
-import fu.gr2.EcommerceProject.dto.request.UserRegistrationRequest;
-import fu.gr2.EcommerceProject.dto.request.UserUpdateRequest;
+import fu.gr2.EcommerceProject.dto.request.*;
 import fu.gr2.EcommerceProject.dto.response.RegistrationFormResponse;
 import fu.gr2.EcommerceProject.dto.response.UserResponse;
 import fu.gr2.EcommerceProject.exception.UserNotFound;
@@ -88,5 +85,9 @@ public class UserController {
         return  ApiResponse.<Void>builder()
                 .message("Unban user thành công")
                 .build();
+    }
+    @PatchMapping("/changepass/{userId}")
+    public void changePass(@PathVariable String userId,@RequestBody @Valid UserChangePasswordRequest request){
+        userService.changePassword(userId, request);
     }
 }

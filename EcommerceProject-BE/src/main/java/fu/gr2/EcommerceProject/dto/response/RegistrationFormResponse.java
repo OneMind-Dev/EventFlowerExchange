@@ -22,4 +22,7 @@ public class RegistrationFormResponse {
     String image;
     String rejectionReason;
     Role role;
+    String username;
+    String email;
+    String phone;
 }

@@ -165,6 +165,7 @@ public class UserRegistrationService {
             RegistrationForm registrationForm = registrationFormMapper.toRegistrationForm(request);
             registrationForm.setUser(existingUser); // Thiết lập User cho RegistrationForm
             registrationForm.setRole(requestedRole); // Thiết lập Role
+            registrationForm.setUser(userRepository.findById(userId).get());
 
             // Lưu RegistrationForm vào cơ sở dữ liệu
             registrationFormRepository.save(registrationForm);
