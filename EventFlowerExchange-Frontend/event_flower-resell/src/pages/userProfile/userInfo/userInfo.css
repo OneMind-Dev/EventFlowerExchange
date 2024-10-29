@@ -1,7 +1,6 @@
 .background {
     background-color: #F4F4F4;
     min-height: 100vh; 
-    padding: 20px; 
     display: flex;            
     justify-content: start;
     align-items: flex-start;  
@@ -10,10 +9,8 @@
 
 .user_container {
     background-color: white;
-    width: 17%;
-    margin-left: 5%;
     padding: 15px; 
-    border-radius: 10px;
+    border-radius: 15px;
     padding-bottom: 2%;
     text-align: center; 
 }
@@ -41,7 +38,7 @@
 
 .username {
     color: blue;
-    
+    cursor: pointer;
     margin-top: 10px;
 }
 
@@ -52,24 +49,32 @@
 
 .user_interact p {
     color: #CC7A7A;
+    cursor: pointer;
     margin-bottom: 30px; 
 }
 
+.bold {
+    font-weight: bold;
+  }
+
 .privateInfor {
     color: #CC7A7A;
+    cursor: pointer;
     margin-bottom: 30px;
 }
 
 .infor_container {
     background-color: white;
-    width: 70%; 
+    width: 100%; 
     padding: 15px; 
-    border-radius: 10px;
+    border-radius: 15px;
     padding-bottom: 1%;
 }
 
 .infor_container h1 {
-    margin: 15px 0px 5% 6%;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-bottom: 20px;
     color: #CC7A7A;
 }
 
@@ -127,4 +132,36 @@
 .edit-button {
     background-color: #F4DDDD;
     color: #CC7A7A;
+}
+
+/* Password input fields styling */
+.password-field-container .form-item {
+    display: flex;
+    align-items: center;
+    justify-content: start; /* Align the label and input fields */
+    margin: 15px 0;
+}
+
+.password-field-container label {
+    width: 150px;
+    margin-left: 2%;
+    color: #CC7A7A;
+}
+
+.password-field-container .ant-form-item {
+    flex: 1;
+}
+
+.password-field-container .ant-input-password {
+    width: 50%; /* Adjust width as needed */
+    padding: 8px; /* Adjust padding for better look */
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    transition: border-color 0.3s;
+}
+
+.password-field-container .ant-input-password:hover, 
+.password-field-container .ant-input-password:focus {
+    border-color: #CC7A7A; /* Change border color on hover or focus */
+    box-shadow: 0 0 5px rgba(204, 122, 122, 0.3); /* Optional: subtle shadow effect */
 }

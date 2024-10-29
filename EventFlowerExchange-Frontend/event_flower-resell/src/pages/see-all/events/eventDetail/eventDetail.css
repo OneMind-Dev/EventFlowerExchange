@@ -48,11 +48,19 @@
     width: 60px;
 }
 
+.wrapper__shop-info--img img:hover{
+    cursor: pointer;
+}
+
 .wrapper__shop-info--des {
     margin-left: 20px;
 }
 
-.wrapper__event--detail,
+.wrapper__shop-info--des:hover {
+    cursor: pointer;
+}
+
+.wrapper__event--detail h3,
 .wrapper__event--other h3 {
     color: #CC7A7A;
     margin-top: 20px;
@@ -74,4 +82,27 @@
     border-radius: 15px;
     border: 2px solid #f4f4f4;
     margin: 20px 0;
+}
+
+.wrapper__event--detail {
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-new-flower-btn {
+    border: none;
+    border-radius: 10px;
+    width: 110px;
+    height: 40px;
+    font-size: 14px;
+    margin-right: 10px;
+    background: #F4DDDD;
+    color: #CC7A7A;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.add-new-flower-btn:hover {
+    opacity: 0.8;
+    cursor: pointer;
 }

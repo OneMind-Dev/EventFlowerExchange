@@ -2,24 +2,32 @@ package fu.gr2.EcommerceProject.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-import java.util.UUID;
+import java.math.BigDecimal;
+
 
 @Entity
-@Getter
-@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Builder
 public class OrderDetail {
     @Id
-    @Column (name = "eventdetail_id")
-    @GeneratedValue (strategy = GenerationType.AUTO)
-    UUID eventDetailId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    int orderDetailId;
+
     @ManyToOne
     @JoinColumn(name = "order_id")
-    private Orders orders;
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "flower_id") // This will create the foreign key in the order_detail table
-    private Flower flower;  // A single flower associated with this order detail
+    Order order;
+
+    @ManyToOne
+    @JoinColumn(name = "flower_event_relationship_id")
+    FlowerEventRelationship flowerEventRelationship;  // Assuming this entity links the flower to an event
+
+    int quantity;
+
+    BigDecimal price;
 }

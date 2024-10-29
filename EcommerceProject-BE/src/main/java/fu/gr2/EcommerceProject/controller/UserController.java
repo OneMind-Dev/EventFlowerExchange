@@ -4,15 +4,14 @@ import fu.gr2.EcommerceProject.dto.request.ApiResponse;
 import fu.gr2.EcommerceProject.dto.request.UserCreationRequest;
 import fu.gr2.EcommerceProject.dto.request.UserRegistrationRequest;
 import fu.gr2.EcommerceProject.dto.request.UserUpdateRequest;
+import fu.gr2.EcommerceProject.dto.response.RegistrationFormResponse;
 import fu.gr2.EcommerceProject.dto.response.UserResponse;
-import fu.gr2.EcommerceProject.entity.User;
 import fu.gr2.EcommerceProject.exception.UserNotFound;
 import fu.gr2.EcommerceProject.service.UserRegistrationService;
 import fu.gr2.EcommerceProject.service.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +22,7 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
     private UserRegistrationService userRegistrationService;
 
     @PostMapping("/register")
@@ -33,17 +33,15 @@ public class UserController {
                 .build();
     }
 
-
-
     @GetMapping
     ApiResponse<List<UserResponse>> getUsers() {
 
-        var authentitcation = SecurityContextHolder.getContext().getAuthentication();
-
-        log.info("Username: {}",authentitcation.getName());
-        authentitcation.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
-
-
+//        var authentitcation = SecurityContextHolder.getContext().getAuthentication();
+//
+//        log.info("Username: {}",authentitcation.getName());
+//        authentitcation.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
+//
+//
 
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.getUser())
@@ -66,14 +64,29 @@ public class UserController {
         return "User has been deleted";
     }
 
-    @PostMapping("/registerRole")
-    public User registerUserRole(@RequestBody UserRegistrationRequest request) {
+    @PostMapping("/registerRole/{userId}")
+    public RegistrationFormResponse registerUserRole(@PathVariable String userId, @RequestBody UserRegistrationRequest request) {
         try {
-            return userRegistrationService.registerUserRole(request);
+            return userRegistrationService.registerUserRole(userId,request);
         } catch (UserNotFound e) {
             throw new UserNotFound("User with the provided details not found.");
         } catch (UnsupportedOperationException e) {
             throw new RuntimeException("Operation is not supported.");
         }
+    }
+
+    @PostMapping("/ban/{userId}")
+    public ApiResponse<Void> banUser(@PathVariable String userId){
+        userService.banUser(userId);
+        return  ApiResponse.<Void>builder()
+                .message("Ban user thành công")
+                .build();
+    }
+    @PostMapping("/unban/{userId}")
+    public ApiResponse<Void> unbanUser(@PathVariable String userId){
+        userService.unbanUser(userId);
+        return  ApiResponse.<Void>builder()
+                .message("Unban user thành công")
+                .build();
     }
 }

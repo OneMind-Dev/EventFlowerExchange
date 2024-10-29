@@ -1,5 +1,7 @@
 package fu.gr2.EcommerceProject.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -22,10 +24,9 @@ public class Event {
    @Id
    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "event_id")
-   UUID eventId;
-   @ManyToOne
-   @JoinColumn(name = "Category_id")
-   EventCategory category;
+   Integer eventId;
+   @Column(name = "category_id")
+   String categoryId;
    String eventName;
    String description;
    @Column(name = "created_at")
@@ -38,5 +39,7 @@ public class Event {
    LocalDateTime startDate;
    LocalDateTime endDate;
    @OneToMany(mappedBy = "event", cascade = {CascadeType.ALL}, orphanRemoval = true)
+   @JsonManagedReference
+   @JsonIgnore
        List<FlowerEventRelationship> flowerEventRelationships;
 }

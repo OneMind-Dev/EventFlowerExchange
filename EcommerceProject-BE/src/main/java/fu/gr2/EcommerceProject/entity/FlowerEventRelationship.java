@@ -18,15 +18,15 @@ public class FlowerEventRelationship {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "e_id")
-    int eId;
+    @Column(name = "R_Id")
+    Integer relationshipID;
 
     @ManyToOne
-    @JoinColumn(name = "event_id")
+    @JoinColumn(name = "event_id", nullable = false)
     Event event;
 
     @ManyToOne
-    @JoinColumn(name = "flower_id")
+    @JoinColumn(name = "flower_id", nullable = false)
     Flower flower;
 
     @Column(name = "quantity")
@@ -38,11 +38,9 @@ public class FlowerEventRelationship {
     @Column(name = "flower_price")
     BigDecimal floPrice;
 
-    @Column(name = "stock")
-    int stock;
 
     @Column(name = "created_at")
-    LocalDate createdAt;
+    LocalDate createdAt=getCreatedAt();
 
     @Column(name = "image")
     String image;

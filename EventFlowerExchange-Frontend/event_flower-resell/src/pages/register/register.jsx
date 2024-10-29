@@ -14,10 +14,10 @@ const Register = () => {
     try {
       const response = await api.post("users/register", values);
 
-      toast.success("Successfully register new account");
+      toast.success("Tạo tài khoản thành công");
       navigate("/login");
     } catch (err) {
-      toast.error("Error register new account");
+      toast.error("Tạo tài khoản thất bại");
     }
   };
 

@@ -4,6 +4,7 @@
     padding: 40px;
     background: #ffff;
     border-radius: 15px;
+    margin-bottom: 20px;
 }
 
 .wrapper__shop-img {
@@ -31,3 +32,28 @@
     margin-bottom: 10px;
 }
 
+.wrapper__shop--check,
+.wrapper__shop--location {
+   margin-top: 17px;
+}
+
+.wrapper__shop--location {
+    margin-left: 6px;
+    display: flex;
+}
+
+.wrapper__shop--check {
+    display: flex;
+}
+
+.wrapper__shop--location p {
+    margin-left: 23px;
+}
+
+.wrapper__shop--check p {
+    margin-left: 19px;
+}
+
+.wrapper__shop--check {
+    margin-left: 4px;
+}

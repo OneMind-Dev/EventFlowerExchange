@@ -1,22 +1,24 @@
 package fu.gr2.EcommerceProject.dto.request;
 
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-@Builder
 public class EventUpdateRequest {
+    @NotBlank(message = "Category cannot be blank")
+    private String categoryId;
     @NotBlank(message = "Event name cannot be blank")
-    String eventName;
-    String description;
-    @FutureOrPresent(message = "Start date must be in the present or future")
-    LocalDateTime startDate;
-    @Future(message = "End date must be in the future")
-    LocalDateTime endDate;
-    String image;
+    private String eventName;
+    @NotBlank(message = "Category cannot be blank")
+    private String description;
+    @NotNull(message = "Creation date must not be null")
+    private LocalDateTime createdAt;
+    private String image;
+    @NotNull(message = "Start date must not be null")
+    private LocalDateTime startDate;
+    @NotNull(message = "End date must not be null")
+    private LocalDateTime endDate;
 }

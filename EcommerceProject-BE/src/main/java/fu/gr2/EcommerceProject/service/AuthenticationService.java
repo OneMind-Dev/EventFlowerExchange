@@ -67,8 +67,8 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request){
         var user= userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
-        if(!user.isStatusUser()){
+//disable cai nay vi cai status bi gi roi admin cung~ bi dinh false
+        if(!user.isStatus()){
             throw new AppException(ErrorCode.BANNED);
         }
 
@@ -78,13 +78,16 @@ public class AuthenticationService {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         var token = generateToken(user);
 
+
+
         return AuthenticationResponse.builder()
                 .token(token)
                 .authenticated(true)
                 .username(user.getUsername())
+                .userId(user.getUserId())
                 .email(user.getEmail())
                 .phone(user.getPhone())
-                .address(user.getPhone())
+                .address(user.getAddress())
                 .role(user.getRole())
                 .build();
     }
@@ -133,8 +136,6 @@ public class AuthenticationService {
 
         if(invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
-
-
         return signedJWT;
     }
 

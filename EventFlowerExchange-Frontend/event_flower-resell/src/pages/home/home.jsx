@@ -1,5 +1,5 @@
 import "./home.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/header/header";
 import { Button, Card } from "antd";
@@ -7,11 +7,22 @@ import Meta from "antd/es/card/Meta";
 import EventData from "../../components/config/eventData";
 
 import Footer from "../../components/footer/footer";
+import api from "../../components/config/axios";
+import { ToastContainer } from "react-toastify";
 const Home = () => {
-  const navigate = useNavigate();
+  const [events, setEvents] = useState([]);
 
-  // Hiển thị 2 sự kiện đầu tiên
-  const displayedEvents = EventData.slice(0, 2);
+  const navigate = useNavigate();
+  const fetchEvent = async () => {
+    const response = await api.get("/AllEvents");
+
+    console.log(response.data);
+    setEvents(response.data);
+  };
+
+  useEffect(() => {
+    fetchEvent();
+  }, []);
 
   // Lấy tất cả các hoa từ tất cả sự kiện
   const allFlowers = EventData.flatMap((event) => event.flowers);
@@ -24,6 +35,8 @@ const Home = () => {
   return (
     <>
       <Header />
+      <ToastContainer /> {/* Toast container for notifications */}
+
       <div className="wrapper">
         <div className="wrapper__poster">
           <img
@@ -158,25 +171,25 @@ const Home = () => {
           <h3>SỰ KIỆN</h3>
         </div>
         <div className="wrapper__card">
-          {displayedEvents.map((event) => (
+          {events.slice(0, 2).map((event) => (
             <>
               <Card
                 onClick={() => {
-                  navigate(`/events/${event.event_id}`);
+                  navigate(`/events/${event.eventId}`);
                 }}
                 hoverable
                 className="wrapper__card-card--event"
                 cover={
                   <img
                     className="wrapper__card-img--event"
-                    alt={event.event_name}
-                    src={event.event_image}
+                    alt={event.eventName}
+                    src={event.image}
                   />
                 }
               >
                 <Meta
                   className="wrapper__card-title--event"
-                  title={event.event_name}
+                  title={event.eventName}
                 />
               </Card>
             </>
@@ -194,6 +207,7 @@ const Home = () => {
           </button>
         </div>
       </div>
+      <Footer />
     </>
   );
 };

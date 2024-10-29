@@ -3,18 +3,23 @@ package fu.gr2.EcommerceProject.service;
 import fu.gr2.EcommerceProject.configuration.VNPAYConfig;
 import fu.gr2.EcommerceProject.dto.response.PaymentResponse;
 import fu.gr2.EcommerceProject.entity.Payment;
+import fu.gr2.EcommerceProject.repository.OrderRepository;
 import fu.gr2.EcommerceProject.repository.PaymentRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.tomcat.util.http.ConcurrentDateFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
+
 @Service
 public class VNPayService {
     @Autowired
@@ -84,6 +89,13 @@ public class VNPayService {
     }
 
     public PaymentResponse createVnPayPayment(HttpServletRequest request) {
+        Payment payment = new Payment();
+        BigDecimal AM = BigDecimal.valueOf(Double.valueOf(request.getParameter("amount")));
+        payment.setAmount(AM.multiply(BigDecimal.valueOf(100)));
+        payment.setPaymentDate(LocalDateTime.now());
+        payment.setPaymentStatus("PENDING");
+        payment.setOrder(orderRepository.findById(Integer.parseInt(request.getParameter("order_id"))).orElseThrow(() -> new IllegalArgumentException("Order not found with id: " + request.getParameter("order_id"))));
+        int pid = repository.save(payment).getPaymentId();
         long amount = Integer.parseInt(request.getParameter("amount")) * 100L;
         String bankCode = request.getParameter("bankCode");
         Map<String, String> vnpParamsMap = vnpayConfig.getVNPayConfig();
@@ -103,10 +115,17 @@ public class VNPayService {
                 .message("success")
                 .paymentUrl(paymentUrl).build();
     }
-    public void savePayment(HttpServletRequest request){
-        Payment payment = new Payment();
-        payment.setVnp_Amount(Double.valueOf(request.getParameter("vnp_Amount")));
-        payment.setVnp_OrderType(request.getParameter("other"));
-        repository.save(payment);
+    @Autowired
+    OrderRepository orderRepository;
+
+    public void savePayment(int s){
+        Payment payment = repository.findTopByOrderByPaymentIdDesc();
+         if(s==1){
+             payment.setPaymentStatus("SUCCESS");
+         }
+         else {
+             payment.setPaymentStatus("FAILED");
+         }
+         repository.save(payment);
     }
 }

@@ -1,4 +1,3 @@
-import React from "react";
 import AuthenTemplate from "../../components/authen-template/authen-template";
 import { Form, Input, Button } from "antd";
 import FormItem from "antd/es/form/FormItem";
@@ -23,12 +22,14 @@ const Login = () => {
       localStorage.setItem("token", token);
 
       if (role.includes("ADMIN")) {
-        navigate("/dashboard");
+        console.log("Include");
+        navigate("/");
       } else {
         navigate("/");
       }
     } catch (err) {
       toast.error("Đăng nhập thất bại");
+      console.log(err);
     }
   };
 

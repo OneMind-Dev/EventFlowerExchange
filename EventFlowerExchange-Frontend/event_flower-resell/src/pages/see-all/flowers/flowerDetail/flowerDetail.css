@@ -80,7 +80,7 @@
     color: rgb(116, 114, 114);
 }
 
-.wrapper__flower--detail,
+.wrapper__flower--detail h3,
 .wrapper__flower--other h3 {
     color: #CC7A7A;
     margin-top: 20px;

@@ -1,13 +1,23 @@
 import "./shopProfile.css";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import EventData from "../../components/config/eventData";
 import UserData from "../../components/config/userData";
 import Header from "../../components/header/header";
-import { Image } from "antd";
+import { Card, Image } from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { faUserCheck } from "@fortawesome/free-solid-svg-icons";
+import Meta from "antd/es/card/Meta";
+import { useEffect } from "react";
 
 const ShopProfile = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const { id } = useParams();
   const user = UserData.find((user) => user.user_id === parseInt(id));
+  const navigate = useNavigate();
 
   if (!user) {
     return <h2>User not found</h2>;
@@ -16,6 +26,8 @@ const ShopProfile = () => {
   const userEvents = EventData.filter(
     (event) => event.user_id === user.user_id
   );
+
+  const userFlowers = userEvents.flatMap((event) => event.flowers);
 
   return (
     <>
@@ -36,29 +48,78 @@ const ShopProfile = () => {
               <p>Đánh giá</p>
             </div>
           </div>
+          <div className="wrapper__shop--location">
+            <FontAwesomeIcon icon={faLocationDot} />
+            <p>{user.address}</p>
+          </div>
+          <div className="wrapper__shop--check">
+            <FontAwesomeIcon icon={faUserCheck} />
+            <p>Đã tham gia: </p>
+          </div>
         </div>
 
-        <h1>{user.username}</h1>
-        <img src={user.avatar} alt={user.username} style={{ width: "150px" }} />
-        <p>Email: {user.email}</p>
-        <p>Phone: {user.phone}</p>
-        <p>Address: {user.address}</p>
+        <div className="wrapper__flower--detail">
+          <h3>TẤT CẢ SỰ KIỆN</h3>
+          <div className="wrapper__flower--detail-card">
+            {userEvents.map((event) => (
+              <>
+                <Card
+                  bordered={false}
+                  onClick={() => {
+                    navigate(`/events/${event.event_id}`);
+                  }}
+                  key={event.event_id}
+                  hoverable
+                  className="wrapper__card-card--event"
+                  cover={
+                    <img
+                      className="wrapper__card-img--event"
+                      alt={event.event_name}
+                      src={event.event_image}
+                    />
+                  }
+                >
+                  <Meta
+                    className="wrapper__card-title--event"
+                    title={event.event_name}
+                  />
+                </Card>
+              </>
+            ))}
+          </div>
+        </div>
 
-        <h3>Events by {user.username}:</h3>
-        <ul>
-          {userEvents.map((event) => (
-            <li key={event.event_id}>
-              <Link to={`/event/${event.event_id}`}>
-                <h4>{event.event_name}</h4>
-                <img
-                  src={event.event_image}
-                  alt={event.event_name}
-                  style={{ width: "200px" }}
-                />
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <div className="wrapper__event--detail">
+          <h3>TẤT CẢ CÁC HOA</h3>
+          <div className="wrapper__event--detail-card">
+            {userFlowers.map((flower) => (
+              <>
+                <Card
+                  bordered={false}
+                  onClick={() => {
+                    navigate(`/flowers/${flower.flower_id}`);
+                  }}
+                  key={flower.flower_id}
+                  hoverable
+                  className="wrapper__card-card"
+                  cover={
+                    <img
+                      className="wrapper__card-img"
+                      alt={flower.flower_name}
+                      src={flower.flower_image}
+                    />
+                  }
+                >
+                  <Meta
+                    className="wrapper__card-title"
+                    title={flower.flower_name}
+                    description={flower.price}
+                  />
+                </Card>
+              </>
+            ))}
+          </div>
+        </div>
       </div>
     </>
   );

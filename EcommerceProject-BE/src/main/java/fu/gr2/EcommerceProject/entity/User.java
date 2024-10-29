@@ -8,6 +8,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -18,10 +19,11 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-public class User {
+public class User implements Serializable{
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    String user_id;
+    String userId;
 
     @Column(unique = true, nullable = false)
     String username;
@@ -41,11 +43,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     Set<Role> role;
 
-    boolean statusUser = true;
+    boolean status = true;
 
     @CreationTimestamp
     LocalDateTime createdAt;
-
-    boolean approvedByAdmin = false;
-    String rejectionReason;
 }

@@ -25,14 +25,36 @@ import javax.crypto.spec.SecretKeySpec;
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = { "/users/register",
-                                                "/auth/login",
-                                                "/auth/introspect",
-                                                "/auth/logout",
-                                                "/auth/introspect   ",
-                                                "/AllEvents",
-                                                   "/api/flowers",
-                                                    "/payment/vn-pay-callback"
-                                                    };
+            "/users/{userId}",
+            "/auth/login",
+            "/auth/introspect",
+            "/auth/logout",
+            "/auth/introspect   ",
+            "/AllEvents",
+            "/api/flowers",
+            "/v3/api-docs",
+            "/swagger-resources/**",
+            "/swagger-ui/**",
+            "/webjars/**",
+            "users/registerRole/{userId}",
+            "/admin/approveRegistration/{formId}",
+            "/admin/rejectRegistration/{formId}",
+            "/admin/registerForm",
+            "/AllEvents",
+            "/Getflowers",
+            "/CreateFlower",
+            "/CreateEvent",
+            "/AddFlowerToEvent",
+            "/GetFlowerFromEvent/{eventId}",
+            "/addFlowerToCart/{userId}/{flowerEventId}",
+            "/GetShoppingCart/{userId}",
+            "/SelectEvent/{eventId}",
+            "/updateCart/{userId}",
+            "/order/shipcode/{userId}",
+            "/order/{userId}",
+            "/profile-picture",
+            "/event-image"
+            };
 
     @Value("${jwt.signerKey}")
     private String signerKey;
@@ -45,27 +67,24 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(request ->
-                request.requestMatchers(HttpMethod.POST,PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET,PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET,PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET,"/users")
-                        .hasAuthority("SCOPE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE)
-                        .hasAuthority("SCOPE_ADMIN")
-                        .anyRequest().authenticated());
-
-        httpSecurity.oauth2ResourceServer(oauth2 ->
-            oauth2.jwt(jwtConfigurer ->  jwtConfigurer.decoder(customJwtDecoder))
-        );
-
-
-        httpSecurity.csrf(AbstractHttpConfigurer::disable);
-
-
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()  // Không yêu cầu JWT
+                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.PUT, PUBLIC_ENDPOINTS).permitAll()  // Không yêu cầu JWT
+                        .requestMatchers(HttpMethod.GET, "/users").hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE).hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/admin/AdminRegister").hasAuthority("SCOPE_ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder)))
+                .csrf(AbstractHttpConfigurer::disable);
 
         return httpSecurity.build();
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -82,8 +101,7 @@ public class SecurityConfig {
     JwtDecoder jwtDecoder(){
         SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
 
-        return NimbusJwtDecoder
-                .withSecretKey(secretKeySpec)
+        return NimbusJwtDecoder.withSecretKey(secretKeySpec)
                 .macAlgorithm(MacAlgorithm.HS512)
                 .build();
     }
@@ -92,4 +110,8 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(10);
     }
+
+
+
+
 }

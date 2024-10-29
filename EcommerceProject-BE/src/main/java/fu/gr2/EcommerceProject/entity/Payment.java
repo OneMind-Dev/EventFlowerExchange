@@ -2,10 +2,14 @@ package fu.gr2.EcommerceProject.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -13,10 +17,13 @@ import java.util.UUID;
 @Builder
 public class Payment {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID PaymentId;
-    @Column (name = "OrderType")
-    private String vnp_OrderType;
-    @Column (name = "Amount")
-    private double vnp_Amount;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    int paymentId;
+    BigDecimal amount;
+    String paymentStatus;  // e.g., SUCCESS, FAILED, PENDING
+    @CreationTimestamp
+    LocalDateTime paymentDate;
+    @OneToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 }

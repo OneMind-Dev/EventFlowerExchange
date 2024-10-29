@@ -1,0 +1,104 @@
+/* PaymentPage.css */
+
+.payment-page {
+    max-width: 800px; /* Limit width for better readability */
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9; /* Light background color for contrast */
+    border-radius: 10px; /* Rounded corners for a modern look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.payment-title {
+    color: #CC7A7A;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 28px; /* Larger font size for prominence */
+    font-weight: bold; /* Bold title for emphasis */
+}
+
+.total-price {
+    text-align: right; /* Align total price to the right */
+    font-size: 20px; /* Slightly larger font for total */
+    color: #333; /* Darker color for contrast */
+    margin: 20px 0; /* Margin for spacing */
+}
+
+.table-container {
+    overflow-x: auto; /* Ensure table is scrollable on small screens */
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px; /* Space between buttons and table */
+}
+
+.payment-button {
+    background-color: #EE6262; /* Primary color for action button */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth transition effect */
+}
+
+.cancel-button {
+    background-color: #ccc; /* Neutral color for cancel button */
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth transition effect */
+}
+
+.payment-button:hover {
+    background-color: #CC7A7A; /* Darker shade on hover */
+}
+
+.cancel-button:hover {
+    background-color: #bbb; /* Darker shade on hover */
+}
+
+.table {
+    margin-bottom: 20px; /* Space below the table */
+}
+
+th, td {
+    text-align: center; /* Center text in table cells */
+}
+
+h3 {
+    margin-bottom: 10px;
+}
+
+.confirmation-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.confirm-button, .payment-cancel {
+    color: white;
+    border: none;
+    background-color: #EE6262;
+    margin: 10px;
+    padding: 10px 20px;
+}

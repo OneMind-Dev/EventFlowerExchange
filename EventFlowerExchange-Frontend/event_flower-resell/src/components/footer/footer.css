@@ -1,15 +1,19 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensures body is at least the height of the viewport */
+    margin: 0; /* Reset default margin */
+}
+
+.main-content {
+    flex: 1; /* This allows the content area to grow and take up available space */
+    padding: 20px; /* Add some padding for better spacing */
+}
+
 .footer {
-<<<<<<< Updated upstream
+    margin-top: 10%;
     background-color: #F4DDDD; /* Footer background color */
     height: 60px; /* Height of the footer */
     width: 100%; /* Make sure footer spans full width */
-    position: fixed; /* Fixed positioning */
-    bottom: 0; /* Sticks the footer to the bottom */
-=======
-    background-color: #F4DDDD; 
-    height: 60px; 
-    width: 100%; 
-    position: fixed; 
-    bottom: 0; 
->>>>>>> Stashed changes
+    /* Remove fixed positioning */
 }

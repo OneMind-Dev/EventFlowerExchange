@@ -1,23 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 import "./eventDetail.css";
 import Header from "../../../../components/header/header";
 import { useNavigate, useParams } from "react-router-dom";
-import EventData from "../../../../components/config/eventData";
-import UserData from "../../../../components/config/userData";
 import { Card, Image } from "antd";
 import Meta from "antd/es/card/Meta";
 import { useEffect } from "react";
+import api from "../../../../components/config/axios";
+import { useSelector } from "react-redux";
 
 const EventDetail = () => {
+  const { eventId } = useParams();
+  const [event, setEvent] = useState(null);
+  const [events, setEvents] = useState([]);
   const navigate = useNavigate();
-  const { id } = useParams(); // Lấy id của sự kiện từ URL
-  const event = EventData.find((event) => event.event_id === parseInt(id)); // Tìm sự kiện theo id1
-  const displayedEvents = EventData.slice(0, 2);
-  const user = UserData.find((user) => user.user_id === event.user_id);
+  const user = useSelector((store) => store.user);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const fetchEvent = async () => {
+      try {
+        const response = await api.get(`/SelectEvent/${eventId}`);
+        setEvent(response.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    fetchEvent();
+  }, [eventId]);
+
+  const fetchEvents = async () => {
+    const response = await api.get("/AllEvents");
+
+    console.log(response.data);
+    setEvents(response.data);
+  };
+
+  useEffect(() => {
+    fetchEvents();
   }, []);
+
+  if (!event) {
+    return <h1>Không có sự kiện này!</h1>;
+  }
 
   return (
     <>
@@ -26,35 +50,46 @@ const EventDetail = () => {
         <div className="wrapper__event-info">
           <Image
             className="wrapper__event-info--img"
-            src={event.event_image}
-            alt={event.event_name}
+            src={event.image}
+            alt={event.eventName}
           />
-          <h2 className="wrapper__event-name">{event.event_name}</h2>
+          <h2 className="wrapper__event-name">{event.eventName}</h2>
           <p className="wrapper__event-des">{event.description}</p>
         </div>
 
         <div className="wrapper__shop-info">
           <div className="wrapper__shop-info--img">
             <img
+              // onClick={() => {
+              //   navigate(`/${user.user_id}`);
+              // }}
               src="../src/components/images/userImage.png"
-              alt="user image"
+              alt="Ảnh người bán"
             />
           </div>
 
           <div className="wrapper__shop-info--des">
             <h3
-              onClick={() => {
-                navigate(`/${user.user_id}`);
-              }}
+            // onClick={() => {
+            //   navigate(`/${user.user_id}`);
+            // }}
             >
-              {user.username}
+              {event.user.username}
             </h3>
           </div>
         </div>
 
         <div className="wrapper__event--detail">
-          <h3>SẢN PHẨM TRONG SỰ KIỆN</h3>
-          <div className="wrapper__event--detail-card">
+          <h3>SẢN PHẨM CÓ TRONG SỰ KIỆN</h3>
+          {event.user.userId === user.userId && (
+            <button
+              className="add-new-flower-btn"
+              onClick={() => navigate(`/addFlowerToEvent/${event.eventId}`)}
+            >
+              Thêm Hoa
+            </button>
+          )}
+          {/* <div className="wrapper__event--detail-card">
             {event.flowers.map((flower) => (
               <>
                 <Card
@@ -81,33 +116,33 @@ const EventDetail = () => {
                 </Card>
               </>
             ))}
-          </div>
+          </div> */}
         </div>
 
         <div className="wrapper__event--other">
           <h3>CÁC SỰ KIỆN KHÁC</h3>
           <div className="wrapper__event--other-card">
-            {displayedEvents.map((event) => (
+            {events.slice(0, 2).map((event) => (
               <>
                 <Card
                   bordered={false}
                   onClick={() => {
-                    navigate(`/events/${event.event_id}`);
+                    navigate(`/events/${event.eventId}`);
                   }}
-                  key={event.event_id}
+                  key={event.eventId}
                   hoverable
                   className="wrapper__card-card--event"
                   cover={
                     <img
                       className="wrapper__card-img--event"
-                      alt={event.event_name}
-                      src={event.event_image}
+                      alt={event.eventName}
+                      src={event.image}
                     />
                   }
                 >
                   <Meta
                     className="wrapper__card-title--event"
-                    title={event.event_name}
+                    title={event.eventName}
                   />
                 </Card>
               </>
