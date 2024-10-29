@@ -1,62 +1,108 @@
-import { Button, Image, Table } from "antd";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import api from "../../components/config/axios";
-import { toast } from "react-toastify";
+import React, { useEffect, useState } from "react";
+import { Table, Button, Image, InputNumber, Modal } from "antd";
+import { useNavigate } from "react-router-dom"; // Use useNavigate for navigation
 import Header from "../../components/header/header";
+import { toast } from 'react-toastify'; // Ensure you have toast notifications set up
+import "./cart.css";
 
 function CartPage() {
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const data = useSelector((store) => store.cart);
-  const dispatch = useDispatch();
+  const [cartItems, setCartItems] = useState([]);
+  const navigate = useNavigate(); // Initialize useNavigate for navigation
 
-  const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
+  useEffect(() => {
+    // Load cart items from sessionStorage when component mounts
+    const storedCartItems = JSON.parse(sessionStorage.getItem("cart")) || [];
+    setCartItems(storedCartItems);
+  }, []);
 
   const columns = [
     {
-      title: "Hình ảnh",
-      dataIndex: "image",
-      //render: (image) => <Image width={200} src={image} />,
+      title: "Ảnh",
+      dataIndex: "flower_image",
+      key: "flower_image",
+      render: (src) => <Image width={50} src={src} alt="Flower Image" />,
     },
     {
-      title: "Tên",
-      dataIndex: "name",
+      title: "Tên sản phẩm",
+      dataIndex: "flower_name",
+      key: "flower_name",
     },
     {
-      title: "Mô Tả",
-      dataIndex: "desciption",
+      title: "Giá (VND)",
+      dataIndex: "price",
+      key: "price",
     },
     {
       title: "Số lượng",
       dataIndex: "quantity",
+      key: "quantity",
+      render: (quantity, record) => (
+        <InputNumber
+          min={0}
+          value={quantity}
+          onChange={(value) => handleQuantityChange(value, record.flower_id)}
+        />
+      ),
     },
     {
-      title: "Giá",
-      dataIndex: "price",
+      title: "Chức năng",
+      key: "actions",
+      render: (_, record) => (
+        <Button type="danger" onClick={() => handleRemove(record.flower_id)}>
+          Xóa
+        </Button>
+      ),
     },
   ];
+
+  const handleQuantityChange = (value, id) => {
+    if (value < 0) return; // Prevent negative quantities
+
+    const updatedCart = cartItems.map((item) => {
+      if (item.flower_id === id) {
+        return { ...item, quantity: value };
+      }
+      return item;
+    });
+    setCartItems(updatedCart);
+    sessionStorage.setItem("cart", JSON.stringify(updatedCart));
+
+    // Check if quantity is zero and prompt user
+    if (value === 0) {
+      confirmRemoval(id);
+    }
+  };
+
+  const confirmRemoval = (id) => {
+    Modal.confirm({
+      title: "Xóa sản phẩm",
+      content: "Bạn có chắc chắn muốn xóa sản phẩm này không?",
+      onOk: () => handleRemove(id),
+      onCancel() { },
+    });
+  };
+
+  const handleRemove = (id) => {
+    const updatedCart = cartItems.filter((item) => item.flower_id !== id);
+    setCartItems(updatedCart);
+    sessionStorage.setItem("cart", JSON.stringify(updatedCart));
+    toast.info("Sản phẩm đã được xóa khỏi giỏ hàng");
+  };
+
+  const handlePaymentClick = () => {
+    sessionStorage.setItem("cart", JSON.stringify(cartItems)); // Store cart items
+    navigate('/payment'); // Navigate to payment page
+  };
 
   return (
     <>
       <Header />
-      <div className="wrapper">
-        <Button>Clear all</Button>
-        <Table
-          rowKey="id"
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={data}
-        />
-
-        <Button>Buy</Button>
+      <div className="cart-page">
+        <h2>Giỏ hàng</h2>
+        <Table dataSource={cartItems} columns={columns} rowKey="flower_id" pagination={false} />
+        <Button className="pay-button" type="primary" onClick={handlePaymentClick}>
+          Thanh toán
+        </Button>
       </div>
     </>
   );

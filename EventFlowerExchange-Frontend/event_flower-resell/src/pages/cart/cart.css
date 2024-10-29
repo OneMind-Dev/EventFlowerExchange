@@ -1,0 +1,58 @@
+/* CartPage.css */
+
+.cart-page {
+    padding: 20px;
+    background-color: #f4f4f4; /* Light gray background */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.cart-page h2 {
+    color: #CC7A7A; /* Dark color for headings */
+    text-align: center; /* Centered heading */
+    margin-bottom: 20px; /* Space below the heading */
+}
+
+.ant-table {
+    background-color: #fff; /* White background for the table */
+    border-radius: 8px; /* Rounded corners */
+    overflow: hidden; /* Ensure rounded corners are visible */
+}
+
+.ant-table thead > tr > th {
+    background-color: #4CAF50; /* Green header background */
+    color: white; /* White text in the header */
+    font-weight: bold; /* Bold header text */
+}
+
+.ant-table td {
+    padding: 16px; /* Padding for cells */
+    border-bottom: 1px solid #ddd; /* Light border for rows */
+}
+
+.ant-btn-danger {
+    background-color: #f44336; /* Red background for remove button */
+    border: none; /* Remove border */
+    color: white; /* White text */
+}
+
+.ant-btn-danger:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+}
+
+.pay-button {
+    display: block; /* Make button a block-level element */
+    width: 100%; /* Full width */
+    max-width: 300px; /* Max width */
+    margin: 20px auto; /* Center the button */
+    background-color: #4CAF50; /* Green background */
+    border: none; /* No border */
+    color: white; /* White text */
+    font-size: 16px; /* Font size */
+    border-radius: 4px; /* Rounded corners */
+    transition: background-color 0.3s; /* Transition for hover effect */
+}
+
+.pay-button:hover {
+    background-color: #388E3C; /* Darker green on hover */
+}

@@ -3,7 +3,6 @@ import { Input, Button, Space, Table, Tag, message, Spin } from "antd";
 import Header from "../../components/header/header";
 import Footer from "../../components/footer/footer";
 import api from "../../components/config/axios";
-import { CiSearch } from "react-icons/ci";
 import "../../components/admin/admin.css";
 
 function AdminManagers() {
@@ -53,19 +52,14 @@ function AdminManagers() {
     const toggleBanStatus = async (userId, status) => {
         try {
             const token = localStorage.getItem("token");
-            // If the user is inactive (banned), call the unban API, otherwise call the ban API
             const action = status ? "ban" : "unban";
-            const apiUrl = `http://localhost:8080/swp391/users/${action}/${userId}`;
-
-            await api.post(apiUrl, null, {
+            console.log(userId);
+            await api.post(`/users/${action}/${userId}`, null, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
-
             message.success(`${status ? "Banned" : "Unbanned"} user successfully!`);
-
-            // Update the local state to reflect the status change
             setData((prevData) =>
                 prevData.map((user) =>
                     user.userId === userId ? { ...user, status: !status } : user
@@ -82,13 +76,21 @@ function AdminManagers() {
         }
     };
 
-
     const columns = [
-        { title: "Username", dataIndex: "username", key: "username" },
+        { title: "Tài khoản", dataIndex: "username", key: "username" },
         { title: "Email", dataIndex: "email", key: "email" },
-        { title: "Address", dataIndex: "address", key: "address" },
+        { title: "Địa chỉ", dataIndex: "address", key: "address" },
         {
-            title: "Status",
+            title: "Vai trò",
+            dataIndex: "role",
+            key: "role",
+            render: (role) => {
+                const sellerRole = role.includes("SELLER") ? "SELLER" : role;
+                return sellerRole;
+            },
+        },
+        {
+            title: "Trạng thái",
             key: "status",
             dataIndex: "status",
             render: (_, { status }) => {
@@ -98,13 +100,11 @@ function AdminManagers() {
             },
         },
         {
-            title: "Action",
+            title: "Hành động",
             key: "action",
             render: (_, record) => (
                 <Space size="middle">
-                    <a
-                        onClick={() => toggleBanStatus(record.userId, record.status)}
-                    >
+                    <a onClick={() => toggleBanStatus(record.userId, record.status)}>
                         {record.status === true ? "Ban" : "Unban"}
                     </a>
                 </Space>
