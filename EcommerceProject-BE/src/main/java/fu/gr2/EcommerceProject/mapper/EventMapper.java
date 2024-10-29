@@ -11,9 +11,10 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface EventMapper {
     @Mapping(source = "user.userId", target = "userId")
+    @Mapping(source = "eventCategory.name", target = "categoryName") // Map category name from EventCategory
     EventResponse toEventResponse(Event event);
 
     void updateEvent(@MappingTarget Event event, EventUpdateRequest request);
 
-    Event toEvent(EventCreateRequest request); // New mapping method
+    Event toEvent(EventCreateRequest request); // Assuming this mapping exists as well
 }

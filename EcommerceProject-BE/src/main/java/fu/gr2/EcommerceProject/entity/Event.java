@@ -5,8 +5,12 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "Event")
@@ -18,14 +22,16 @@ import java.util.List;
 @Builder
 public class Event {
    @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "event_id")
-   Integer eventId;
-   @Column(name = "category_id")
-   String categoryId;
+   int eventId;
+   @ManyToOne // Many events can belong to one category
+   @JoinColumn(name = "category_id") // Ensure this column references the correct ID
+   private EventCategory eventCategory; //
    String eventName;
    String description;
    @Column(name = "created_at")
+   @CreationTimestamp
    LocalDateTime createdAt;
    String image;
    @ManyToOne

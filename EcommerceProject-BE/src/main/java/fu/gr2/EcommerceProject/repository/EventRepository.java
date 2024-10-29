@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
-    List<Event> findByCategoryIdAndEventNameContaining(String categoryId, String eventName);
-    List<Event> findByCategoryId(String categoryId);
+    List<Event> findByEventCategory_CategoryIdAndEventName(int categoryId, String eventName);
+    List<Event> findByEventCategory_CategoryId(int categoryId);
     List<Event> findByEventNameContaining(String eventName);
     List<Event> findByUser_userId(String userId);
 }

@@ -3,6 +3,7 @@ package fu.gr2.EcommerceProject.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class Payment {
     int paymentId;
     BigDecimal amount;
     String paymentStatus;  // e.g., SUCCESS, FAILED, PENDING
+    @CreationTimestamp
     LocalDateTime paymentDate;
     @OneToOne
     @JoinColumn(name = "order_id")
