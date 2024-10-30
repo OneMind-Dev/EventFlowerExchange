@@ -124,12 +124,9 @@ function UserInfo() {
               />
             </div>
             <div className="user_interact">
-              <p
-                className={activeSection === "profile" ? "privateInfor bold" : "privateInfor"}
-                onClick={() => setActiveSection("profile")}
-              >
+              <h3 className="privateInfor">
                 Hồ sơ cá nhân
-              </p>
+              </h3>
               {user.role?.includes("ADMIN") && (
                 <>
                   <p onClick={() => navigate("/dashboard")}>Bảng thống kê</p>
@@ -138,11 +135,7 @@ function UserInfo() {
                 </>
               )}
               <p
-                className={activeSection === "password" ? "privateInfor bold" : "privateInfor"}
-                onClick={() => {
-                  setActiveSection("password");
-                  // Add logic for changing password if needed
-                }}
+                onClick={() => navigate("/profile/changePassword")}
               >
                 Thay đổi mật khẩu
               </p>
@@ -166,132 +159,89 @@ function UserInfo() {
           </div>
 
           <div className="infor_container">
-            <h1>{activeSection === "password" ? "Thay đổi mật khẩu" : "Thông Tin Cá Nhân"}</h1>
+            <h1>Thông Tin Cá Nhân</h1>
             <Form layout="vertical" form={form}>
-              {activeSection === "password" ? (
-                // Password change fields
-                <div className="password-field-container">
-                  <div className="form-item">
-                    <label htmlFor="newPassword">Mật khẩu mới</label>
+              <>
+                <div className="form-item">
+                  <label htmlFor="username">Tên tài khoản</label>
+                  <p>{user.username}</p>
+                </div>
+                <div className="form-item">
+                  <label htmlFor="phone">Số điện thoại</label>
+                  {editingField === "phone" ? (
                     <Form.Item
-                      name="newPassword"
-                      rules={[{ required: true, message: "Vui lòng nhập mật khẩu mới!" }]}
+                      name="phone"
+                      rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }]}
                     >
-                      <Input.Password placeholder="Mật khẩu mới" />
+                      <Input placeholder="Số điện thoại" defaultValue={user.phone} />
                     </Form.Item>
-                  </div>
-
-                  <div className="form-item">
-                    <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
-                    <Form.Item
-                      name="confirmPassword"
-                      dependencies={['newPassword']}
-                      rules={[
-                        { required: true, message: "Vui lòng nhập lại mật khẩu mới!" },
-                        ({ getFieldValue }) => ({
-                          validator(_, value) {
-                            if (!value || getFieldValue('newPassword') === value) {
-                              return Promise.resolve();
-                            }
-                            return Promise.reject(new Error("Mật khẩu xác nhận không khớp với mật khẩu mới!"));
-                          },
-                        }),
-                      ]}
-                    >
-                      <Input.Password placeholder="Xác nhận mật khẩu mới" />
-                    </Form.Item>
-                  </div>
-
-                  <Form.Item>
-                    <Button type="primary" onClick={() => handleSave(user.userId, "password")}>
+                  ) : (
+                    <p>{user.phone}</p>
+                  )}
+                  {editingField === "phone" ? (
+                    <>
+                      <Button type="primary" onClick={() => handleSave(user.userId, "phone")}>
+                        Lưu
+                      </Button>
+                      <Button onClick={handleCancel}>Hủy</Button>
+                    </>
+                  ) : (
+                    <Button className="edit-button" onClick={() => handleEdit("phone")}>
                       Thay đổi
                     </Button>
-                  </Form.Item>
+                  )}
                 </div>
-              ) : (
-                // User information fields
-                <>
-                  <div className="form-item">
-                    <label htmlFor="username">Tên tài khoản</label>
-                    <p>{user.username}</p>
-                  </div>
-                  <div className="form-item">
-                    <label htmlFor="phone">Số điện thoại</label>
-                    {editingField === "phone" ? (
-                      <Form.Item
-                        name="phone"
-                        rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }]}
-                      >
-                        <Input placeholder="Số điện thoại" defaultValue={user.phone} />
-                      </Form.Item>
-                    ) : (
-                      <p>{user.phone}</p>
-                    )}
-                    {editingField === "phone" ? (
-                      <>
-                        <Button type="primary" onClick={() => handleSave(user.userId, "phone")}>
-                          Lưu
-                        </Button>
-                        <Button onClick={handleCancel}>Hủy</Button>
-                      </>
-                    ) : (
-                      <Button className="edit-button" onClick={() => handleEdit("phone")}>
-                        Thay đổi
+                <div className="form-item">
+                  <label htmlFor="email">Email</label>
+                  {editingField === "email" ? (
+                    <Form.Item
+                      name="email"
+                      rules={[{ required: true, message: "Vui lòng nhập email!" }]}
+                    >
+                      <Input placeholder="Email" defaultValue={user.email} />
+                    </Form.Item>
+                  ) : (
+                    <p>{user.email}</p>
+                  )}
+                  {editingField === "email" ? (
+                    <>
+                      <Button type="primary" onClick={() => handleSave(user.userId, "email")}>
+                        Lưu
                       </Button>
-                    )}
-                  </div>
-                  <div className="form-item">
-                    <label htmlFor="email">Email</label>
-                    {editingField === "email" ? (
-                      <Form.Item
-                        name="email"
-                        rules={[{ required: true, message: "Vui lòng nhập email!" }]}
-                      >
-                        <Input placeholder="Email" defaultValue={user.email} />
-                      </Form.Item>
-                    ) : (
-                      <p>{user.email}</p>
-                    )}
-                    {editingField === "email" ? (
-                      <>
-                        <Button type="primary" onClick={() => handleSave(user.userId, "email")}>
-                          Lưu
-                        </Button>
-                        <Button onClick={handleCancel}>Hủy</Button>
-                      </>
-                    ) : (
-                      <Button className="edit-button" onClick={() => handleEdit("email")}>
-                        Thay đổi
+                      <Button onClick={handleCancel}>Hủy</Button>
+                    </>
+                  ) : (
+                    <Button className="edit-button" onClick={() => handleEdit("email")}>
+                      Thay đổi
+                    </Button>
+                  )}
+                </div>
+                <div className="form-item">
+                  <label htmlFor="address">Địa chỉ</label>
+                  {editingField === "address" ? (
+                    <Form.Item
+                      name="address"
+                      rules={[{ required: true, message: "Vui lòng nhập địa chỉ!" }]}
+                    >
+                      <Input placeholder="Địa chỉ" defaultValue={user.address} />
+                    </Form.Item>
+                  ) : (
+                    <p>{user.address}</p>
+                  )}
+                  {editingField === "address" ? (
+                    <>
+                      <Button type="primary" onClick={() => handleSave(user.userId, "address")}>
+                        Lưu
                       </Button>
-                    )}
-                  </div>
-                  <div className="form-item">
-                    <label htmlFor="address">Địa chỉ</label>
-                    {editingField === "address" ? (
-                      <Form.Item
-                        name="address"
-                        rules={[{ required: true, message: "Vui lòng nhập địa chỉ!" }]}
-                      >
-                        <Input placeholder="Địa chỉ" defaultValue={user.address} />
-                      </Form.Item>
-                    ) : (
-                      <p>{user.address}</p>
-                    )}
-                    {editingField === "address" ? (
-                      <>
-                        <Button type="primary" onClick={() => handleSave(user.userId, "address")}>
-                          Lưu
-                        </Button>
-                        <Button onClick={handleCancel}>Hủy</Button>
-                      </>
-                    ) : (
-                      <Button className="edit-button" onClick={() => handleEdit("address")}>
-                        Thay đổi
-                      </Button>
-                    )}
-                  </div>
-                </>
-              )}
+                      <Button onClick={handleCancel}>Hủy</Button>
+                    </>
+                  ) : (
+                    <Button className="edit-button" onClick={() => handleEdit("address")}>
+                      Thay đổi
+                    </Button>
+                  )}
+                </div>
+              </>
             </Form>
           </div>
         </div>

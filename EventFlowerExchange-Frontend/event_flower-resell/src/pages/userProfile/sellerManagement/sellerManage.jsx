@@ -49,10 +49,6 @@ function SellerManage() {
     }
   };
 
-  const triggerFileInput = () => {
-    document.getElementById("fileInput").click();
-  };
-
   const fetchEvent = async () => {
     const response = await api.get("/AllEvents");
 
@@ -61,7 +57,10 @@ function SellerManage() {
   };
 
   useEffect(() => {
-    fetchEvent();
+    const storedAvatar = sessionStorage.getItem('userAvatar');
+    if (storedAvatar) {
+      setAvatarUrl(storedAvatar); // Set state from session storage
+    }
   }, []);
 
   const columns = [
@@ -211,18 +210,12 @@ function SellerManage() {
         <div className="background">
           <div className="user_container">
             <div className="user_infor">
-              {user.avatar ? (
-                <img
-                  src={user.avatar}
-                  alt="User Avatar"
-                  className="user_avatar"
-                />
+              {avatarUrl ? (
+                <Image src={avatarUrl} alt="User Avatar" className="user_avatar" />
               ) : (
                 <FaCircleUser className="user_icon" />
               )}
-              <a className="username" onClick={triggerFileInput}>
-                Thay đổi ảnh
-              </a>
+
               <input
                 type="file"
                 id="fileInput"
@@ -232,9 +225,11 @@ function SellerManage() {
               />
             </div>
             <div className="user_interact">
-              <h3 className="privateInfor">Hồ sơ cá nhân</h3>
-              <p>Thay đổi mật khẩu</p>
+              <p className="privateInfor" onClick={() => navigate("/profile/userinfo")}>
+                Hồ sơ cá nhân</p>
+              <p onClick={() => navigate("/profile/changePassword")}>Thay đổi mật khẩu</p>
               <p>Đơn hàng</p>
+              <h3 className="privateInfor">Quản lý sự kiện</h3>
               <Popconfirm
                 onConfirm={() => dispatch(logout())}
                 title="Bạn muốn đăng xuất ?"
