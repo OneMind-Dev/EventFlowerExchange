@@ -32,6 +32,8 @@ function SellerManage() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState([]);
+  const [categories, setCategories] = useState([]);
+
 
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
@@ -49,11 +51,28 @@ function SellerManage() {
     }
   };
 
-  const fetchEvent = async () => {
-    const response = await api.get("/AllEvents");
+  const fetchCategories = async () => {
+    try {
+      const response = await api.get('/EventCate');
+      setCategories(response.data); // Assuming response.data is an array of categories
+    } catch (error) {
+      console.error('Failed to fetch event categories:', error);
+    }
+  };
 
-    console.log(response.data);
-    setEvents(response.data);
+  const fetchEvent = async () => {
+    try {
+      const response = await api.get("/AllEvents", {
+        params: {
+          categoryId: "", // Empty string to fetch all events
+          eventName: ""   // Empty string to fetch all events
+        }
+      });
+      console.log(response.data);
+      setEvents(response.data);
+    } catch (error) {
+      console.error("Failed to fetch events:", error);
+    }
   };
 
   useEffect(() => {
@@ -61,6 +80,8 @@ function SellerManage() {
     if (storedAvatar) {
       setAvatarUrl(storedAvatar); // Set state from session storage
     }
+    fetchCategories();
+    fetchEvent();
   }, []);
 
   const columns = [
@@ -74,13 +95,13 @@ function SellerManage() {
       dataIndex: "image",
       key: "image",
       render: (image) => {
-        return <Image src={image} alt="" width={100}></Image>;
+        return <Image src={image || "default-image.jpg"} alt="" width={100} />;
       },
     },
     {
       title: "Phân Loại",
-      dataIndex: "categoryId",
-      key: "categoryId",
+      dataIndex: "categoryName", // Update to match API response structure
+      key: "categoryName",
     },
     {
       title: "Tên Sự Kiện",
@@ -94,11 +115,7 @@ function SellerManage() {
       render: (eventId) => {
         return (
           <>
-            <Button
-              onClick={() => {
-                navigate(`/events/${eventId}`);
-              }}
-            >
+            <Button onClick={() => navigate(`/events/${eventId}`)}>
               Chi tiết
             </Button>
             <Popconfirm
