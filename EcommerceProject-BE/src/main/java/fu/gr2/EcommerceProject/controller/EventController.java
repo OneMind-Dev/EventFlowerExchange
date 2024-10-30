@@ -44,7 +44,7 @@ public class EventController {
     ReviewService reviewService;
 
     @GetMapping({"/AllEvents"})
-    public ResponseEntity<List<EventResponse>> getAllEvents(@RequestParam(required = false) int categoryId, @RequestParam(required = false) String eventName) {
+    public ResponseEntity<List<EventResponse>> getAllEvents(@RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String eventName) {
         this.logger.info("Getting all events with categoryId: {} and eventName: {}", categoryId, eventName);
         return ResponseEntity.ok(this.eventService.getAllEvents(categoryId, eventName));
     }
