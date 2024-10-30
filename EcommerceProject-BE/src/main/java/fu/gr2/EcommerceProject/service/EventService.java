@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -76,19 +77,36 @@ public class EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException(eventId));
 
-        // Update fields based on the request
-
-        event.setEventCategory(eventCategoryRepository.findById(request.getCategoryId()).get());
-        event.setEventName(request.getEventName());
-        event.setDescription(request.getDescription());
-        event.setCreatedAt(request.getCreatedAt());
-        event.setImage(request.getImage());
-        event.setStartDate(request.getStartDate());
-        event.setEndDate(request.getEndDate());
+        // Update fields only if they are not null, and handle errors without stopping the process
+        if (request.getCategoryId() != null) {
+            try {
+                event.setEventCategory(eventCategoryRepository.findById(request.getCategoryId())
+                        .orElseThrow(ChangeSetPersister.NotFoundException::new));
+            } catch (ChangeSetPersister.NotFoundException e) {
+                // Log a warning or handle the error as needed without interrupting the update
+                System.out.println("Warning: Category not found, category not updated.");
+            }
+        }
+        if (request.getEventName() != null) {
+            event.setEventName(request.getEventName());
+        }
+        if (request.getDescription() != null) {
+            event.setDescription(request.getDescription());
+        }
+        if (request.getImage() != null) {
+            event.setImage(request.getImage());
+        }
+        if (request.getStartDate() != null) {
+            event.setStartDate(request.getStartDate());
+        }
+        if (request.getEndDate() != null) {
+            event.setEndDate(request.getEndDate());
+        }
 
         // Save the updated event entity back to the repository and return the response
         return eventMapper.toEventResponse(eventRepository.save(event));
     }
+
     @Transactional
     public EventResponse createEvent(EventCreateRequest request){
         Event event = new Event();

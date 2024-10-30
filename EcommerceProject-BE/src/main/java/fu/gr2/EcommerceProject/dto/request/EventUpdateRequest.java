@@ -8,17 +8,11 @@ import java.time.LocalDateTime;
 
 @Data
 public class EventUpdateRequest {
-    @NotBlank(message = "Category cannot be blank")
-    private int categoryId;
-    @NotBlank(message = "Event name cannot be blank")
+
+    private Integer categoryId;
     private String eventName;
-    @NotBlank(message = "Category cannot be blank")
     private String description;
-    @NotNull(message = "Creation date must not be null")
-    private LocalDateTime createdAt;
     private String image;
-    @NotNull(message = "Start date must not be null")
     private LocalDateTime startDate;
-    @NotNull(message = "End date must not be null")
     private LocalDateTime endDate;
 }
