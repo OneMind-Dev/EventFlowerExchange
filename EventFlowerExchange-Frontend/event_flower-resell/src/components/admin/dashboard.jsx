@@ -7,7 +7,7 @@ const COLORS = ["#00C49F", "#FF7F50", "#27A4F2"]; // Added a third color for SEL
 
 function Dashboard() {
   const [data, setData] = useState([
-    { name: "Đã Đăng Ký", value: 0 },
+    { name: "Người dùng", value: 0 },
     { name: "Bị Ban", value: 0 },
     { name: "Người bán", value: 0 }, // Changed to "Người bán" to reflect seller role
   ]);
@@ -39,7 +39,7 @@ function Dashboard() {
           ).length;
 
           setData([
-            { name: "Đã Đăng Ký", value: registeredCount },
+            { name: "Người dùng", value: registeredCount },
             { name: "Bị Ban", value: bannedCount },
             { name: "Người bán", value: sellerCount }, // Update SELLER count
           ]);

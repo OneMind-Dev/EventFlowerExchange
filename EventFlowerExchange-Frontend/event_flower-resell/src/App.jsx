@@ -25,6 +25,7 @@ import AddFlowerToEvent from "./pages/addFlowerToEvent/addFlowerToEvent";
 import Managers from "./pages/admin/adminManagers";
 import Approve from "./pages/admin/adminApprove";
 import Payment from "./pages/payment/payment";
+import ChangePassword from "./pages/userProfile/userInfo/changePassword"
 const App = () => {
   const ProtectRouteAuth = ({ children }) => {
     const user = useSelector((store) => store.user);
@@ -143,6 +144,12 @@ const App = () => {
       path: "manager",
       element: (<ProtectRouteAuth1>
         <Managers />
+      </ProtectRouteAuth1>)
+    },
+    {
+      path: "profile/changePassword",
+      element: (<ProtectRouteAuth1>
+        <ChangePassword />
       </ProtectRouteAuth1>)
     },
     {
