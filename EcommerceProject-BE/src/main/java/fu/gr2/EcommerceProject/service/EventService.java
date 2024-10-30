@@ -81,7 +81,7 @@ public class EventService {
         event.setImage(request.getImage());
         event.setStartDate(request.getStartDate());
         event.setEndDate(request.getEndDate());
-        //nếu ID bị lỗi thì t cũng bó tay ngồi sữa cả ngày nay chả biết bi gì
+
         // Fetch user by ID and set it
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));

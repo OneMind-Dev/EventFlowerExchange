@@ -30,6 +30,8 @@ public enum ErrorCode {
     NO_INFO(1018,"không có đủ thông tin cần thiết"),
     NO_ORDER(1019,"Chưa có order nào"),
     REVIEW_NOT_EXISTED(1020,"review not existed"),
+    NOTIFICATION_NOT_EXISTED(1021,"notification not existed"),
+    READ_NOTIFICATION(1022,"only read notification can be deleted"),
     ;
     int code;
     String message;
