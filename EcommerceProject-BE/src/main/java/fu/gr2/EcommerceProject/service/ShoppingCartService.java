@@ -85,7 +85,7 @@ public class ShoppingCartService {
         List<ShoppingCartResponse> shoppingCartResponses = new ArrayList<>();
         List<ShoppingCartItem> shoppingCarts = shoppingCartItemRepository.findByShoppingCart(shoppingCart);
         for (ShoppingCartItem i: shoppingCarts){
-                if(i.getFlowerEventRelationship().getEvent().getEndDate().isBefore(LocalDateTime.now())){
+                if(i.getFlowerEventRelationship().getEvent().getEndDate().isAfter(LocalDateTime.now())){
                     String flowerName = i.getFlowerEventRelationship().getFlower().getFlowerName();
 
                     ShoppingCartResponse shoppingCartResponse = ShoppingCartResponse.builder()
