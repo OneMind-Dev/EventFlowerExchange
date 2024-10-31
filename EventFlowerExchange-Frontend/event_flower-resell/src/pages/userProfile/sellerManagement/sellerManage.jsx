@@ -155,19 +155,21 @@ function SellerManage() {
 
   // Handle event submission
   const handleSubmitEvent = async (event) => {
-    // Gán userId cho event
     event.userId = user.userId;
+    console.log(event.userId);
 
-    // Xử lý upload hình ảnh
     if (fileList.length > 0) {
       const file = fileList[0];
       const url = await uploadFile(file.originFileObj);
       event.image = url;
     }
 
-    // Định dạng ngày tháng theo ISO
-    if (event.startDate) event.startDate = event.startDate.toISOString();
-    if (event.endDate) event.endDate = event.endDate.toISOString();
+    if (event.startDate) {
+      event.startDate = event.startDate.toISOString();
+    }
+    if (event.endDate) {
+      event.endDate = event.endDate.toISOString();
+    }
 
     console.log("Event Data:", event);
 
@@ -176,30 +178,26 @@ function SellerManage() {
 
       const token = localStorage.getItem("token");
 
-      // Kiểm tra và tạo danh mục mới nếu chọn "Other"
+      // Check if the user selected "Other" and provided a new category name
       if (event.categoryId === "other" && newCategoryName) {
         const categoryResponse = await api.post(
           "/EventCate/create",
           { name: newCategoryName },
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        event.categoryId = categoryResponse.data.categoryId; // Gán categoryId mới
-        console.log("Category creation response:", categoryResponse);
+        event.categoryId = categoryResponse.data.categoryId; // Set new category ID
+        console.log(categoryResponse); // Moved inside the if block
       }
-
-      // Tạo sự kiện với categoryId đã cập nhật
+      // Now create the event with the updated categoryId
       const response = await api.post("/CreateEvent", event, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       console.log("Event creation response:", response);
       toast.success("Tạo sự kiện thành công!");
-
-      // Reset form và làm mới danh sách sự kiện
       setOpenModal(false);
       form.resetFields();
       fetchEvent(); // Refresh events list
-
     } catch (err) {
       console.error("Error creating event:", err);
       toast.error("Failed to create event");
@@ -207,6 +205,8 @@ function SellerManage() {
       setSubmitting(false);
     }
   };
+
+
 
   const handleDeleteEvent = async (eventId) => {
     try {

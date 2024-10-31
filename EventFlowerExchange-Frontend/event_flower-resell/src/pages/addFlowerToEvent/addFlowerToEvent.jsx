@@ -39,7 +39,7 @@ function AddFlowerToEvent() {
   const fetchStudent = async () => {
     const response = await api.get("/Getflowers");
 
-    console.log(response.data);
+    console.log("fetchStudent: ", response.data);
     setStudents(response.data);
   };
 
@@ -47,24 +47,44 @@ function AddFlowerToEvent() {
     fetchStudent();
   }, []);
 
-  const handleAddFlower = async (event) => {
-    event.eventId = parseInt(id, 10);
-    event.flowerId = selectedFlowerId;
+  const handleAddFlower = async (values) => {
+    // Extract the necessary fields from the form values
+    const { description, floPrice, quantity, img } = values;
+
+    // Prepare the data for the API request
+    const flowerData = {
+      description: description,
+      floPrice: floPrice,
+      img: img ? img[0].response.url : '', // Adjust according to your upload response
+      quantity: quantity,
+      floId: selectedFlowerId,
+      eventId: parseInt(id, 10),
+    };
 
     try {
-      setSubmitting(true); //bat dau load
-      const response = await api.post("/AddFlowerToEvent", event);
+      // Show loading indicator or disable the form temporarily
+      setSubmitting(true);
+
+      // Make the API request to add the flower to the event
+      const response = await api.post('/AddFlowerToEvent', flowerData);
+
+      // Handle successful response
       console.log(response.data);
-      toast.success("Thêm hoa thành công!");
-      setOpenModal(false);
-      formAddFlower.resetFields();
-      fetchStudent();
-    } catch (err) {
-      toast.error(err);
+      toast.success('Thêm hoa thành công!');
+      formAddFlower.resetFields(); // Reset the form after submission
+
+      // Optionally, refresh data or perform further actions
+      fetchStudent(); // Assuming this function fetches the updated student data
+
+    } catch (error) {
+      // Handle any errors that occur during the request
+      toast.error(error.message || 'Có lỗi xảy ra, vui lòng thử lại!');
     } finally {
+      // Reset submitting state regardless of the outcome
       setSubmitting(false);
     }
   };
+
 
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -232,21 +252,18 @@ function AddFlowerToEvent() {
     },
   ];
 
-  const handleOpenModal1 = () => {
-    setOpenModal1(true);
-  };
-
   const handleCloseModal1 = () => {
     setOpenModal1(false);
   };
 
   const handleSubmitStudent = async (student) => {
     student.userId = user.userId;
+    console.log("student: ", student)
 
     try {
       setSubmitting(true); //bat dau load
       const response = await api.post("/CreateFlower", student);
-      console.log(response.data);
+      console.log("handleSubmitStudent Response data: ", response.data);
       toast.success("Successfully create new flower");
       setOpenModal(false);
       formCreateFlower.resetFields();

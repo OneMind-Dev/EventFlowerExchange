@@ -12,6 +12,7 @@ const EventDetail = () => {
   const { eventId } = useParams();
   const [event, setEvent] = useState(null);
   const [events, setEvents] = useState([]);
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
   const user = useSelector((store) => store.user);
 
@@ -21,7 +22,7 @@ const EventDetail = () => {
         const response = await api.get(`/SelectEvent/${eventId}`);
         setEvent(response.data);
       } catch (e) {
-        console.log(e);
+        console.log("fetchEvent: ", e);
       }
     };
 
@@ -31,13 +32,28 @@ const EventDetail = () => {
   const fetchEvents = async () => {
     const response = await api.get("/AllEvents");
 
-    console.log(response.data);
+    console.log("Response.data: ", response.data);
     setEvents(response.data);
   };
 
   useEffect(() => {
     fetchEvents();
   }, []);
+
+  useEffect(() => {
+    const fetchUsername = async () => {
+      if (event && event.userId) {
+        try {
+          const response = await api.get(`/users/${event.userId}`);
+          setUsername(response.data.username);
+        } catch (e) {
+          console.log("fetchUsername: ", e);
+        }
+      }
+    };
+
+    fetchUsername();
+  }, [event]);
 
   if (!event) {
     return <h1>Không có sự kiện này!</h1>;
@@ -60,28 +76,22 @@ const EventDetail = () => {
         <div className="wrapper__shop-info">
           <div className="wrapper__shop-info--img">
             <img
-              // onClick={() => {
-              //   navigate(`/${user.user_id}`);
-              // }}
               src="../src/components/images/userImage.png"
               alt="Ảnh người bán"
+            // onClick={() => navigate(`/${user.user_id}`)}
             />
           </div>
-
           <div className="wrapper__shop-info--des">
-            <h3
-            // onClick={() => {
-            //   navigate(`/${user.user_id}`);
-            // }}
-            >
-              {event.user.username}
+            <h3>
+              {username}
+              {console.log("event username: ", username)}
             </h3>
           </div>
         </div>
 
         <div className="wrapper__event--detail">
           <h3>SẢN PHẨM CÓ TRONG SỰ KIỆN</h3>
-          {event.user.userId === user.userId && (
+          {event.userId === user.userId && (
             <button
               className="add-new-flower-btn"
               onClick={() => navigate(`/addFlowerToEvent/${event.eventId}`)}
@@ -89,69 +99,62 @@ const EventDetail = () => {
               Thêm Hoa
             </button>
           )}
-          {/* <div className="wrapper__event--detail-card">
+          {/* Uncomment the following block to display event flowers */}
+          {/* 
+          <div className="wrapper__event--detail-card">
             {event.flowers.map((flower) => (
-              <>
-                <Card
-                  bordered={false}
-                  onClick={() => {
-                    navigate(`/flowers/${flower.flower_id}`);
-                  }}
-                  key={flower.flower_id}
-                  hoverable
-                  className="wrapper__card-card"
-                  cover={
-                    <img
-                      className="wrapper__card-img"
-                      alt={flower.flower_name}
-                      src={flower.flower_image}
-                    />
-                  }
-                >
-                  <Meta
-                    className="wrapper__card-title"
-                    title={flower.flower_name}
-                    description={flower.price}
+              <Card
+                key={flower.flower_id}
+                bordered={false}
+                hoverable
+                className="wrapper__card-card"
+                cover={
+                  <img
+                    className="wrapper__card-img"
+                    alt={flower.flower_name}
+                    src={flower.flower_image}
                   />
-                </Card>
-              </>
+                }
+                onClick={() => navigate(`/flowers/${flower.flower_id}`)}
+              >
+                <Meta
+                  className="wrapper__card-title"
+                  title={flower.flower_name}
+                  description={flower.price}
+                />
+              </Card>
             ))}
-          </div> */}
+          </div>
+          */}
         </div>
 
         <div className="wrapper__event--other">
           <h3>CÁC SỰ KIỆN KHÁC</h3>
           <div className="wrapper__event--other-card">
             {events.slice(0, 2).map((event) => (
-              <>
-                <Card
-                  bordered={false}
-                  onClick={() => {
-                    navigate(`/events/${event.eventId}`);
-                  }}
-                  key={event.eventId}
-                  hoverable
-                  className="wrapper__card-card--event"
-                  cover={
-                    <img
-                      className="wrapper__card-img--event"
-                      alt={event.eventName}
-                      src={event.image}
-                    />
-                  }
-                >
-                  <Meta
-                    className="wrapper__card-title--event"
-                    title={event.eventName}
+              <Card
+                key={event.eventId}
+                bordered={false}
+                hoverable
+                className="wrapper__card-card--event"
+                cover={
+                  <img
+                    className="wrapper__card-img--event"
+                    alt={event.eventName}
+                    src={event.image}
                   />
-                </Card>
-              </>
+                }
+                onClick={() => navigate(`/events/${event.eventId}`)}
+              >
+                <Meta className="wrapper__card-title--event" title={event.eventName} />
+              </Card>
             ))}
           </div>
         </div>
       </div>
     </>
   );
+
 };
 
 export default EventDetail;
