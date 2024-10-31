@@ -9,12 +9,9 @@ import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';  /
 function AdminApprove() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [confirmedIds, setConfirmedIds] = useState(new Set()); // State to track confirmed IDs
-    const [declinedIds, setDeclinedIds] = useState(new Set()); // State to track declined IDs
+    const [confirmedIds, setConfirmedIds] = useState(new Set()); // Track confirmed IDs
+    const [declinedIds, setDeclinedIds] = useState(new Set()); // Track declined IDs
     const [reasonData, setReasonData] = useState({}); // Store reasons for each record
-    const addNewItem = (newItem) => {
-        setData((prevData) => [newItem, ...prevData]); // Add new item at the beginning
-    };
 
     useEffect(() => {
         fetchData();
@@ -94,7 +91,7 @@ function AdminApprove() {
                     )}
                 </Space>
             ),
-        },
+        }
     ];
 
     // Handle reason input change
@@ -116,7 +113,7 @@ function AdminApprove() {
                     localStorage.setItem("confirmedIds", JSON.stringify(Array.from(updatedIds)));
                     return updatedIds;
                 });
-                fetchData(); // Refresh data to update UI
+                fetchData();
             } else {
                 message.error("Failed to confirm registration.");
             }
@@ -127,25 +124,17 @@ function AdminApprove() {
 
     // Handle decline function with reason validation
     const handleDecline = async (formId) => {
-        // Check if the reason is provided
         if (!reasonData[formId]) {
             message.warning("Please provide a reason before declining.");
             return;
         }
 
         try {
-            // Get the token from local storage
             const token = localStorage.getItem("token");
+            const response = await api.post(`/admin/rejectRegistration/${formId}`, { reason: reasonData[formId] }, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
 
-            // Prepare the API request
-            const response = await api.post(`/admin/rejectRegistration/${formId}`,
-                { reason: reasonData[formId] }, // Include the reason in the payload
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
-            );
-
-            // Check if the response indicates a successful decline
             if (response.data && response.data.code === 1000) {
                 setDeclinedIds(prevIds => {
                     const updatedIds = new Set(prevIds);
