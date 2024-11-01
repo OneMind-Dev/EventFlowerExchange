@@ -104,18 +104,26 @@ function SellerRegister() {
             <Input className="input" type="text" placeholder="Số CCCD" />
           </FormItem>
 
-          <FormItem name="image">
-            <p className="add-img">Thêm hình ảnh : </p>
+          <Form.Item name="image">
+            <p className="add-img">Thêm hình ảnh:</p>
             <Upload
-              action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
               listType="picture-card"
               fileList={fileList}
               onPreview={handlePreview}
               onChange={handleChange}
+              beforeUpload={(file) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                  const base64Image = reader.result;
+                  sessionStorage.setItem('uploadeEventdImage', base64Image); // Store image in session
+                };
+                reader.readAsDataURL(file);
+                return false; // Prevent automatic upload
+              }}
             >
               {fileList.length >= 2 ? null : uploadButton}
             </Upload>
-          </FormItem>
+          </Form.Item>
 
           {previewImage && (
             <Image

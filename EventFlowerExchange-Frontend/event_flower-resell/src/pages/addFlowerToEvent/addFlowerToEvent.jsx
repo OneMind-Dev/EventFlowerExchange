@@ -223,13 +223,21 @@ function AddFlowerToEvent() {
                 </Form.Item>
 
                 <Form.Item name="img">
-                  <p>Thêm hình ảnh : </p>
+                  <p>Thêm hình ảnh:</p>
                   <Upload
-                    action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
                     listType="picture-card"
                     fileList={fileList}
                     onPreview={handlePreview}
                     onChange={handleChange}
+                    beforeUpload={(file) => {
+                      const reader = new FileReader();
+                      reader.onload = () => {
+                        const base64Image = reader.result;
+                        sessionStorage.setItem('uploadedFlowerImage', base64Image); // Save to session
+                      };
+                      reader.readAsDataURL(file);
+                      return false; // Prevent automatic upload
+                    }}
                   >
                     {fileList.length >= 8 ? null : uploadButton}
                   </Upload>

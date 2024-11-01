@@ -91,6 +91,7 @@ const EventDetail = () => {
 
         <div className="wrapper__event--detail">
           <h3>SẢN PHẨM CÓ TRONG SỰ KIỆN</h3>
+
           {event.userId === user.userId && (
             <button
               className="add-new-flower-btn"
