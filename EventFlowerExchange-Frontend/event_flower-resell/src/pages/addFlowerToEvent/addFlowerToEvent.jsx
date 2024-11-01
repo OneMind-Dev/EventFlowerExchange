@@ -20,7 +20,7 @@ import Footer from "../../components/footer/footer";
 import { useParams } from "react-router-dom";
 
 function AddFlowerToEvent() {
-  const [students, setStudents] = useState([]);
+  const [flowers, setFlowers] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [openModal1, setOpenModal1] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -36,15 +36,18 @@ function AddFlowerToEvent() {
 
   const user = useSelector((store) => store.user);
 
-  const fetchStudent = async () => {
+  const fetchFlowers = async () => {
     const response = await api.get("/Getflowers");
 
-    console.log("fetchStudent: ", response.data);
-    setStudents(response.data);
+    console.log("fetchflower: ", response.data);
+    setFlowers(response.data);
   };
 
+  const token = localStorage.getItem("token");
+  console.log("user token: ", token);
+
   useEffect(() => {
-    fetchStudent();
+    fetchFlowers();
   }, []);
 
   const handleAddFlower = async (values) => {
@@ -74,7 +77,7 @@ function AddFlowerToEvent() {
       formAddFlower.resetFields(); // Reset the form after submission
 
       // Optionally, refresh data or perform further actions
-      fetchStudent(); // Assuming this function fetches the updated student data
+      fetchFlowers(); // Assuming this function fetches the updated flower data
 
     } catch (error) {
       // Handle any errors that occur during the request
@@ -256,20 +259,34 @@ function AddFlowerToEvent() {
     setOpenModal1(false);
   };
 
-  const handleSubmitStudent = async (student) => {
-    student.userId = user.userId;
-    console.log("student: ", student)
+  const handleSubmitFlower = async (flower) => {
+    // Ensure `flower` object follows the specified format
+    flower = {
+      flowerName: flower.flowerName,
+      userId: user.userId,
+      origin: flower.origin,
+      color: flower.color
+    };
+
+    console.log("flower:", flower);
 
     try {
-      setSubmitting(true); //bat dau load
-      const response = await api.post("/CreateFlower", student);
-      console.log("handleSubmitStudent Response data: ", response.data);
-      toast.success("Successfully create new flower");
+      setSubmitting(true); // start loading indicator
+
+      // Send the formatted flower object in the request body
+      const response = await api.post("/CreateFlower", flower, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Replace `token` with your actual token variable
+        }
+      });
+
+      console.log("handleSubmitFlower Response data:", response.data);
+      toast.success("Successfully created new flower");
       setOpenModal(false);
       formCreateFlower.resetFields();
-      fetchStudent();
+      fetchFlowers();
     } catch (err) {
-      toast.error(err);
+      toast.error(err.message || "Failed to create flower");
     } finally {
       setSubmitting(false);
     }
@@ -278,8 +295,8 @@ function AddFlowerToEvent() {
   return (
     <div className="wrapper">
       <h1>Flower Management</h1>
-      <Button onClick={handleCloseModal1}>Create new flower</Button>
-      <Table columns={columns} dataSource={students} />
+      <Button onClick={() => setOpenModal1(true)}>Create new flower</Button>
+      <Table columns={columns} dataSource={flowers} />
       {/* {neu true => modal hien, false => an} */}
       <Modal
         confirmLoading={submitting}
@@ -288,7 +305,7 @@ function AddFlowerToEvent() {
         open={openModal1}
         onCancel={handleCloseModal1}
       >
-        <Form onFinish={handleSubmitStudent} form={formCreateFlower}>
+        <Form onFinish={handleSubmitFlower} form={formCreateFlower}>
           {/* rule => dinh nghia validation => [] */}
           <Form.Item
             label="Flower name"

@@ -39,7 +39,7 @@ function SellerManage() {
 
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
-
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
   const handleImageChange = (event) => {
@@ -56,7 +56,6 @@ function SellerManage() {
   // Fetch categories and add the "Other" option
   const fetchCategories = async () => {
     try {
-      const token = localStorage.getItem("token");
       const response = await api.get('/EventCate', {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -74,7 +73,6 @@ function SellerManage() {
 
   const fetchEvent = async () => {
     try {
-      const token = localStorage.getItem("token");
       const response = await api.get('/AllEvents', {
         headers: { Authorization: `Bearer ${token}` }, // Add the token here
         params: {
