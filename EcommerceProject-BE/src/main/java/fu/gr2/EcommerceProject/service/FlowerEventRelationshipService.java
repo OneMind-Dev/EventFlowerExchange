@@ -15,6 +15,7 @@ import fu.gr2.EcommerceProject.repository.EventRepository;
 import fu.gr2.EcommerceProject.repository.FlowerEventRelationshipRepository;
 import fu.gr2.EcommerceProject.repository.FlowerRepository;
 import fu.gr2.EcommerceProject.repository.UserRepository;
+import io.swagger.annotations.Api;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -97,6 +98,27 @@ public class FlowerEventRelationshipService {
                 .result(flowerEventResponse)
                 .message("Flower added successfully")  // Thêm thông báo thành công
                 .build();
+    }
+    public ApiResponse<FlowerEventResponse> getRelationship(int relationshipId){
+        FlowerEventRelationship relationship = flowerEventRelationshipRepository.findById(relationshipId).orElseThrow(() -> new AppException(ErrorCode.FLOWER_NOT_EXISTED));
+        FlowerEventResponse flowerEventResponse = FlowerEventResponse.builder()
+                .relationshipID(relationship.getRelationshipID())
+                .flowername(relationship.getFlower().getFlowerName())
+                .origin(relationship.getFlower().getOrigin())
+                .color(relationship.getFlower().getColor())
+                .description(relationship.getDescription())
+                .floPrice(relationship.getFloPrice())
+                .createdAt(relationship.getCreatedAt())
+                .image(relationship.getImage())
+                .quantity(relationship.getQuantity())
+                .eventname(relationship.getEvent().getEventName())
+                .build();
+
+        return  ApiResponse.<FlowerEventResponse>builder()
+                .result(flowerEventResponse)
+                .build();
+
+
     }
 
     public ApiResponse<List<FlowerEventResponse>> getFlower(int eventId){
