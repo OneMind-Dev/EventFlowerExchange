@@ -222,22 +222,14 @@ function AddFlowerToEvent() {
                   <InputNumber min={1} placeholder="Số lượng" />
                 </Form.Item>
 
-                <Form.Item name="img">
-                  <p>Thêm hình ảnh:</p>
+                <Form.Item name="image">
+                  <p>Thêm hình ảnh :</p>
                   <Upload
+                    action="https://6725f1d9c39fedae05b65f25.mockapi.io/api/upload" // MockAPI URL
                     listType="picture-card"
                     fileList={fileList}
                     onPreview={handlePreview}
                     onChange={handleChange}
-                    beforeUpload={(file) => {
-                      const reader = new FileReader();
-                      reader.onload = () => {
-                        const base64Image = reader.result;
-                        sessionStorage.setItem('uploadedFlowerImage', base64Image); // Save to session
-                      };
-                      reader.readAsDataURL(file);
-                      return false; // Prevent automatic upload
-                    }}
                   >
                     {fileList.length >= 8 ? null : uploadButton}
                   </Upload>

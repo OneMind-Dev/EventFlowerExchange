@@ -1,61 +1,75 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./flowerDetail.css";
 import Header from "../../../../components/header/header";
-import EventData from "../../../../components/config/eventData";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card, Image } from "antd";
 import Meta from "antd/es/card/Meta";
-import UserData from "../../../../components/config/userData";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import api from "../../../../components/config/axios";
 
 const FlowerDetail = () => {
   const navigate = useNavigate();
-  const { id } = useParams(); // Retrieve flower ID from URL
+  const { id, eventId } = useParams(); // Retrieve flower ID and event ID from URL
 
-  let flowerDetail = null;
-  let eventDetail = null;
-  let userDetail = null;
-
-  // Find the specific flower, event, and user details based on the ID
-  EventData.forEach((event) => {
-    const flower = event.flowers.find((f) => f.flower_id === parseInt(id));
-    if (flower) {
-      flowerDetail = flower;
-      eventDetail = event;
-      userDetail = UserData.find((user) => user.user_id === event.user_id);
-    }
-  });
+  const [flowerDetail, setFlowerDetail] = useState({});
+  const [eventDetail, setEventDetail] = useState({});
+  const [userDetail, setUserDetail] = useState({});
+  const token = localStorage.getItem("token"); // Adjust as needed
 
   useEffect(() => {
-    window.scrollTo(0, 0); // Scroll to top on component mount
-  }, []);
+    // Fetch flower details from the API
+    const fetchFlowerDetails = async () => {
+      if (!token) {
+        toast.error("You must be logged in to view flower details.");
+        navigate("/login"); // Redirect to login if no token
+        return;
+      }
+
+      try {
+        const response = await api.get(`/GetFlowerFromEvent/${eventId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the headers
+          },
+        });
+        setFlowerDetail(response.data.flower);
+        setEventDetail(response.data.event); // Assume your API returns event details
+        setUserDetail(response.data.user); // Assume your API returns user details
+      } catch (error) {
+        console.error("Error fetching flower details:", error);
+        toast.error("Failed to fetch flower details");
+      }
+    };
+
+    fetchFlowerDetails();
+    window.scrollTo(0, 0);
+  }, [eventId, token]); // Depend on eventId and token
 
   if (!flowerDetail || !eventDetail) {
     return <h2>Flower not found</h2>;
   }
 
   const addToCart = () => {
-    // Retrieve existing cart data from sessionStorage
-    const cartItems = JSON.parse(sessionStorage.getItem("cart")) || [];
+    if (!token) {
+      toast.error("You must be logged in to add items to the cart.");
+      return; // Prevent adding to cart if no token
+    }
 
-    // Check if item already exists in the cart
+    const cartItems = JSON.parse(sessionStorage.getItem("cart")) || [];
     const existingItemIndex = cartItems.findIndex(item => item.flower_id === flowerDetail.flower_id);
 
     if (existingItemIndex === -1) {
-      // Item does not exist, add it with quantity 1
       const newItem = { ...flowerDetail, quantity: 1 };
       cartItems.push(newItem);
       toast.success("Product added to cart!");
     } else {
-      // Item exists, increment the quantity
       cartItems[existingItemIndex].quantity += 1;
       toast.info("Product quantity updated in cart!");
     }
 
-    // Update sessionStorage with the modified cart
     sessionStorage.setItem("cart", JSON.stringify(cartItems));
   };
+
   return (
     <>
       <Header />
