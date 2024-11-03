@@ -32,6 +32,8 @@ function SellerManage() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState([]);
+  const [categories, setCategories] = useState([]);
+
 
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
@@ -49,18 +51,36 @@ function SellerManage() {
     }
   };
 
-  const triggerFileInput = () => {
-    document.getElementById("fileInput").click();
+  const fetchCategories = async () => {
+    try {
+      const response = await api.get('/EventCate');
+      setCategories(response.data); // Assuming response.data is an array of categories
+    } catch (error) {
+      console.error('Failed to fetch event categories:', error);
+    }
   };
 
   const fetchEvent = async () => {
-    const response = await api.get("/AllEvents");
-
-    console.log(response.data);
-    setEvents(response.data);
+    try {
+      const response = await api.get("/AllEvents", {
+        params: {
+          categoryId: "", // Empty string to fetch all events
+          eventName: ""   // Empty string to fetch all events
+        }
+      });
+      console.log(response.data);
+      setEvents(response.data);
+    } catch (error) {
+      console.error("Failed to fetch events:", error);
+    }
   };
 
   useEffect(() => {
+    const storedAvatar = sessionStorage.getItem('userAvatar');
+    if (storedAvatar) {
+      setAvatarUrl(storedAvatar); // Set state from session storage
+    }
+    fetchCategories();
     fetchEvent();
   }, []);
 
@@ -75,13 +95,13 @@ function SellerManage() {
       dataIndex: "image",
       key: "image",
       render: (image) => {
-        return <Image src={image} alt="" width={100}></Image>;
+        return <Image src={image || "default-image.jpg"} alt="" width={100} />;
       },
     },
     {
       title: "Phân Loại",
-      dataIndex: "categoryId",
-      key: "categoryId",
+      dataIndex: "categoryName", // Update to match API response structure
+      key: "categoryName",
     },
     {
       title: "Tên Sự Kiện",
@@ -95,11 +115,7 @@ function SellerManage() {
       render: (eventId) => {
         return (
           <>
-            <Button
-              onClick={() => {
-                navigate(`/events/${eventId}`);
-              }}
-            >
+            <Button onClick={() => navigate(`/events/${eventId}`)}>
               Chi tiết
             </Button>
             <Popconfirm
@@ -211,18 +227,12 @@ function SellerManage() {
         <div className="background">
           <div className="user_container">
             <div className="user_infor">
-              {user.avatar ? (
-                <img
-                  src={user.avatar}
-                  alt="User Avatar"
-                  className="user_avatar"
-                />
+              {avatarUrl ? (
+                <Image src={avatarUrl} alt="User Avatar" className="user_avatar" />
               ) : (
                 <FaCircleUser className="user_icon" />
               )}
-              <a className="username" onClick={triggerFileInput}>
-                Thay đổi ảnh
-              </a>
+
               <input
                 type="file"
                 id="fileInput"
@@ -232,9 +242,11 @@ function SellerManage() {
               />
             </div>
             <div className="user_interact">
-              <h3 className="privateInfor">Hồ sơ cá nhân</h3>
-              <p>Thay đổi mật khẩu</p>
+              <p className="privateInfor" onClick={() => navigate("/profile/userinfo")}>
+                Hồ sơ cá nhân</p>
+              <p onClick={() => navigate("/profile/changePassword")}>Thay đổi mật khẩu</p>
               <p>Đơn hàng</p>
+              <h3 className="privateInfor">Quản lý sự kiện</h3>
               <Popconfirm
                 onConfirm={() => dispatch(logout())}
                 title="Bạn muốn đăng xuất ?"

@@ -1,5 +1,6 @@
 package fu.gr2.EcommerceProject.service;
 
+import fu.gr2.EcommerceProject.dto.request.UserChangePasswordRequest;
 import fu.gr2.EcommerceProject.entity.User;
 import fu.gr2.EcommerceProject.dto.request.UserCreationRequest;
 import fu.gr2.EcommerceProject.dto.request.UserUpdateRequest;
@@ -107,7 +108,14 @@ public class UserService {
         user.setAvatar(avatarPath);
         userRepository.save(user);
     }
-
+    public void changePassword(String userId, UserChangePasswordRequest request){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User không tồn tại"));
+        if(request.getNewPassword().equals(request.getConfirmedPassword())){
+            user.setPassword(passwordEncoder.encode(request.getConfirmedPassword()));
+        }
+        userRepository.save(user);
+    }
 //    public User handleGoogleLogin(String accessToken) {
 //        String userInfoEndpoint = "https://www.googleapis.com/oauth2/v3/userinfo";
 //

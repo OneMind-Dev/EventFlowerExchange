@@ -60,6 +60,7 @@ public class FlowerEventRelationshipService {
             flowerEventRelationship = relationshipOpt.get();
             // Cập nhật số lượng của mối quan hệ hiện có
             flowerEventRelationship.setQuantity(flowerEventRelationship.getQuantity() + quantity);
+
             flowerEventRelationship.setFloPrice(request.getFloPrice());
 
         } else {
@@ -83,6 +84,7 @@ public class FlowerEventRelationshipService {
 
         // Tạo FlowerEventResponse
         FlowerEventResponse flowerEventResponse = FlowerEventResponse.builder()
+                .relationshipID(flowerEventRelationship.getRelationshipID())
                 .eventname(event.getEventName())
                 .flowername(flower.getFlowerName())
                 .origin(flower.getOrigin())

@@ -6,6 +6,7 @@
 package fu.gr2.EcommerceProject.controller;
 
 import fu.gr2.EcommerceProject.dto.request.*;
+import fu.gr2.EcommerceProject.dto.response.CommentResponse;
 import fu.gr2.EcommerceProject.dto.response.EventResponse;
 import fu.gr2.EcommerceProject.dto.response.FlowerEventResponse;
 import fu.gr2.EcommerceProject.entity.Review;
@@ -44,7 +45,7 @@ public class EventController {
     ReviewService reviewService;
 
     @GetMapping({"/AllEvents"})
-    public ResponseEntity<List<EventResponse>> getAllEvents(@RequestParam(required = false) int categoryId, @RequestParam(required = false) String eventName) {
+    public ResponseEntity<List<EventResponse>> getAllEvents(@RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String eventName) {
         this.logger.info("Getting all events with categoryId: {} and eventName: {}", categoryId, eventName);
         return ResponseEntity.ok(this.eventService.getAllEvents(categoryId, eventName));
     }
@@ -100,8 +101,11 @@ public class EventController {
 
 
     @PostMapping("/{eventId}/comments")
-    public ResponseEntity<ApiResponse<Review>> addComment(@PathVariable Integer eventId, @RequestBody CommentRequest commentRequest) {
-        ApiResponse<Review> response = reviewService.addComment(eventId, commentRequest);
+    public ResponseEntity<ApiResponse<CommentResponse>> addComment(
+            @PathVariable Integer eventId,
+            @RequestBody CommentRequest commentRequest) {
+
+        ApiResponse<CommentResponse> response = reviewService.addComment(eventId, commentRequest);
 
         return ResponseEntity.ok(response);
     }

@@ -22,7 +22,6 @@ public class EventCategory {
     private int categoryId;
     @Column(name= "Category_name")
     private String name;
-    @OneToMany(mappedBy = "eventCategory", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Event> events;
+
 
 }

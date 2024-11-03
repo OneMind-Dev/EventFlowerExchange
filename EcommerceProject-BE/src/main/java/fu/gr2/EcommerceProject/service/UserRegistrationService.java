@@ -3,14 +3,17 @@ package fu.gr2.EcommerceProject.service;
 import fu.gr2.EcommerceProject.dto.request.ApiResponse;
 import fu.gr2.EcommerceProject.dto.request.UserRegistrationRequest;
 import fu.gr2.EcommerceProject.dto.response.RegistrationFormResponse;
+import fu.gr2.EcommerceProject.entity.Notification;
 import fu.gr2.EcommerceProject.entity.RegistrationForm;
 import fu.gr2.EcommerceProject.entity.User;
+import fu.gr2.EcommerceProject.enums.NotificationStatus;
 import fu.gr2.EcommerceProject.enums.Role;
 import fu.gr2.EcommerceProject.exception.AppException;
 import fu.gr2.EcommerceProject.exception.ErrorCode;
 import fu.gr2.EcommerceProject.exception.UserNotFound;
 
 import fu.gr2.EcommerceProject.mapper.RegistrationFormMapper;
+import fu.gr2.EcommerceProject.repository.NotificationRepository;
 import fu.gr2.EcommerceProject.repository.RegistrationFormRepository;
 import fu.gr2.EcommerceProject.repository.UserRepository;
 import lombok.AccessLevel;
@@ -27,14 +30,16 @@ public class UserRegistrationService {
     private final UserRepository userRepository;
     private RegistrationFormRepository registrationFormRepository;
     private RegistrationFormMapper registrationFormMapper;
-
+    private NotificationRepository notificationRepository;
     @Autowired
     public UserRegistrationService(UserRepository userRepository,
                                    RegistrationFormRepository registrationFormRepository,
-                                   RegistrationFormMapper registrationFormMapper) {
+                                   RegistrationFormMapper registrationFormMapper,
+                                   NotificationRepository notificationRepository) {
         this.userRepository = userRepository;
         this.registrationFormRepository = registrationFormRepository;
         this.registrationFormMapper = registrationFormMapper;
+        this.notificationRepository = notificationRepository;
     }
 
     private User getUserByUsername(String username) throws UserNotFound {
@@ -46,7 +51,7 @@ public class UserRegistrationService {
     }
 
     public ApiResponse approveRegistration(int formId) {
-        List<String> notifications = new ArrayList<>();
+
         try {
             // Tìm kiếm form đăng ký dựa trên formId
             RegistrationForm registrationForm = registrationFormRepository.findById(formId)
@@ -79,12 +84,18 @@ public class UserRegistrationService {
 
             user.setRole(roles);
             userRepository.save(user);
-            String successMessage = "Registration form approved successfully for User: " + user.getUsername();
-            notifications.add(successMessage);
+
+            // Create and save the notification for successful approval
+            Notification notification = Notification.builder()
+                    .message("Registration form approved successfully for user: " + user.getUsername())
+                    .user(user)
+                    .status(NotificationStatus.UNREAD)
+                    .build();
+            notificationRepository.save(notification);
+
             // Trả về phản hồi thành công
             return ApiResponse.builder()
                     .message("Registration form approved successfully.")
-                    .notifications(notifications)
                     .build();
         } catch (AppException e) {
             // Xử lý lỗi liên quan đến AppException
@@ -104,7 +115,7 @@ public class UserRegistrationService {
 
 
     public ApiResponse rejectRegistration(int formId,String reason) {
-        List<String> notifications = new ArrayList<>();
+
         if(reason.isEmpty()||reason==null)
             throw new UserNotFound("No reason found");
         try {
@@ -118,12 +129,21 @@ public class UserRegistrationService {
 
             // Lưu lại thay đổi vào cơ sở dữ liệu
             registrationFormRepository.save(registrationForm);
-            String successMessage = "Registration form rejected successfully. Reason: " + reason;
-            notifications.add(successMessage);
+
+            // Create and save the notification for rejection
+            User user = registrationForm.getUser();
+            if (user != null) {
+                Notification notification = Notification.builder()
+                        .message("Registration form rejected for user: " + user.getUsername() + ". Reason: " + reason)
+                        .user(user)
+                        .status(NotificationStatus.UNREAD)
+                        .build();
+                notificationRepository.save(notification);
+            }
+
             // Trả về phản hồi thành công
             return ApiResponse.builder()
-                    .message(successMessage)
-                    .notifications(notifications)
+                    .message("Registration form rejected successfully.")
                     .build();
         } catch (AppException e) {
             // Xử lý lỗi liên quan đến AppException
@@ -165,6 +185,7 @@ public class UserRegistrationService {
             RegistrationForm registrationForm = registrationFormMapper.toRegistrationForm(request);
             registrationForm.setUser(existingUser); // Thiết lập User cho RegistrationForm
             registrationForm.setRole(requestedRole); // Thiết lập Role
+            registrationForm.setUser(userRepository.findById(userId).get());
 
             // Lưu RegistrationForm vào cơ sở dữ liệu
             registrationFormRepository.save(registrationForm);

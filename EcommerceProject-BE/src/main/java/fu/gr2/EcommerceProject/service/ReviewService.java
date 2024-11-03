@@ -2,6 +2,7 @@ package fu.gr2.EcommerceProject.service;
 
 import fu.gr2.EcommerceProject.dto.request.ApiResponse;
 import fu.gr2.EcommerceProject.dto.request.CommentRequest;
+import fu.gr2.EcommerceProject.dto.response.CommentResponse;
 import fu.gr2.EcommerceProject.entity.Event;
 import fu.gr2.EcommerceProject.entity.Review;
 import fu.gr2.EcommerceProject.entity.User;
@@ -13,7 +14,6 @@ import fu.gr2.EcommerceProject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -29,9 +29,7 @@ import java.util.List;
     @Autowired
     private UserRepository userRepository;
 
-    public ApiResponse<Review> addComment(Integer eventId, CommentRequest commentRequest) {
-        List<String> notifications = new ArrayList<>();
-
+    public ApiResponse<CommentResponse> addComment(Integer eventId, CommentRequest commentRequest) {
         // Validate and find the event
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new AppException(ErrorCode.EVENT_NOT_EXISTED));
@@ -46,20 +44,22 @@ import java.util.List;
         review.setUser(user);
         review.getComments().add(commentRequest.getComment());
 
-        // Save the review
         Review savedReview = reviewRepository.save(review);
 
+        // Create the simplified response
+        CommentResponse commentResponse = new CommentResponse(
+                savedReview.getReviewID(),
+                savedReview.getComments(),
+                savedReview.getCreatedAt().toString() // Format as needed
+        );
+
         String successMessage = "Comment added successfully to Event ID: " + eventId;
-        notifications.add(successMessage); // Add message to notifications
 
-
-        return ApiResponse.<Review>builder()
-                .result(savedReview)
+        return ApiResponse.<CommentResponse>builder()
+                .result(commentResponse)
                 .message(successMessage)
-                .notifications(notifications)
                 .build();
     }
-
     public ApiResponse<Review> updateComment(Integer reviewId, CommentRequest commentRequest) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_EXISTED));
@@ -70,15 +70,11 @@ import java.util.List;
 
         // Save the updated review
         Review updatedReview = reviewRepository.save(review);
-
-        // Create a success message
         String successMessage = "Comment updated successfully for Review ID: " + reviewId;
 
-        // Return the response
         return ApiResponse.<Review>builder()
                 .result(updatedReview)
                 .message(successMessage)
-                .notifications(List.of(successMessage)) // Add notification
                 .build();
     }
 
@@ -87,14 +83,10 @@ import java.util.List;
                 .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_EXISTED));
 
         reviewRepository.delete(review);
-
-        // Create a success message
         String successMessage = "Comment deleted successfully for Review ID: " + reviewId;
 
-        // Return response without result
         return ApiResponse.<Void>builder()
                 .message(successMessage)
-                .notifications(List.of(successMessage)) // Add notification
                 .build();
     }
 
