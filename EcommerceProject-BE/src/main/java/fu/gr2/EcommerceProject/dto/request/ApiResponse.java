@@ -1,9 +1,9 @@
 package fu.gr2.EcommerceProject.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import fu.gr2.EcommerceProject.dto.response.NotificationResponse;
 import lombok.*;
 
-import java.util.List;
 
 @Builder
 @Getter
@@ -16,5 +16,5 @@ public class ApiResponse <T> {
     private int code = 1000;
     private String message;
     private T result;
-    private List<String> notifications;
+    private NotificationResponse notification;
 }
