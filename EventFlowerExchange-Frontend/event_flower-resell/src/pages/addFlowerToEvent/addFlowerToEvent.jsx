@@ -199,10 +199,10 @@ function AddFlowerToEvent() {
                   <InputNumber min={1} placeholder="Số lượng" />
                 </Form.Item>
 
-                <Form.Item name="img">
-                  <p>Thêm hình ảnh : </p>
+                <Form.Item name="image">
+                  <p>Thêm hình ảnh :</p>
                   <Upload
-                    action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                    action="https://6725f1d9c39fedae05b65f25.mockapi.io/api/upload" // MockAPI URL
                     listType="picture-card"
                     fileList={fileList}
                     onPreview={handlePreview}
