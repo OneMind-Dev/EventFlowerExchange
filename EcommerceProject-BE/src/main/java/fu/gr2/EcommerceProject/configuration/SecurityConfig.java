@@ -53,7 +53,8 @@ public class SecurityConfig {
             "/order/shipcode/{userId}",
             "/order/{userId}",
             "/profile-picture",
-            "/event-image"
+            "/event-image",
+            "/payment/vn-pay-callback"
             };
 
     @Value("${jwt.signerKey}")

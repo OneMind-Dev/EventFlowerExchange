@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,9 +19,9 @@ public class PaymentController {
     @Autowired
     private VNPayService vnPayService;
 
-    @GetMapping("/vn-pay")
-    public ResponseObject<PaymentResponse> pay(HttpServletRequest request) {
-        PaymentResponse paymentResponse = vnPayService.createVnPayPayment(request);
+    @GetMapping("/vn-pay/{orderId}")
+    public ResponseObject<PaymentResponse> pay(@PathVariable String orderId, HttpServletRequest request) {
+        PaymentResponse paymentResponse = vnPayService.createVnPayPayment(orderId, request);
         if (paymentResponse != null) {
             return new ResponseObject<>(HttpStatus.OK, "Success", paymentResponse);
         }
