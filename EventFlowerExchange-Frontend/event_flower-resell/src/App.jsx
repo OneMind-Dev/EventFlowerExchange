@@ -170,7 +170,7 @@ const App = () => {
       element: <Flowers />,
     },
     {
-      path: "flowers/:id",
+      path: "/:relationshipID",
       element: <FlowerDetail />,
     },
     {

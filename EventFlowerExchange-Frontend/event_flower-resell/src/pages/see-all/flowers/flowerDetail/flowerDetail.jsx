@@ -10,31 +10,22 @@ import api from "../../../../components/config/axios";
 
 const FlowerDetail = () => {
   const navigate = useNavigate();
-  const { id, eventId } = useParams(); // Retrieve flower ID and event ID from URL
-
+  const { relationshipID } = useParams(); // Retrieve relationshipID from URL
   const [flowerDetail, setFlowerDetail] = useState({});
-  const [eventDetail, setEventDetail] = useState({});
-  const [userDetail, setUserDetail] = useState({});
-  const token = localStorage.getItem("token"); // Adjust as needed
+  const token = localStorage.getItem("token");
+
 
   useEffect(() => {
-    // Fetch flower details from the API
     const fetchFlowerDetails = async () => {
-      if (!token) {
-        toast.error("You must be logged in to view flower details.");
-        navigate("/login"); // Redirect to login if no token
-        return;
-      }
-
       try {
-        const response = await api.get(`/GetFlowerFromEvent/${eventId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the headers
-          },
-        });
-        setFlowerDetail(response.data.flower);
-        setEventDetail(response.data.event); // Assume your API returns event details
-        setUserDetail(response.data.user); // Assume your API returns user details
+        const response = await api.get(`/${relationshipID}`);
+
+        if (response.data.code === 1000) {
+          setFlowerDetail(response.data.result); // Set flower details
+          console.log("flowerDetail: ", response.data.result);
+        } else {
+          toast.error("Failed to fetch flower details");
+        }
       } catch (error) {
         console.error("Error fetching flower details:", error);
         toast.error("Failed to fetch flower details");
@@ -43,9 +34,9 @@ const FlowerDetail = () => {
 
     fetchFlowerDetails();
     window.scrollTo(0, 0);
-  }, [eventId, token]); // Depend on eventId and token
+  }, [relationshipID, token]);
 
-  if (!flowerDetail || !eventDetail) {
+  if (!flowerDetail) {
     return <h2>Flower not found</h2>;
   }
 
@@ -78,57 +69,41 @@ const FlowerDetail = () => {
         <div className="wrapper__flower-info">
           <Image
             className="wrapper__flower-info--img"
-            src={flowerDetail.flower_image}
-            alt={flowerDetail.flower_name}
+            src={flowerDetail.image} // Default image if not provided
+            alt={flowerDetail.flowername}
           />
           <div className="wrapper__flower-info-detail">
-            <h1>{flowerDetail.flower_name}</h1>
-            <h2>{flowerDetail.price} VND</h2>
+            <h1>{flowerDetail.flowername}</h1>
+            <h2>{flowerDetail.floPrice} VND</h2>
             <p>Số lượng có sẵn: {flowerDetail.quantity}</p>
             <div className="wrapper__flower-info-detail--btn">
               <button
                 className="wrapper__flower-info-detail--btn--buy"
-                onClick={addToCart}
+                onClick={() => addToCart(flowerDetail)}
               >
                 Thêm vào giỏ hàng
               </button>
             </div>
           </div>
         </div>
+
         <div className="wrapper__flower-des">
           <h2>Mô tả sản phẩm</h2>
           <p>{flowerDetail.description}</p>
         </div>
-        <div className="wrapper__shop-info">
-          <div className="wrapper__shop-info--img">
-            <img
-              onClick={() => navigate(`/${userDetail.user_id}`)}
-              src="../src/components/images/userImage.png"
-              alt="User"
-            />
-          </div>
-          <div className="wrapper__shop-info--des">
-            <h3 onClick={() => navigate(`/${userDetail.user_id}`)}>
-              {userDetail.username}
-            </h3>
-          </div>
-        </div>
+
         <div className="wrapper__flower--detail">
           <h3>SẢN PHẨM THUỘC SỰ KIỆN</h3>
           <div className="wrapper__flower--detail-card">
-            <>
-              <Card
-                bordered={false}
-                onClick={() => {
-                  navigate(`/event/${eventDetail.event_id}`);
-                }}
-              >
-                <Meta
-                  title={eventDetail.event_name}
-                  description={eventDetail.event_description}
-                />
-              </Card>
-            </>
+            <Card
+              bordered={false}
+              onClick={() => navigate(`/event/${flowerDetail.relationshipID}`)}
+            >
+              <Card.Meta
+                title={flowerDetail.eventname}
+                description={flowerDetail.description}
+              />
+            </Card>
           </div>
         </div>
       </div>
