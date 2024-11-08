@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./flowerDetail.css";
 import Header from "../../../../components/header/header";
+import EventData from "../../../../components/config/eventData";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card, Image } from "antd";
 import Meta from "antd/es/card/Meta";
+import UserData from "../../../../components/config/userData";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import api from "../../../../components/config/axios";
 
 const FlowerDetail = () => {
   const navigate = useNavigate();
@@ -41,26 +42,26 @@ const FlowerDetail = () => {
   }
 
   const addToCart = () => {
-    if (!token) {
-      toast.error("You must be logged in to add items to the cart.");
-      return; // Prevent adding to cart if no token
-    }
-
+    // Retrieve existing cart data from sessionStorage
     const cartItems = JSON.parse(sessionStorage.getItem("cart")) || [];
+
+    // Check if item already exists in the cart
     const existingItemIndex = cartItems.findIndex(item => item.flower_id === flowerDetail.flower_id);
 
     if (existingItemIndex === -1) {
+      // Item does not exist, add it with quantity 1
       const newItem = { ...flowerDetail, quantity: 1 };
       cartItems.push(newItem);
       toast.success("Product added to cart!");
     } else {
+      // Item exists, increment the quantity
       cartItems[existingItemIndex].quantity += 1;
       toast.info("Product quantity updated in cart!");
     }
 
+    // Update sessionStorage with the modified cart
     sessionStorage.setItem("cart", JSON.stringify(cartItems));
   };
-
   return (
     <>
       <Header />

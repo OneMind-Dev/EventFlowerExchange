@@ -2,10 +2,8 @@ package fu.gr2.EcommerceProject.service;
 
 import fu.gr2.EcommerceProject.dto.request.ApiResponse;
 import fu.gr2.EcommerceProject.dto.request.OrderRequest;
-import fu.gr2.EcommerceProject.dto.response.NotificationResponse;
 import fu.gr2.EcommerceProject.dto.response.OrderResponse;
 import fu.gr2.EcommerceProject.entity.*;
-import fu.gr2.EcommerceProject.enums.NotificationStatus;
 import fu.gr2.EcommerceProject.enums.Status;
 import fu.gr2.EcommerceProject.exception.AppException;
 import fu.gr2.EcommerceProject.exception.ErrorCode;
@@ -31,9 +29,7 @@ public class OrderService {
     OrderRepository orderRepository;
     UserRepository userRepository;
     EventRepository eventRepository;
-    NotificationRepository notificationRepository;
-
-
+     List<String> notifications;
     @Transactional
     public ApiResponse<OrderResponse> createOrder(String userId, OrderRequest request) {
         if (request == null) {
@@ -62,6 +58,8 @@ public class OrderService {
                 .build();
 
         orderRepository.save(order);
+        String successMessage = "Order placed successfully! Order ID: " + order.getOrderId();
+        notifications.add(successMessage);
 
         List<OrderDetail> orderDetails = new ArrayList<>();
         List<ShoppingCartItem> shoppingCartItems = shoppingCartItemRepository.findByShoppingCart(shoppingCart);
@@ -77,14 +75,6 @@ public class OrderService {
 
         shoppingCartItemRepository.deleteByShoppingCart(shoppingCart);
 
-        // Create and save the notification for successful order
-        Notification notification = Notification.builder()
-                .message("Order placed successfully with ID: " + order.getOrderId())
-                .user(user)
-                .status(NotificationStatus.UNREAD)
-                .build();
-        notificationRepository.save(notification);
-
         OrderResponse orderResponse = OrderResponse.builder()
                 .orderId(order.getOrderId())
                 .method(order.getMethod())
@@ -96,15 +86,10 @@ public class OrderService {
                 .phone(order.getPhone())
                 .build();
 
-        NotificationResponse notificationResponse = NotificationResponse.builder()
-                .message(notification.getMessage())
-                .status(notification.getStatus().toString())
-                .build();
-
-
         return ApiResponse.<OrderResponse>builder()
                 .result(orderResponse)
-                .notification(notificationResponse)
+                .message(successMessage)
+                .notifications(notifications)
                 .build();
     }
 

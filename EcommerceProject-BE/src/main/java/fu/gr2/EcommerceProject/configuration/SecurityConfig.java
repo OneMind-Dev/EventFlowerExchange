@@ -54,8 +54,7 @@ public class SecurityConfig {
             "/order/{userId}",
             "/profile-picture",
             "/event-image",
-            "/EventCate/create",
-            "/{relationshipID}"
+            "/payment/vn-pay-callback"
             };
 
     @Value("${jwt.signerKey}")
