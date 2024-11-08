@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./flowerDetail.css";
 import Header from "../../../../components/header/header";
 import EventData from "../../../../components/config/eventData";
@@ -8,6 +8,7 @@ import Meta from "antd/es/card/Meta";
 import UserData from "../../../../components/config/userData";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import api from "../../../../components/config/axios";
 
 const FlowerDetail = () => {
   const navigate = useNavigate();
