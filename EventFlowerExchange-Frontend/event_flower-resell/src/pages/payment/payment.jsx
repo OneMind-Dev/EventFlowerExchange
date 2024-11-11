@@ -13,6 +13,7 @@ function Payment() {
         const storedCartItems = JSON.parse(sessionStorage.getItem("cart")) || [];
         setCartItems(storedCartItems);
         const total = storedCartItems.reduce((sum, item) => {
+            console.log("item: ", item);
             const priceValue = typeof item.price === 'string' ? item.price : String(item.price || 0);
             return sum + (parseFloat(priceValue.replace(/\./g, '').replace('đ', '')) * item.quantity);
         }, 0);
@@ -26,8 +27,8 @@ function Payment() {
             key: "flower_image",
             render: (src) => <Image width={50} src={src} alt="Flower Image" />,
         },
-        { title: "Name", dataIndex: "flower_name", key: "flower_name" },
-        { title: "Price (VND)", dataIndex: "price", key: "price" },
+        { title: "Name", dataIndex: "flowername", key: "flowername" },
+        { title: "Price (VND)", dataIndex: "floPrice", key: "floPrice" },
         { title: "Quantity", dataIndex: "quantity", key: "quantity" },
     ];
 

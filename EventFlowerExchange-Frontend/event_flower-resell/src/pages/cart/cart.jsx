@@ -12,7 +12,6 @@ function CartPage() {
   useEffect(() => {
     const storedCartItems = JSON.parse(sessionStorage.getItem("cart")) || [];
     setCartItems(storedCartItems);
-    console.log("Products in cart:", storedCartItems); // Log the cart items when the page loads
   }, []);
 
   const columns = [
@@ -37,77 +36,57 @@ function CartPage() {
       dataIndex: "quantity",
       key: "quantity",
       render: (quantity, record) => (
-        <InputNumber
-          min={0}
-          value={quantity}
-          onChange={(value) => handleQuantityChange(value, record.flower_id)}
-        />
+        <div>
+          <Button
+            onClick={() => handleQuantityChange(quantity - 1, record.relationshipID)}
+            disabled={quantity <= 1} // Disable decrease button if quantity is 1
+          >
+            -
+          </Button>
+          <InputNumber
+            min={1}
+            value={quantity}
+            onChange={(value) => handleQuantityChange(value, record.relationshipID)}
+          />
+          <Button
+            onClick={() => handleQuantityChange(quantity + 1, record.relationshipID)}
+          >
+            +
+          </Button>
+        </div>
       ),
     },
     {
       title: "Chức năng",
       key: "actions",
       render: (_, record) => (
-        <Button type="danger" onClick={() => handleRemove(record.flower_id)}>
+        <Button type="danger" onClick={() => handleRemove(record.relationshipID)}>
           Xóa
         </Button>
       ),
     },
   ];
-  const handleQuantityChange = (value, id) => {
-    if (value < 0) return; // Prevent negative quantities
 
-    // Update cart items with new quantity
-    const updatedCart = cartItems.map((item) => {
-      if (item.flower_id === id) {
-        return { ...item, quantity: value };
-      }
-      return item;
-    });
-
-    setCartItems(updatedCart);
-    sessionStorage.setItem("cart", JSON.stringify(updatedCart));
-
-    // If the quantity is set to 0, ask for removal
-    if (value === 0) {
-      console.log(`Product selected for removal: ${id}`); // Log the selected product's id
-      confirmRemoval(id);  // Call to confirm removal only if quantity is 0
-    }
-  };
-
-  const confirmRemoval = (id) => {
-    Modal.confirm({
-      title: "Xóa sản phẩm",
-      content: "Bạn có chắc chắn muốn xóa sản phẩm này không?",
-      onOk: () => {
-        console.log(`Confirmed removal of product with id: ${id}`); // Log when removal is confirmed
-        handleRemove(id);  // Proceed with removal if confirmed
-      },
-      onCancel() {
-        console.log("Removal canceled"); // Log if the removal is canceled
-      }
-    });
+  const handleQuantityChange = (newQuantity, relationshipID) => {
+    // Update the cart item's quantity
+    const updatedCartItems = cartItems.map(item =>
+      item.relationshipID === relationshipID ? { ...item, quantity: newQuantity } : item
+    );
+    setCartItems(updatedCartItems); // Assuming setCartItems updates the state
   };
 
   const handleRemove = (id) => {
     // Log the product being removed
-    const productToRemove = cartItems.find(item => item.flower_id === id);
+    const productToRemove = cartItems.find((item) => item.relationshipID === id);
     console.log("Product being removed:", productToRemove);
-
-    // Remove the specific product by flower_id using the callback form of setCartItems
-    setCartItems((prevCartItems) => {
-      const updatedCart = prevCartItems.filter((item) => item.flower_id !== id);
-
-      // Update session storage
-      sessionStorage.setItem("cart", JSON.stringify(updatedCart));
-
-      // Notify the user
-      toast.info("Sản phẩm đã được xóa khỏi giỏ hàng");
-
-      return updatedCart;  // Return the updated state
-    });
+    // Remove the specific product by flower_id
+    const updatedCart = cartItems.filter((item) => item.relationshipID !== id);
+    // Update the state and session storage
+    setCartItems(updatedCart);
+    sessionStorage.setItem("cart", JSON.stringify(updatedCart));
+    // Notify the user
+    toast.info("Sản phẩm đã được xóa khỏi giỏ hàng");
   };
-
 
   const handlePaymentClick = () => {
     sessionStorage.setItem("cart", JSON.stringify(cartItems)); // Store cart items
