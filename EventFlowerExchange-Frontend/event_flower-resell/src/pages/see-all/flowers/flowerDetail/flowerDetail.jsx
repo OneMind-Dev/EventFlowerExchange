@@ -20,8 +20,11 @@ const FlowerDetail = () => {
   useEffect(() => {
     const fetchFlowerDetails = async () => {
       try {
-        const response = await api.get(`/${relationshipID}`);
-
+        const response = await api.get(`/${relationshipID}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         if (response.data.code === 1000) {
           setFlowerDetail(response.data.result); // Set flower details
           console.log("flowerDetail: ", response.data.result);
@@ -42,27 +45,36 @@ const FlowerDetail = () => {
     return <h2>Flower not found</h2>;
   }
 
-  const addToCart = () => {
-    // Retrieve existing cart data from sessionStorage
-    const cartItems = JSON.parse(sessionStorage.getItem("cart")) || [];
+  const addToCart = (flowerDetail) => {
+    // Lấy giỏ hàng hiện tại từ sessionStorage
+    let cart = JSON.parse(sessionStorage.getItem("cart")) || [];
 
-    // Check if item already exists in the cart
-    const existingItemIndex = cartItems.findIndex(item => item.flower_id === flowerDetail.flower_id);
+    // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+    const existingItemIndex = cart.findIndex(item => item.flower_id === flowerDetail.flower_id);
 
-    if (existingItemIndex === -1) {
-      // Item does not exist, add it with quantity 1
-      const newItem = { ...flowerDetail, quantity: 1 };
-      cartItems.push(newItem);
-      toast.success("Product added to cart!");
+    if (existingItemIndex !== -1) {
+      // Nếu có rồi, tăng số lượng
+      cart[existingItemIndex].quantity += 1;
     } else {
-      // Item exists, increment the quantity
-      cartItems[existingItemIndex].quantity += 1;
-      toast.info("Product quantity updated in cart!");
+      // Nếu chưa có, thêm sản phẩm mới vào giỏ hàng
+      cart.push({
+        flower_id: flowerDetail.flower_id,
+        flower_name: flowerDetail.flowername,
+        flower_image: flowerDetail.image,
+        flower_price: flowerDetail.floPrice,
+        quantity: 1
+      });
     }
 
-    // Update sessionStorage with the modified cart
-    sessionStorage.setItem("cart", JSON.stringify(cartItems));
+    // Lưu lại giỏ hàng vào sessionStorage
+    sessionStorage.setItem("cart", JSON.stringify(cart));
+
+    // Cập nhật lại state giỏ hàng (nếu cần)
+    setCartItems(cart);
   };
+
+
+
   return (
     <>
       <Header />
