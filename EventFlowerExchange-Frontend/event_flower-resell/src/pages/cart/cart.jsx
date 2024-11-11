@@ -10,27 +10,27 @@ function CartPage() {
   const navigate = useNavigate(); // Initialize useNavigate for navigation
 
   useEffect(() => {
-    // Load cart items from sessionStorage when component mounts
     const storedCartItems = JSON.parse(sessionStorage.getItem("cart")) || [];
     setCartItems(storedCartItems);
+    console.log("Products in cart:", storedCartItems); // Log the cart items when the page loads
   }, []);
 
   const columns = [
     {
       title: "Ảnh",
-      dataIndex: "flower_image",
-      key: "flower_image",
+      dataIndex: "image",
+      key: "image",
       render: (src) => <Image width={50} src={src} alt="Flower Image" />,
     },
     {
       title: "Tên sản phẩm",
-      dataIndex: "flower_name",
-      key: "flower_name",
+      dataIndex: "flowername",
+      key: "flowername",
     },
     {
       title: "Giá (VND)",
-      dataIndex: "price",
-      key: "price",
+      dataIndex: "floPrice",
+      key: "floPrice",
     },
     {
       title: "Số lượng",
@@ -54,22 +54,24 @@ function CartPage() {
       ),
     },
   ];
-
   const handleQuantityChange = (value, id) => {
     if (value < 0) return; // Prevent negative quantities
 
+    // Update cart items with new quantity
     const updatedCart = cartItems.map((item) => {
       if (item.flower_id === id) {
         return { ...item, quantity: value };
       }
       return item;
     });
+
     setCartItems(updatedCart);
     sessionStorage.setItem("cart", JSON.stringify(updatedCart));
 
-    // Check if quantity is zero and prompt user
+    // If the quantity is set to 0, ask for removal
     if (value === 0) {
-      confirmRemoval(id);
+      console.log(`Product selected for removal: ${id}`); // Log the selected product's id
+      confirmRemoval(id);  // Call to confirm removal only if quantity is 0
     }
   };
 
@@ -77,17 +79,35 @@ function CartPage() {
     Modal.confirm({
       title: "Xóa sản phẩm",
       content: "Bạn có chắc chắn muốn xóa sản phẩm này không?",
-      onOk: () => handleRemove(id),
-      onCancel() { },
+      onOk: () => {
+        console.log(`Confirmed removal of product with id: ${id}`); // Log when removal is confirmed
+        handleRemove(id);  // Proceed with removal if confirmed
+      },
+      onCancel() {
+        console.log("Removal canceled"); // Log if the removal is canceled
+      }
     });
   };
 
   const handleRemove = (id) => {
-    const updatedCart = cartItems.filter((item) => item.flower_id !== id);
-    setCartItems(updatedCart);
-    sessionStorage.setItem("cart", JSON.stringify(updatedCart));
-    toast.info("Sản phẩm đã được xóa khỏi giỏ hàng");
+    // Log the product being removed
+    const productToRemove = cartItems.find(item => item.flower_id === id);
+    console.log("Product being removed:", productToRemove);
+
+    // Remove the specific product by flower_id using the callback form of setCartItems
+    setCartItems((prevCartItems) => {
+      const updatedCart = prevCartItems.filter((item) => item.flower_id !== id);
+
+      // Update session storage
+      sessionStorage.setItem("cart", JSON.stringify(updatedCart));
+
+      // Notify the user
+      toast.info("Sản phẩm đã được xóa khỏi giỏ hàng");
+
+      return updatedCart;  // Return the updated state
+    });
   };
+
 
   const handlePaymentClick = () => {
     sessionStorage.setItem("cart", JSON.stringify(cartItems)); // Store cart items
@@ -99,7 +119,7 @@ function CartPage() {
       <Header />
       <div className="cart-page">
         <h2>Giỏ hàng</h2>
-        <Table dataSource={cartItems} columns={columns} rowKey="flower_id" pagination={false} />
+        <Table dataSource={cartItems} columns={columns} rowKey="flower_id" />
         <Button className="pay-button" type="primary" onClick={handlePaymentClick}>
           Thanh toán
         </Button>

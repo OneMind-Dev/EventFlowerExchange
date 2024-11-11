@@ -40,25 +40,29 @@ const FlowerDetail = () => {
     return <h2>Flower not found</h2>;
   }
 
-  const addToCart = () => {
-    if (!token) {
-      toast.error("You must be logged in to add items to the cart.");
-      return; // Prevent adding to cart if no token
-    }
+  const addToCart = (flower) => {
+    const existingCart = JSON.parse(sessionStorage.getItem("cart")) || [];
+    console.log("Existing cart before update:", existingCart);
 
-    const cartItems = JSON.parse(sessionStorage.getItem("cart")) || [];
-    const existingItemIndex = cartItems.findIndex(item => item.flower_id === flowerDetail.flower_id);
+    // Find index of the flower in the existing cart by flowerID (if this is your identifier)
+    const flowerIndex = existingCart.findIndex((item) => item.relationshipID === flower.relationshipID);
 
-    if (existingItemIndex === -1) {
-      const newItem = { ...flowerDetail, quantity: 1 };
-      cartItems.push(newItem);
-      toast.success("Product added to cart!");
+    // If flower already exists in cart, update its quantity, otherwise add a new flower
+    if (flowerIndex !== -1) {
+      existingCart[flowerIndex].quantity += 1;
     } else {
-      cartItems[existingItemIndex].quantity += 1;
-      toast.info("Product quantity updated in cart!");
+      existingCart.push({ ...flower, quantity: 1 });
     }
 
-    sessionStorage.setItem("cart", JSON.stringify(cartItems));
+    // Log the product being added and the updated cart state
+    console.log("Product added to cart:", flower);
+    console.log("Updated cart:", existingCart);
+
+    // Update sessionStorage with the new cart data
+    sessionStorage.setItem("cart", JSON.stringify(existingCart));
+
+    // Notify user
+    toast.success("Product added to cart successfully");
   };
 
   return (
@@ -97,7 +101,7 @@ const FlowerDetail = () => {
           <div className="wrapper__flower--detail-card">
             <Card
               bordered={false}
-              onClick={() => navigate(`/event/${flowerDetail.relationshipID}`)}
+              onClick={() => navigate(`/events/${flowerDetail.relationshipID}`)}
             >
               <Card.Meta
                 title={flowerDetail.eventname}
