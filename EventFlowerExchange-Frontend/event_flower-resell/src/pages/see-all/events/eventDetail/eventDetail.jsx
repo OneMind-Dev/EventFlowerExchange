@@ -124,7 +124,7 @@ const EventDetail = () => {
                       src={flower.image}
                     />
                   }
-                  onClick={() => navigate(`/flowers/${flower.relationshipID}`)}
+                  onClick={() => navigate(`/${flower.relationshipID}`)}
                 >
                   <Meta
                     className="wrapper__card-title"
