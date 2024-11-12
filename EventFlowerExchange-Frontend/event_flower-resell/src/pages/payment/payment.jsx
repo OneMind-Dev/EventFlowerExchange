@@ -13,8 +13,8 @@ function Payment() {
         const storedCartItems = JSON.parse(sessionStorage.getItem("cart")) || [];
         setCartItems(storedCartItems);
         const total = storedCartItems.reduce((sum, item) => {
-            console.log("item: ", item);
-            const priceValue = typeof item.price === 'string' ? item.price : String(item.price || 0);
+            console.log("item: ", item.quantity);
+            const priceValue = typeof item.floPrice === 'string' ? item.floPrice : String(item.floPrice || 0);
             return sum + (parseFloat(priceValue.replace(/\./g, '').replace('đ', '')) * item.quantity);
         }, 0);
         setTotalPrice(total.toLocaleString() + 'đ'); // Format total price
