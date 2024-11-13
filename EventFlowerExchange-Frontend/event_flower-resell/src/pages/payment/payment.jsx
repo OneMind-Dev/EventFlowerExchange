@@ -4,11 +4,13 @@ import Footer from '../../components/footer/footer';
 import "../../components/payment/payment.css"; // Ensure to import your CSS
 import { Table, Button, Image, Modal } from 'antd';
 import { toast } from 'react-toastify';
+import { useSelector } from "react-redux";
 
 function Payment() {
     const [cartItems, setCartItems] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
-
+    const user = useSelector((store) => store.user);
+    console.log("user: ", user);
     useEffect(() => {
         const storedCartItems = JSON.parse(sessionStorage.getItem("cart")) || [];
         setCartItems(storedCartItems);
