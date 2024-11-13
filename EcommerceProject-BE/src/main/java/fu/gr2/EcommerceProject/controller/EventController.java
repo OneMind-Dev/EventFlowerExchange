@@ -93,6 +93,10 @@ public class EventController {
     public ApiResponse<List<FlowerEventResponse>> getFlower(@PathVariable int eventId) {
         return flowerEventRelationshipService.getFlower(eventId);
     }
+    @GetMapping("/GetFlowerEvent/{relationshipId}")
+    public ApiResponse<FlowerEventResponse> getFlowerEvent(@PathVariable int relationshipId) {
+        return flowerEventRelationshipService.getFlowerByRelationshipId(relationshipId);
+    }
 
 
     @PostMapping("/{eventId}/comments")

@@ -36,6 +36,23 @@ public class FlowerEventRelationshipService {
     FlowerEventRelationshipMapper flowerEventRelationshipMapper;
     private final FlowerEventRelationshipRepository flowerEventRelationshipRepository;
 
+    public ApiResponse<FlowerEventResponse> getFlowerByRelationshipId(Integer relationshipID){
+        FlowerEventRelationship flowerEventRelationship = flowerEventRelationshipRepository.findById(relationshipID).get();
+        FlowerEventResponse flowerEventResponse = new FlowerEventResponse();
+        flowerEventResponse.setRelationshipID(flowerEventRelationship.getRelationshipID());
+        flowerEventResponse.setDescription(flowerEventRelationship.getDescription());
+        flowerEventResponse.setFloPrice(flowerEventRelationship.getFloPrice());
+        flowerEventResponse.setOrigin(flowerEventRelationship.getFlower().getOrigin());
+        flowerEventResponse.setColor(flowerEventRelationship.getFlower().getColor());
+        flowerEventResponse.setCreatedAt(flowerEventRelationship.getCreatedAt());
+        flowerEventResponse.setImage(flowerEventRelationship.getImage());
+        flowerEventResponse.setQuantity(flowerEventRelationship.getQuantity());
+        flowerEventResponse.setFlowername(flowerEventRelationship.getFlower().getFlowerName());
+        return ApiResponse.<FlowerEventResponse>builder()
+                .result(flowerEventResponse)
+                .message("Flowers fetched successfully")
+                .build();
+    }
     public ApiResponse<FlowerEventResponse> addFlower(FlowerEventRequest request){
 
         // Kiểm tra sự tồn tại của Flower
