@@ -9,19 +9,25 @@ import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';  /
 function AdminApprove() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [confirmedIds, setConfirmedIds] = useState(new Set()); // Track confirmed IDs
-    const [declinedIds, setDeclinedIds] = useState(new Set()); // Track declined IDs
+    const [confirmedIds, setConfirmedIds] = useState(new Set()); // State to track confirmed IDs
+    const [declinedIds, setDeclinedIds] = useState(new Set()); // State to track declined IDs
     const [reasonData, setReasonData] = useState({}); // Store reasons for each record
-    const token = localStorage.getItem("token");
+    const addNewItem = (newItem) => {
+        setData((prevData) => [newItem, ...prevData]); // Add new item at the beginning
+    };
+
     useEffect(() => {
         fetchData();
-
+        const confirmedIdsFromStorage = JSON.parse(localStorage.getItem("confirmedIds")) || [];
+        setConfirmedIds(new Set(confirmedIdsFromStorage));
+        const declinedIdsFromStorage = JSON.parse(localStorage.getItem("declinedIds")) || [];
+        setDeclinedIds(new Set(declinedIdsFromStorage));
     }, []);
 
     const fetchData = async () => {
         setLoading(true);
         try {
-
+            const token = localStorage.getItem("token");
             const response = await api.get("/admin/registerForm", {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -88,7 +94,7 @@ function AdminApprove() {
                     )}
                 </Space>
             ),
-        }
+        },
     ];
 
     // Handle reason input change
@@ -96,58 +102,63 @@ function AdminApprove() {
         setReasonData(prev => ({ ...prev, [id]: value }));
     };
 
-    // Function to handle confirmation of registration
+    // Handle confirm function
     const handleConfirm = async (formId) => {
         try {
-            // Set the authorization token (you need to replace 'yourToken' with the actual token you are using)
-            const config = {
+            const token = localStorage.getItem("token");
+            const response = await api.post(`/admin/approveRegistration/${formId}`, {}, {
                 headers: { Authorization: `Bearer ${token}` },
-            };
-
-            // Make API request to confirm registration
-            const response = await api.post(`admin/approveRegistration/${formId}`, {}, config);
-
-            // Check if the response indicates success
-            if (response.status === 200) {
-                // Update the confirmed IDs state
-                setConfirmedIds((prev) => new Set(prev).add(formId));
-                console.log(response.data);
-                toast.success('Confirmation successful!');
+            });
+            if (response.data && response.data.code === 1000) {
+                setConfirmedIds(prevIds => {
+                    const updatedIds = new Set(prevIds);
+                    updatedIds.add(formId);
+                    localStorage.setItem("confirmedIds", JSON.stringify(Array.from(updatedIds)));
+                    return updatedIds;
+                });
+                fetchData(); // Refresh data to update UI
+            } else {
+                message.error("Failed to confirm registration.");
             }
         } catch (error) {
-            // Handle any errors that occur during the request
-            toast.error(error.message || 'Confirmation failed, please try again.');
+            message.error("Error confirming registration. Please try again.");
         }
     };
 
-    // Function to handle declining registration
+    // Handle decline function with reason validation
     const handleDecline = async (formId) => {
         // Check if the reason is provided
         if (!reasonData[formId]) {
-            toast.error('Please enter a reason before declining.');
+            message.warning("Please provide a reason before declining.");
             return;
         }
 
         try {
-            // Set the authorization token (you need to replace 'yourToken' with the actual token you are using)
-            const config = {
-                headers: { Authorization: `Bearer ${token}` },
-            };
+            // Get the token from local storage
+            const token = localStorage.getItem("token");
 
-            // Make API request to decline registration with reason
-            const response = await api.post(`admin/rejectRegistration/${formId}`, {
-                reason: reasonData[formId],
-            }, config);
+            // Prepare the API request
+            const response = await api.post(`/admin/rejectRegistration/${formId}`,
+                { reason: reasonData[formId] }, // Include the reason in the payload
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
 
-            // Check if the response indicates success
-            if (response.status === 200) {
-                // Update the declined IDs state
-                setDeclinedIds((prev) => new Set(prev).add(formId));
-                toast.success('Decline successful!');
+            // Check if the response indicates a successful decline
+            if (response.data && response.data.code === 1000) {
+                setDeclinedIds(prevIds => {
+                    const updatedIds = new Set(prevIds);
+                    updatedIds.add(formId);
+                    localStorage.setItem("declinedIds", JSON.stringify(Array.from(updatedIds)));
+                    return updatedIds;
+                });
+                fetchData(); // Refresh data to update UI
+            } else {
+                message.error("Failed to decline registration.");
             }
         } catch (error) {
-            // Handle any errors that occur during the request
-            toast.error(error.message || 'Decline failed, please try again.');
+            message.error("Error declining registration. Please try again.");
         }
     };
 

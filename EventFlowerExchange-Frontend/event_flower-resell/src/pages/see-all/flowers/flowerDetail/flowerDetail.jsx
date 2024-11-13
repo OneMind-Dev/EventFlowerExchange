@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./flowerDetail.css";
 import Header from "../../../../components/header/header";
+import EventData from "../../../../components/config/eventData";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card, Image } from "antd";
 import Meta from "antd/es/card/Meta";
+import UserData from "../../../../components/config/userData";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import api from "../../../../components/config/axios";
 import api from "../../../../components/config/axios";
 
 const FlowerDetail = () => {
@@ -18,8 +22,11 @@ const FlowerDetail = () => {
   useEffect(() => {
     const fetchFlowerDetails = async () => {
       try {
-        const response = await api.get(`/${relationshipID}`);
-
+        const response = await api.get(`/${relationshipID}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         if (response.data.code === 1000) {
           setFlowerDetail(response.data.result); // Set flower details
           console.log("flowerDetail: ", response.data.result);
@@ -64,6 +71,8 @@ const FlowerDetail = () => {
     // Notify user
     toast.success("Product added to cart successfully");
   };
+
+
 
   return (
     <>

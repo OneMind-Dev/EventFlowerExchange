@@ -6,7 +6,6 @@
 package fu.gr2.EcommerceProject.controller;
 
 import fu.gr2.EcommerceProject.dto.request.*;
-import fu.gr2.EcommerceProject.dto.response.CommentResponse;
 import fu.gr2.EcommerceProject.dto.response.EventResponse;
 import fu.gr2.EcommerceProject.dto.response.FlowerEventResponse;
 import fu.gr2.EcommerceProject.entity.Review;
@@ -14,6 +13,7 @@ import fu.gr2.EcommerceProject.service.EventService;
 import fu.gr2.EcommerceProject.service.FlowerEventRelationshipService;
 import fu.gr2.EcommerceProject.service.ReviewService;
 import jakarta.validation.Valid;
+
 import java.util.List;
 
 import lombok.AccessLevel;
@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EventController {
     EventService eventService;
     Logger logger = LoggerFactory.getLogger(EventController.class);
@@ -64,12 +64,12 @@ public class EventController {
         return ResponseEntity.ok(updatedEvent);
     }
 
-        @PostMapping("/CreateEvent")
-        public ResponseEntity<EventResponse> createEvent(@RequestBody @Valid EventCreateRequest request) {
-            logger.info("Creating a new event");
-            EventResponse eventResponse = eventService.createEvent(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(eventResponse);
-        }
+    @PostMapping("/CreateEvent")
+    public ResponseEntity<EventResponse> createEvent(@RequestBody @Valid EventCreateRequest request) {
+        logger.info("Creating a new event");
+        EventResponse eventResponse = eventService.createEvent(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventResponse);
+    }
 
     @DeleteMapping("/DeleteEvent/{eventId}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Integer eventId) {
@@ -85,27 +85,19 @@ public class EventController {
 
 
     @PostMapping("/AddFlowerToEvent")
-    public ApiResponse<FlowerEventResponse> addFlowerToEvent(@RequestBody FlowerEventRequest request){
-            return flowerEventRelationshipService.addFlower(request);
+    public ApiResponse<FlowerEventResponse> addFlowerToEvent(@RequestBody FlowerEventRequest request) {
+        return flowerEventRelationshipService.addFlower(request);
     }
 
     @GetMapping("/GetFlowerFromEvent/{eventId}")
-    public ApiResponse<List<FlowerEventResponse>> getFlower(@PathVariable int eventId){
+    public ApiResponse<List<FlowerEventResponse>> getFlower(@PathVariable int eventId) {
         return flowerEventRelationshipService.getFlower(eventId);
-    }
-
-    @GetMapping("/{relationshipID}")
-    public ApiResponse<FlowerEventResponse> getRelationship(@PathVariable int relationshipID){
-        return flowerEventRelationshipService.getRelationship(relationshipID);
     }
 
 
     @PostMapping("/{eventId}/comments")
-    public ResponseEntity<ApiResponse<CommentResponse>> addComment(
-            @PathVariable Integer eventId,
-            @RequestBody CommentRequest commentRequest) {
-
-        ApiResponse<CommentResponse> response = reviewService.addComment(eventId, commentRequest);
+    public ResponseEntity<ApiResponse<Review>> addComment(@PathVariable Integer eventId, @RequestBody CommentRequest commentRequest) {
+        ApiResponse<Review> response = reviewService.addComment(eventId, commentRequest);
 
         return ResponseEntity.ok(response);
     }

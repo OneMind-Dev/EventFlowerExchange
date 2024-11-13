@@ -88,13 +88,13 @@ public class VNPayService {
         this.vnpayConfig = vnpayConfig;
     }
 
-    public PaymentResponse createVnPayPayment(HttpServletRequest request) {
+    public PaymentResponse createVnPayPayment(String orderId, HttpServletRequest request) {
         Payment payment = new Payment();
         BigDecimal AM = BigDecimal.valueOf(Double.valueOf(request.getParameter("amount")));
         payment.setAmount(AM.multiply(BigDecimal.valueOf(100)));
         payment.setPaymentDate(LocalDateTime.now());
         payment.setPaymentStatus("PENDING");
-        payment.setOrder(orderRepository.findById(Integer.parseInt(request.getParameter("order_id"))).orElseThrow(() -> new IllegalArgumentException("Order not found with id: " + request.getParameter("order_id"))));
+        payment.setOrder(orderRepository.findById(Integer.parseInt(orderId)).get());
         int pid = repository.save(payment).getPaymentId();
         long amount = Integer.parseInt(request.getParameter("amount")) * 100L;
         String bankCode = request.getParameter("bankCode");
