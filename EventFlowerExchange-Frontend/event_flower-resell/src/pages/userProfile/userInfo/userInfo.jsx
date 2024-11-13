@@ -15,7 +15,6 @@ function UserInfo() {
   const [editingField, setEditingField] = useState(null);
   const [form] = Form.useForm();
   const user = useSelector((store) => store.user);
-  const [activeSection, setActiveSection] = useState("profile");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

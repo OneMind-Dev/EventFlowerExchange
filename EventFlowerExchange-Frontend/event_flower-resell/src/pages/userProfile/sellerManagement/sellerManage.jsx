@@ -25,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 
 function SellerManage() {
   const [avatarUrl, setAvatarUrl] = useState(null);
+  const [isOtherSelected, setIsOtherSelected] = useState(false);
   const [form] = Form.useForm();
   const [events, setEvents] = useState([]);
   const [openModal, setOpenModal] = useState(false);
@@ -32,10 +33,13 @@ function SellerManage() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [categoryId, setCategoryId] = useState(null);
 
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
-
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
   const handleImageChange = (event) => {
@@ -49,18 +53,45 @@ function SellerManage() {
     }
   };
 
-  const fetchEvent = async () => {
-    const response = await api.get("/AllEvents");
-
-    console.log(response.data);
-    setEvents(response.data);
+  // Fetch categories and add the "Other" option
+  const fetchCategories = async () => {
+    try {
+      const response = await api.get('/EventCate', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setCategories([
+        ...response.data.map(category => ({
+          value: category.categoryId,
+          label: category.name
+        })),
+        { value: "other", label: "Khác" } // Thêm tùy chọn "Khác"
+      ]);
+    } catch (error) {
+      console.error('Failed to fetch categories:', error);
+    }
   };
 
-  useEffect(() => {
-    const storedAvatar = sessionStorage.getItem('userAvatar');
-    if (storedAvatar) {
-      setAvatarUrl(storedAvatar); // Set state from session storage
+  const fetchEvent = async () => {
+    try {
+      const response = await api.get('/AllEvents', {
+        headers: { Authorization: `Bearer ${token}` }, // Add the token here
+        params: {
+          categoryId: "",
+          eventName: ""
+        }
+      });
+      setEvents(response.data);
+    } catch (error) {
+      console.error('Failed to fetch events:', error);
     }
+  };
+
+
+  useEffect(() => {
+
+    fetchCategories();
+    fetchEvent();
+
   }, []);
 
   const columns = [
@@ -74,13 +105,13 @@ function SellerManage() {
       dataIndex: "image",
       key: "image",
       render: (image) => {
-        return <Image src={image} alt="" width={100}></Image>;
+        return <Image src={image || "default-image.jpg"} alt="" width={100} />;
       },
     },
     {
       title: "Phân Loại",
-      dataIndex: "categoryId",
-      key: "categoryId",
+      dataIndex: "categoryName", // Update to match API response structure
+      key: "categoryName",
     },
     {
       title: "Tên Sự Kiện",
@@ -94,11 +125,7 @@ function SellerManage() {
       render: (eventId) => {
         return (
           <>
-            <Button
-              onClick={() => {
-                navigate(`/events/${eventId}`);
-              }}
-            >
+            <Button onClick={() => navigate(`/events/${eventId}`)}>
               Chi tiết
             </Button>
             <Popconfirm
@@ -124,12 +151,13 @@ function SellerManage() {
     setOpenModal(false);
   };
 
+  // Handle event submission
   const handleSubmitEvent = async (event) => {
     event.userId = user.userId;
+    console.log(event.userId);
 
     if (fileList.length > 0) {
       const file = fileList[0];
-      console.log(file);
       const url = await uploadFile(file.originFileObj);
       event.image = url;
     }
@@ -141,20 +169,42 @@ function SellerManage() {
       event.endDate = event.endDate.toISOString();
     }
 
+    console.log("Event Data:", event);
+
     try {
-      setSubmitting(true); //bat dau load
-      const response = await api.post("/CreateEvent", event);
-      console.log(response.data);
+      setSubmitting(true);
+
+      const token = localStorage.getItem("token");
+
+      // Check if the user selected "Other" and provided a new category name
+      if (event.categoryId === "other" && newCategoryName) {
+        const categoryResponse = await api.post(
+          "/EventCate/create",
+          { name: newCategoryName },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        event.categoryId = categoryResponse.data.categoryId; // Set new category ID
+        console.log(categoryResponse); // Moved inside the if block
+      }
+      // Now create the event with the updated categoryId
+      const response = await api.post("/CreateEvent", event, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      console.log("Event creation response:", response);
       toast.success("Tạo sự kiện thành công!");
       setOpenModal(false);
       form.resetFields();
-      fetchEvent();
+      fetchEvent(); // Refresh events list
     } catch (err) {
-      toast.error(err);
+      console.error("Error creating event:", err);
+      toast.error("Failed to create event");
     } finally {
       setSubmitting(false);
     }
   };
+
+
 
   const handleDeleteEvent = async (eventId) => {
     try {
@@ -271,37 +321,33 @@ function SellerManage() {
 
                 <Form.Item
                   name="categoryId"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Hãy chọn loại sự kiện.",
-                    },
-                  ]}
+                  rules={[{ required: true, message: "Hãy chọn loại sự kiện." }]}
                 >
                   <Select
-                    className="infor_container-category"
+                    className="infor_container-catex`gory"
                     allowClear
-                    options={[
-                      {
-                        value: "Đám Cưới",
-                        label: "Đám Cưới",
-                      },
-                      {
-                        value: "Sinh Nhật",
-                        label: "Sinh Nhật",
-                      },
-                      {
-                        value: "Lễ Hội",
-                        label: "Lễ Hội",
-                      },
-                      {
-                        value: "Khác",
-                        label: "Khác",
-                      },
-                    ]}
+                    options={categories} // Đảm bảo categories có định dạng đúng
                     placeholder="Loại sự kiện"
+                    value={categoryId} // Gán giá trị đã chọn
+                    onChange={(value) => {
+                      setCategoryId(value); // Lưu giá trị đã chọn vào state
+                      setIsOtherSelected(value === "other"); // Kiểm tra nếu chọn "Khác"
+                    }}
                   />
                 </Form.Item>
+
+
+                {isOtherSelected && (
+                  <Form.Item
+                    name="newCategoryName"
+                    rules={[{ required: true, message: "Vui lòng nhập tên loại sự kiện." }]}
+                  >
+                    <Input
+                      placeholder="Nhập tên loại sự kiện"
+                      onChange={(e) => setNewCategoryName(e.target.value)}
+                    />
+                  </Form.Item>
+                )}
 
                 <Form.Item
                   name="description"
