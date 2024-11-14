@@ -151,32 +151,45 @@ function SellerManage() {
     setOpenModal(false);
   };
 
+  // Convert file to base64 format
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
   // Handle event submission
   const handleSubmitEvent = async (event) => {
-    event.userId = user.userId;
-    console.log(event.userId);
+    event.userId = user.userId; // Set userId from logged-in user
+    console.log("User ID:", event.userId);
 
+    // Handle image upload
     if (fileList.length > 0) {
       const file = fileList[0];
-      const url = await uploadFile(file.originFileObj);
-      event.image = url;
+      try {
+        // Upload image and set URL
+        const url = await uploadFile(file.originFileObj); // Assuming uploadFile returns the uploaded image URL
+        event.image = url;
+      } catch (error) {
+        console.error("Image upload failed:", error);
+        toast.error("Failed to upload image");
+        return; // Stop submission if image upload fails
+      }
     }
 
-    if (event.startDate) {
-      event.startDate = event.startDate.toISOString();
-    }
-    if (event.endDate) {
-      event.endDate = event.endDate.toISOString();
-    }
+    // Format start and end dates to ISO strings
+    if (event.startDate) event.startDate = event.startDate.toISOString();
+    if (event.endDate) event.endDate = event.endDate.toISOString();
 
     console.log("Event Data:", event);
 
     try {
       setSubmitting(true);
-
       const token = localStorage.getItem("token");
 
-      // Check if the user selected "Other" and provided a new category name
+      // Create new category if "Other" is selected
       if (event.categoryId === "other" && newCategoryName) {
         const categoryResponse = await api.post(
           "/EventCate/create",
@@ -184,18 +197,19 @@ function SellerManage() {
           { headers: { Authorization: `Bearer ${token}` } }
         );
         event.categoryId = categoryResponse.data.categoryId; // Set new category ID
-        console.log(categoryResponse); // Moved inside the if block
       }
-      // Now create the event with the updated categoryId
+
+      // Create the event with the provided details, including the image URL
       const response = await api.post("/CreateEvent", event, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
       console.log("Event creation response:", response);
-      toast.success("Tạo sự kiện thành công!");
+      toast.success("Event created successfully!");
+
+      // Reset the form and fetch the updated event list
       setOpenModal(false);
       form.resetFields();
-      fetchEvent(); // Refresh events list
+      fetchEvent();
     } catch (err) {
       console.error("Error creating event:", err);
       toast.error("Failed to create event");
@@ -203,8 +217,6 @@ function SellerManage() {
       setSubmitting(false);
     }
   };
-
-
 
   const handleDeleteEvent = async (eventId) => {
     try {
@@ -217,14 +229,6 @@ function SellerManage() {
       toast.error("Xóa sự kiện thất bại");
     }
   };
-
-  const getBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
 
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
