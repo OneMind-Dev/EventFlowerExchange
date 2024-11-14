@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import React, { useEffect, useState } from "react";
 import "./flowerDetail.css";
 import Header from "../../../../components/header/header";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,7 +6,6 @@ import { Card, Image } from "antd";
 import Meta from "antd/es/card/Meta";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import api from "../../../../components/config/axios";
 import api from "../../../../components/config/axios";
 
 const FlowerDetail = () => {
