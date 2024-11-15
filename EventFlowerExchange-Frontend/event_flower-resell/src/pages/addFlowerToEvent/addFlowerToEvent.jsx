@@ -92,7 +92,7 @@ function AddFlowerToEvent() {
       setSubmitting(true);  // Show the loading indicator
 
       // Make the API request to add the flower to the event
-      const response = await api.post("http://localhost:8080/swp391/AddFlowerToEvent", flowerData);
+      const response = await api.post("/AddFlowerToEvent", flowerData);
       console.log("Add Flower Response:", response.data);
       toast.success("Thêm hoa thành công!");  // Success message
 

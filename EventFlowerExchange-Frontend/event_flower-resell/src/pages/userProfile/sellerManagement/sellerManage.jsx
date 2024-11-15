@@ -22,6 +22,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import uploadFile from "../../../components/ultils/file";
 import api from "../../../components/config/axios";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 
 function SellerManage() {
   const [avatarUrl, setAvatarUrl] = useState(null);
@@ -220,7 +221,7 @@ function SellerManage() {
 
   const handleDeleteEvent = async (eventId) => {
     try {
-      const response = await api.delete(`deactive/${eventId}`);
+      const response = await api.delete(`/deactive/${eventId}`);
       console.log(response.data);
       toast.success("Xóa sự kiện thành công");
       fetchEvent();
@@ -379,6 +380,18 @@ function SellerManage() {
                     showTime={{ format: "HH:mm" }}
                     format="YYYY-MM-DD HH:mm"
                     placeholder="Thời gian bắt đầu"
+                    disabledDate={(current) => current && current < moment().startOf('day')}
+                    disabledTime={(current) => {
+                      if (!current) return {};
+                      const now = moment();
+                      if (current.isSame(now, 'day')) {
+                        return {
+                          disabledHours: () => Array.from({ length: 24 }, (_, i) => i).filter(h => h < now.hour()),
+                          disabledMinutes: () => Array.from({ length: 60 }, (_, i) => i).filter(m => m < now.minute()),
+                        };
+                      }
+                      return {};
+                    }}
                   />
                 </Form.Item>
 
