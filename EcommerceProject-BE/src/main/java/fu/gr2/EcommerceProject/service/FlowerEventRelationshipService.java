@@ -42,6 +42,9 @@ public class FlowerEventRelationshipService {
         flowerEventResponse.setRelationshipID(flowerEventRelationship.getRelationshipID());
         flowerEventResponse.setDescription(flowerEventRelationship.getDescription());
         flowerEventResponse.setFloPrice(flowerEventRelationship.getFloPrice());
+        flowerEventResponse.setFlowerId(flowerEventRelationship.getFlower().getFlowerId());
+        flowerEventResponse.setEventId(flowerEventRelationship.getEvent().getEventId());
+        flowerEventResponse.setEventname(flowerEventRelationship.getEvent().getEventName());
         flowerEventResponse.setOrigin(flowerEventRelationship.getFlower().getOrigin());
         flowerEventResponse.setColor(flowerEventRelationship.getFlower().getColor());
         flowerEventResponse.setCreatedAt(flowerEventRelationship.getCreatedAt());
@@ -101,6 +104,8 @@ public class FlowerEventRelationshipService {
         // Tạo FlowerEventResponse
         FlowerEventResponse flowerEventResponse = FlowerEventResponse.builder()
                 .relationshipID(flowerEventRelationship.getRelationshipID())
+                .eventId(flowerEventRelationship.getEvent().getEventId())
+                .flowerId(flowerEventRelationship.getFlower().getFlowerId())
                 .eventname(event.getEventName())
                 .flowername(flower.getFlowerName())
                 .origin(flower.getOrigin())
@@ -130,6 +135,9 @@ public class FlowerEventRelationshipService {
             if (relationship.getQuantity() > 0) {
                 flowerEventResponses.add(FlowerEventResponse.builder()
                                 .relationshipID(relationship.getRelationshipID())
+                        .eventId(relationship.getEvent().getEventId())
+                        .eventname(relationship.getEvent().getEventName())
+                        .flowerId(relationship.getFlower().getFlowerId())
                         .flowername(relationship.getFlower().getFlowerName())
                         .origin(relationship.getFlower().getOrigin())
                         .color(relationship.getFlower().getColor())
