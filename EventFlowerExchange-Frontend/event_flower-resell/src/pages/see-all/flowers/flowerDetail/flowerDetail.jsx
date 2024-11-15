@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./flowerDetail.css";
 import Header from "../../../../components/header/header";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Card, Image } from "antd";
 import Meta from "antd/es/card/Meta";
 import { toast, ToastContainer } from "react-toastify";
@@ -13,13 +13,19 @@ const FlowerDetail = () => {
   const { relationshipID } = useParams(); // Retrieve relationshipID from URL
   const [flowerDetail, setFlowerDetail] = useState({});
   const token = localStorage.getItem("token");
-
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const eventId = queryParams.get("eventId");
+  console.log("Event ID:", eventId);
 
   useEffect(() => {
     const fetchFlowerDetails = async () => {
       try {
-        const response = await api.get(`/${relationshipID}`);
-
+        const response = await api.get(`/GetFlowerEvent/${relationshipID}`, {
+          headers: {
+            Authorization: `Bearer ${token}`  // Include token in Authorization header
+          }
+        });
         if (response.data.code === 1000) {
           setFlowerDetail(response.data.result); // Set flower details
           console.log("flowerDetail: ", response.data.result);
@@ -101,7 +107,7 @@ const FlowerDetail = () => {
           <div className="wrapper__flower--detail-card">
             <Card
               bordered={false}
-              onClick={() => navigate(`/events/${flowerDetail.relationshipID}`)}
+              onClick={() => navigate(`/events/${eventId}`)}
             >
               <Card.Meta
                 title={flowerDetail.eventname}

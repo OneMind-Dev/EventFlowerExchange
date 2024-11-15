@@ -166,11 +166,11 @@ const App = () => {
       element: <EventDetail />,
     },
     {
-      path: "flowers",
+      path: "flowers/:id",
       element: <Flowers />,
     },
     {
-      path: "/:relationshipID",
+      path: "flowerDetails/:relationshipID",
       element: <FlowerDetail />,
     },
     {

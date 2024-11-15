@@ -13,7 +13,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-
+import uploadFile from "../../components/ultils/file";
 import api from "../../components/config/axios";
 import { useSelector } from "react-redux";
 import Footer from "../../components/footer/footer";
@@ -50,45 +50,7 @@ function AddFlowerToEvent() {
     fetchFlowers();
   }, []);
 
-  const handleAddFlower = async (values) => {
-    // Extract the necessary fields from the form values
-    const { description, floPrice, quantity, img } = values;
-
-    // Prepare the data for the API request
-    const flowerData = {
-      description: description,
-      floPrice: floPrice,
-      img: img ? img[0].response.url : '', // Adjust according to your upload response
-      quantity: quantity,
-      floId: selectedFlowerId,
-      eventId: parseInt(id, 10),
-    };
-
-    try {
-      // Show loading indicator or disable the form temporarily
-      setSubmitting(true);
-
-      // Make the API request to add the flower to the event
-      const response = await api.post('/AddFlowerToEvent', flowerData);
-
-      // Handle successful response
-      console.log(response.data);
-      toast.success('Thêm hoa thành công!');
-      formAddFlower.resetFields(); // Reset the form after submission
-
-      // Optionally, refresh data or perform further actions
-      fetchFlowers(); // Assuming this function fetches the updated flower data
-
-    } catch (error) {
-      // Handle any errors that occur during the request
-      toast.error(error.message || 'Có lỗi xảy ra, vui lòng thử lại!');
-    } finally {
-      // Reset submitting state regardless of the outcome
-      setSubmitting(false);
-    }
-  };
-
-
+  // Convert file to base64 format
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -96,6 +58,54 @@ function AddFlowerToEvent() {
       reader.onload = () => resolve(reader.result);
       reader.onerror = (error) => reject(error);
     });
+
+
+  const handleAddFlower = async (values) => {
+    const { description, floPrice, quantity, img } = values;  // Extract values from form
+
+    // Prepare the flower data
+    const flowerData = {
+      description: description,
+      floPrice: floPrice,
+      quantity: quantity,
+      floId: selectedFlowerId,  // Assuming this is available elsewhere in your component
+      eventId: parseInt(id, 10),  // Assuming 'id' is the event ID you want to associate the flower with
+    };
+
+    // Handle image upload if an image is selected
+    if (fileList.length > 0) {
+      const file = fileList[0];
+      try {
+        // Upload image and get the URL
+        const url = await uploadFile(file.originFileObj);  // Assuming uploadFile is a function that handles the image upload
+        flowerData.img = url;  // Add the uploaded image URL to the flower data
+      } catch (error) {
+        console.error("Image upload failed:", error);
+        toast.error("Failed to upload image");
+        return;  // Stop submission if the image upload fails
+      }
+    }
+
+    console.log("Flower Data:", flowerData);  // Log the data for debugging
+
+    try {
+      setSubmitting(true);  // Show the loading indicator
+
+      // Make the API request to add the flower to the event
+      const response = await api.post("http://localhost:8080/swp391/AddFlowerToEvent", flowerData);
+      console.log("Add Flower Response:", response.data);
+      toast.success("Thêm hoa thành công!");  // Success message
+
+      formAddFlower.resetFields();  // Reset form fields after submission
+      fetchFlowers();  // Refresh the flower data if needed
+
+    } catch (error) {
+      console.error("Error adding flower:", error);
+      toast.error(error.message || "Có lỗi xảy ra, vui lòng thử lại!");  // Error message
+    } finally {
+      setSubmitting(false);  // Hide the loading indicator after submission
+    }
+  };
 
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {

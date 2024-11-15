@@ -23,34 +23,34 @@ const Home = () => {
     fetchEvent();
   }, []);
 
-  // // Lấy tất cả các hoa từ tất cả sự kiện
-  // const allFlowers = EventData.flatMap((event) => event.flowers);
-  // // Fetch flowers data from the API
-  // const fetchFlowers = async () => {
-  //   try {
-  //     const response = await api.get("/Getflowers");
-  //     console.log(response.data);
-  //     setFlowers(response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching flowers:", error);
-  //     toast.error("Failed to fetch flowers");
-  //   }
-  // };
+  // Lấy tất cả các hoa từ tất cả sự kiện
+  const allFlowers = EventData.flatMap((event) => event.flowers);
+  // Fetch flowers data from the API
+  const fetchFlowers = async () => {
+    try {
+      const response = await api.get("/Getflowers");
+      console.log("flower: ", response.data);
+      setFlowers(response.data);
+    } catch (error) {
+      console.error("Error fetching flowers:", error);
+      toast.error("Failed to fetch flowers");
+    }
+  };
 
-  // useEffect(() => {
-  //   fetchFlowers();
-  // }, []);
-  // // Chọn ngẫu nhiên 4 hoa
-  // const randomFlowers = allFlowers
-  //   .sort(() => 0.5 - Math.random()) // Shuffle mảng
-  //   .slice(0, 4); // Lấy 4 phần tử đầu tiên sau khi shuffle
+  useEffect(() => {
+    fetchFlowers();
+  }, []);
+  // Chọn ngẫu nhiên 4 hoa
+  const randomFlowers = allFlowers
+    .sort(() => 0.5 - Math.random()) // Shuffle mảng
+    .slice(0, 4); // Lấy 4 phần tử đầu tiên sau khi shuffle
 
   return (
     <>
       <Header />
       <ToastContainer /> {/* Toast container for notifications */}
       <div className="wrapper">
-        {/* <div className="wrapper__poster">
+        <div className="wrapper__poster">
           <img
             className="wrapper__poster-img"
             src="src/components/images/poster1.jpg"
@@ -174,7 +174,7 @@ const Home = () => {
         </div>
         <div className="wrapper__all">
           <button className="wrapper__all-btn">Xem Tất Cả</button>
-        </div> */}
+        </div>
 
         <div className="wrapper__title">
           <h3>SỰ KIỆN</h3>
