@@ -19,11 +19,9 @@ public class ShoppingCartController {
     ShoppingCartService shoppingCartService;
 
     @PostMapping("/addFlowerToCart/{userId}/{flowerEventId}")
-    public ApiResponse addToCart(@PathVariable String userId, @PathVariable int flowerEventId){
-        shoppingCartService.addToCart(userId,flowerEventId);
-        return ApiResponse.builder()
-                .message("Đã thêm vào giỏ hàng thành công")
-                .build();
+    public ShoppingCartItemResponse addToCart(@PathVariable String userId, @PathVariable int flowerEventId){
+        return shoppingCartService.addToCart(userId,flowerEventId);
+
     }
     @GetMapping("/GetCartItem/{userId}")
     public List<ShoppingCartItemResponse> getCartItem(@PathVariable String userId){

@@ -31,7 +31,7 @@ public class ShoppingCartService {
     ShoppingCartItemRepository shoppingCartItemRepository;
     FlowerRepository flowerRepository;
     EventRepository eventRepository;
-    public void addToCart(String userId,int flowerEventId){
+    public ShoppingCartItemResponse addToCart(String userId,int flowerEventId){
         // Fetch the user, throw exception if not found
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -65,6 +65,12 @@ public class ShoppingCartService {
         shoppingCartItem.setItemPrice(flower.getFloPrice().multiply(BigDecimal.valueOf(shoppingCartItem.getQuantity())));
         // Save the shopping cart item
         shoppingCartItemRepository.save(shoppingCartItem);
+        return ShoppingCartItemResponse.builder()
+                .item_id(shoppingCartItem.getItem_id())
+                .flowerName(flower.getFlower().getFlowerName())
+                .quantity(shoppingCartItem.getQuantity())
+                .item_price(shoppingCartItem.getItemPrice())
+                .build();
     }
 
     public ApiResponse<ShoppingCart> getCart(String userId) {
@@ -118,6 +124,7 @@ public class ShoppingCartService {
                 .map(item -> new ShoppingCartItemResponse(
                         item.getItem_id(),
                         item.getFlowerEventRelationship().getFlower().getFlowerName(),
+                        item.getFlowerEventRelationship().getImage(),
                         item.getQuantity(),
                         item.getItemPrice()
                 ))

@@ -3,6 +3,7 @@ package fu.gr2.EcommerceProject.service;
 import fu.gr2.EcommerceProject.configuration.VNPAYConfig;
 import fu.gr2.EcommerceProject.dto.response.PaymentResponse;
 import fu.gr2.EcommerceProject.entity.Payment;
+import fu.gr2.EcommerceProject.entity.Order;
 import fu.gr2.EcommerceProject.repository.OrderRepository;
 import fu.gr2.EcommerceProject.repository.PaymentRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -120,12 +121,18 @@ public class VNPayService {
 
     public void savePayment(int s){
         Payment payment = repository.findTopByOrderByPaymentIdDesc();
+        Order o = orderRepository.findById(payment.getOrder().getOrderId()).get();
          if(s==1){
+             o.setOrderStatus("SUCESS");
              payment.setPaymentStatus("SUCCESS");
+
          }
          else {
+             o.setOrderStatus("FAILED");
+
              payment.setPaymentStatus("FAILED");
          }
+         orderRepository.save(o);
          repository.save(payment);
     }
 }

@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 public class ShoppingCartItemResponse {
     int item_id;
     String flowerName;
+    String image;
     int quantity;
     BigDecimal item_price;
 }
