@@ -2,7 +2,7 @@ package fu.gr2.EcommerceProject.service;
 
 import fu.gr2.EcommerceProject.dto.request.ApiResponse;
 import fu.gr2.EcommerceProject.dto.request.UpdateCartRequest;
-import fu.gr2.EcommerceProject.dto.response.ShoppingCartResponse;
+import fu.gr2.EcommerceProject.dto.response.ShoppingCartItemResponse;
 import fu.gr2.EcommerceProject.entity.FlowerEventRelationship;
 import fu.gr2.EcommerceProject.entity.ShoppingCart;
 import fu.gr2.EcommerceProject.entity.ShoppingCartItem;
@@ -17,7 +17,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,13 +67,16 @@ public class ShoppingCartService {
         shoppingCartItemRepository.save(shoppingCartItem);
     }
 
-    public ApiResponse<List<ShoppingCartResponse>> getCart(String userId){
+    public ApiResponse<ShoppingCart> getCart(String userId) {
         // Fetch the user, throw exception if not found
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        // Retrieve or create a shopping cart
         ShoppingCart shoppingCart = shoppingCartRepository.findByUser_userId(userId);
         BigDecimal totalPrice = BigDecimal.ZERO;
-        if(shoppingCart == null){
+
+        if (shoppingCart == null) {
             shoppingCart = ShoppingCart.builder()
                     .user(user)
                     .totalPrice(totalPrice)
@@ -82,49 +84,94 @@ public class ShoppingCartService {
             shoppingCartRepository.save(shoppingCart);
         }
 
-        List<ShoppingCartResponse> shoppingCartResponses = new ArrayList<>();
-        List<ShoppingCartItem> shoppingCarts = shoppingCartItemRepository.findByShoppingCart(shoppingCart);
-        for (ShoppingCartItem i: shoppingCarts){
-                if(i.getFlowerEventRelationship().getEvent().getEndDate().isBefore(LocalDateTime.now())){
-                    String flowerName = i.getFlowerEventRelationship().getFlower().getFlowerName();
+        // Process cart items to calculate total price
+        List<ShoppingCartItem> shoppingCartItems = shoppingCartItemRepository.findByShoppingCart(shoppingCart);
 
-                    ShoppingCartResponse shoppingCartResponse = ShoppingCartResponse.builder()
-                            .item_id(i.getItem_id())
-                            .flowerName(flowerName)
-                            .quantity(i.getQuantity())
-                            .item_price(i.getFlowerEventRelationship().getFloPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
-                            .build();
-                    shoppingCartResponses.add(shoppingCartResponse);
-                    totalPrice=totalPrice.add(shoppingCartResponse.getItem_price());
-                }
+        for (ShoppingCartItem item : shoppingCartItems) {
+            if (item.getFlowerEventRelationship().getEvent().getEndDate().isBefore(LocalDateTime.now())) {
+                BigDecimal itemPrice = item.getFlowerEventRelationship().getFloPrice()
+                        .multiply(BigDecimal.valueOf(item.getQuantity()));
+                totalPrice = totalPrice.add(itemPrice);
+            }
         }
-        System.out.println("total :"+totalPrice);
+
+        // Update and save total price in the shopping cart
         shoppingCart.setTotalPrice(totalPrice);
         shoppingCartRepository.save(shoppingCart);
-        return  ApiResponse.<List<ShoppingCartResponse>>builder()
-                .result(shoppingCartResponses)
-                .message("Total Price: "+shoppingCart.getTotalPrice().toString())
+
+        // Return only the ShoppingCart entity
+        return ApiResponse.<ShoppingCart>builder()
+                .result(shoppingCart)
+                .message("Shopping cart retrieved successfully.")
                 .build();
     }
 
-    @Transactional
-    public void updateCart(String userId, List<UpdateCartRequest> updateCartRequests) {
-        // Lấy người dùng từ repository hoặc ném ngoại lệ nếu không tồn tại
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
-        // Lấy giỏ hàng của người dùng
+    public List<ShoppingCartItemResponse> getCartItems(String userId) {
         ShoppingCart shoppingCart = shoppingCartRepository.findByUser_userId(userId);
         if (shoppingCart == null) {
             throw new AppException(ErrorCode.CART_NOT_FOUND);
         }
-        // Duyệt qua danh sách cập nhật từ người dùng
-        for(UpdateCartRequest i : updateCartRequests){
-            System.out.println("Quantity: "+i.getQuantity());
-            System.out.println("item id: "+i.getItemId());
-            ShoppingCartItem shoppingCartItem =  shoppingCartItemRepository.findById(i.getItemId()).orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND));
-            shoppingCartItem.setQuantity(i.getQuantity());
-            shoppingCartItemRepository.save(shoppingCartItem);
-        }
+
+        List<ShoppingCartItem> shoppingCartItems = shoppingCartItemRepository.findByShoppingCart(shoppingCart);
+
+        return shoppingCartItems.stream()
+                .map(item -> new ShoppingCartItemResponse(
+                        item.getItem_id(),
+                        item.getFlowerEventRelationship().getFlower().getFlowerName(),
+                        item.getQuantity(),
+                        item.getItemPrice()
+                ))
+                .toList();
     }
+
+
+    @Transactional
+    public void updateCart(String userId, List<UpdateCartRequest> updateCartRequests) {
+        // Validate user existence
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        // Get user's shopping cart
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUser_userId(userId);
+        if (shoppingCart == null) {
+            throw new AppException(ErrorCode.CART_NOT_FOUND);
+        }
+
+        // Iterate through the update requests
+        for (UpdateCartRequest i : updateCartRequests) {
+            System.out.println("Quantity: " + i.getQuantity());
+            System.out.println("Item ID: " + i.getItemId());
+
+            // Fetch the shopping cart item or throw exception if not found
+            ShoppingCartItem shoppingCartItem = shoppingCartItemRepository.findById(i.getItemId())
+                    .orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND));
+
+            // If the quantity is 0, remove the item
+            if (i.getQuantity() == 0) {
+                shoppingCartItemRepository.delete(shoppingCartItem);
+                System.out.println("Item ID " + i.getItemId() + " removed from the cart.");
+            } else {
+                // Otherwise, update the quantity
+                shoppingCartItem.setQuantity(i.getQuantity());
+
+                // Recalculate item price based on the new quantity
+                shoppingCartItem.setItemPrice(shoppingCartItem.getFlowerEventRelationship().getFloPrice()
+                        .multiply(BigDecimal.valueOf(i.getQuantity())));
+
+                // Save the updated shopping cart item
+                shoppingCartItemRepository.save(shoppingCartItem);
+            }
+        }
+
+        // Recalculate the total price of the cart
+        BigDecimal updatedTotalPrice = shoppingCartItemRepository.findByShoppingCart(shoppingCart).stream()
+                .map(ShoppingCartItem::getItemPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        shoppingCart.setTotalPrice(updatedTotalPrice);
+        shoppingCartRepository.save(shoppingCart);
+
+        System.out.println("Updated cart total price: " + updatedTotalPrice);
+    }
+
 }

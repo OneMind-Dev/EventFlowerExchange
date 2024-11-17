@@ -23,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class OrderService {
+    FlowerEventRepository flowerEventRepository;
     ShoppingCartRepository shoppingCartRepository;
     ShoppingCartItemRepository shoppingCartItemRepository;
     OrderDetailRepository orderDetailRepository;
@@ -63,18 +64,38 @@ public class OrderService {
 
         List<OrderDetail> orderDetails = new ArrayList<>();
         List<ShoppingCartItem> shoppingCartItems = shoppingCartItemRepository.findByShoppingCart(shoppingCart);
-        for (ShoppingCartItem i : shoppingCartItems) {
+
+        for (ShoppingCartItem item : shoppingCartItems) {
+            FlowerEventRelationship flowerEventRelationship = item.getFlowerEventRelationship();
+
+            // Validate stock availability
+            if (flowerEventRelationship.getQuantity() < item.getQuantity()) {
+                throw new IllegalArgumentException(
+                        "Not enough stock for " + flowerEventRelationship.getFlower().getFlowerName()
+                );
+            }
+
+            // Deduct stock and update relationship
+            flowerEventRelationship.setQuantity(flowerEventRelationship.getQuantity() - item.getQuantity());
+            flowerEventRepository.save(flowerEventRelationship);
+
+            // Create order detail
             OrderDetail orderDetail = OrderDetail.builder()
-                    .quantity(i.getQuantity())
-                    .price(i.getItemPrice())
-                    .flowerEventRelationship(i.getFlowerEventRelationship())
+                    .quantity(item.getQuantity())
+                    .price(item.getItemPrice())
+                    .flowerEventRelationship(flowerEventRelationship)
                     .order(order)
                     .build();
-            orderDetailRepository.save(orderDetail);
+            orderDetails.add(orderDetail);
         }
 
+        // Save all order details in batch
+        orderDetailRepository.saveAll(orderDetails);
+
+        // Clear shopping cart
         shoppingCartItemRepository.deleteByShoppingCart(shoppingCart);
 
+        // Build the response
         OrderResponse orderResponse = OrderResponse.builder()
                 .orderId(order.getOrderId())
                 .method(order.getMethod())

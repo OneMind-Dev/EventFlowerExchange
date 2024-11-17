@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Builder
 @Getter
 @Setter
-public class ShoppingCartResponse {
+public class ShoppingCartItemResponse {
     int item_id;
     String flowerName;
     int quantity;
