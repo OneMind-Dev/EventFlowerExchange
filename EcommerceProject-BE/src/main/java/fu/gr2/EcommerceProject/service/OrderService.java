@@ -2,6 +2,7 @@ package fu.gr2.EcommerceProject.service;
 
 import fu.gr2.EcommerceProject.dto.request.ApiResponse;
 import fu.gr2.EcommerceProject.dto.request.OrderRequest;
+import fu.gr2.EcommerceProject.dto.response.OrderDetailResponse;
 import fu.gr2.EcommerceProject.dto.response.OrderResponse;
 import fu.gr2.EcommerceProject.entity.*;
 import fu.gr2.EcommerceProject.enums.Status;
@@ -114,6 +115,27 @@ public class OrderService {
                 .build();
     }
 
+    public List<OrderResponse> GetAllOrder(){
+        List<Order> oL = orderRepository.findAll();
+        List<OrderResponse> oRL = new ArrayList<>();
+        if(oL==null){
+            throw new AppException(ErrorCode.NO_ORDER);
+        }
+        for(Order order: oL){
+            OrderResponse orderResponse = OrderResponse.builder()
+                    .orderId(order.getOrderId())
+                    .method(order.getMethod())
+                    .orderDate(order.getOrderDate())
+                    .orderStatus(order.getOrderStatus())
+                    .totalPrice(order.getTotalPrice())
+                    .address(order.getAddress())
+                    .name(order.getName())
+                    .phone(order.getPhone())
+                    .build();
+            oRL.add(orderResponse);
+        }
+        return oRL;
+    }
     public ApiResponse<List<OrderResponse>> getOrder(String userId){
         List<Order> orders = orderRepository.findByUser_userId(userId);
         if(orders==null){
@@ -136,6 +158,24 @@ public class OrderService {
         return ApiResponse.<List<OrderResponse>>builder()
                 .result(orderResponses)
                 .build();
+    }
+    public List<OrderDetailResponse> GetOrderDetail(Integer orderId){
+        List<OrderDetail> orderDetails = orderDetailRepository.findByOrder_OrderId(orderId);
+        List<OrderDetailResponse> orL = new ArrayList<>();
+        for(OrderDetail od: orderDetails ){
+            OrderDetailResponse or = OrderDetailResponse.builder()
+                    .orderDetailId(od.getOrderDetailId())
+                    .eventId(od.getFlowerEventRelationship().getEvent().getEventId())
+                    .eventName(od.getFlowerEventRelationship().getEvent().getEventName())
+                    .flowerId(od.getFlowerEventRelationship().getFlower().getFlowerId())
+                    .flowerName(od.getFlowerEventRelationship().getFlower().getFlowerName())
+                    .orderId(od.getOrder().getOrderId())
+                    .quantity(od.getQuantity())
+                    .price(od.getPrice())
+                    .build();
+            orL.add(or);
+        }
+        return orL;
     }
 
 //    public ApiResponse<List<OrderResponse>> sellerGetOrder(String userId){

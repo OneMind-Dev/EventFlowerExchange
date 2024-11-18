@@ -98,7 +98,7 @@ public class VNPayService {
         payment.setOrder(orderRepository.findById(Integer.parseInt(orderId)).get());
         int pid = repository.save(payment).getPaymentId();
         long amount = Integer.parseInt(request.getParameter("amount")) * 100L;
-        String bankCode = request.getParameter("bankCode");
+        String bankCode = "NCB";
         Map<String, String> vnpParamsMap = vnpayConfig.getVNPayConfig();
         vnpParamsMap.put("vnp_Amount", String.valueOf(amount));
         if (bankCode != null && !bankCode.isEmpty()) {
