@@ -94,11 +94,10 @@ public class ShoppingCartService {
         List<ShoppingCartItem> shoppingCartItems = shoppingCartItemRepository.findByShoppingCart(shoppingCart);
 
         for (ShoppingCartItem item : shoppingCartItems) {
-            if (item.getFlowerEventRelationship().getEvent().getEndDate().isBefore(LocalDateTime.now())) {
                 BigDecimal itemPrice = item.getFlowerEventRelationship().getFloPrice()
                         .multiply(BigDecimal.valueOf(item.getQuantity()));
                 totalPrice = totalPrice.add(itemPrice);
-            }
+
         }
 
         // Update and save total price in the shopping cart
