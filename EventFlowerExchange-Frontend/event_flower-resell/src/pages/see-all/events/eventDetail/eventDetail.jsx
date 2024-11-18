@@ -50,6 +50,7 @@ const EventDetail = () => {
       }
     };
     fetchFlowers();
+    window.scrollTo(0, 0);
   }, [eventId]);
 
   useEffect(() => {
