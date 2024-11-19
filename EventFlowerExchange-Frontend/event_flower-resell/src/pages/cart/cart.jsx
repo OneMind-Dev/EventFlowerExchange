@@ -4,15 +4,37 @@ import { useNavigate } from "react-router-dom"; // Use useNavigate for navigatio
 import Header from "../../components/header/header";
 import { toast } from 'react-toastify'; // Ensure you have toast notifications set up
 import "./cart.css";
+import { useSelector } from "react-redux";
+import api from "../../components/config/axios";
 
 function CartPage() {
   const [cartItems, setCartItems] = useState([]);
-  const navigate = useNavigate(); // Initialize useNavigate for navigation
+  const navigate = useNavigate();
+  const user = useSelector((store) => store.user);  // Get user info from Redux store
 
   useEffect(() => {
-    const storedCartItems = JSON.parse(sessionStorage.getItem("cart")) || [];
-    setCartItems(storedCartItems);
-  }, []);
+    if (user.userId) {
+      const fetchCartItems = async () => {
+        try {
+          const response = await api.get(`GetCartItem/${user.userId}`, {
+            headers: { Authorization: `Bearer ${user.token}` },
+          });
+          setCartItems(response.data); // Cập nhật lại giỏ hàng khi có sự thay đổi
+        } catch (error) {
+          toast.error("Failed to load cart items.");
+        }
+      };
+      fetchCartItems();
+    }
+  }, [cartItems, user]);  // Trigger lại mỗi khi giỏ hàng thay đổi
+
+  const confirmDeletion = (itemId) => {
+    Modal.confirm({
+      title: 'Bạn có muốn xóa sản phẩm này không?',
+      onOk: () => handleQuantityChange(0, itemId), // Set quantity to 0 if confirmed
+      onCancel: () => handleQuantityChange(1, itemId), // Set quantity back to 1 if canceled
+    });
+  };
 
   const columns = [
     {
@@ -23,13 +45,13 @@ function CartPage() {
     },
     {
       title: "Tên sản phẩm",
-      dataIndex: "flowername",
-      key: "flowername",
+      dataIndex: "flowerName",
+      key: "flowerName",
     },
     {
       title: "Giá (VND)",
-      dataIndex: "floPrice",
-      key: "floPrice",
+      dataIndex: "item_price",
+      key: "item_price",
     },
     {
       title: "Số lượng",
@@ -38,18 +60,23 @@ function CartPage() {
       render: (quantity, record) => (
         <div>
           <Button
-            onClick={() => handleQuantityChange(quantity - 1, record.relationshipID)}
-            disabled={quantity <= 1} // Disable decrease button if quantity is 1
+            onClick={() => {
+              if (quantity <= 1) {
+                confirmDeletion(record.item_id); // Show confirmation when decreasing quantity below 1
+              } else {
+                handleQuantityChange(quantity - 1, record.item_id);
+              }
+            }}
           >
             -
           </Button>
           <InputNumber
             min={1}
             value={quantity}
-            onChange={(value) => handleQuantityChange(value, record.relationshipID)}
+            onChange={(value) => handleQuantityChange(value, record.item_id)}
           />
           <Button
-            onClick={() => handleQuantityChange(quantity + 1, record.relationshipID)}
+            onClick={() => handleQuantityChange(quantity + 1, record.item_id)}
           >
             +
           </Button>
@@ -57,40 +84,49 @@ function CartPage() {
       ),
     },
     {
-      title: "Chức năng",
+      title: "",
       key: "actions",
       render: (_, record) => (
-        <Button type="danger" onClick={() => handleRemove(record.relationshipID)}>
+        <Button
+          type="danger"
+          onClick={() => confirmDeletion(record.item_id)} // Show confirmation when "Xóa" button is clicked
+        >
           Xóa
         </Button>
       ),
     },
   ];
 
-  const handleQuantityChange = (newQuantity, relationshipID) => {
-    // Update the cart item's quantity
-    const updatedCartItems = cartItems.map(item =>
-      item.relationshipID === relationshipID ? { ...item, quantity: newQuantity } : item
-    );
-    setCartItems(updatedCartItems); // Assuming setCartItems updates the state
-  };
-
-  const handleRemove = (id) => {
-    // Log the product being removed
-    const productToRemove = cartItems.find((item) => item.relationshipID === id);
-    console.log("Product being removed:", productToRemove);
-    // Remove the specific product by flower_id
-    const updatedCart = cartItems.filter((item) => item.relationshipID !== id);
-    // Update the state and session storage
-    setCartItems(updatedCart);
-    sessionStorage.setItem("cart", JSON.stringify(updatedCart));
-    // Notify the user
-    toast.info("Sản phẩm đã được xóa khỏi giỏ hàng");
+  const handleQuantityChange = async (newQuantity, itemId) => {
+    try {
+      // Send a PUT request to update the quantity of the product in the cart
+      const response = await api.post(
+        `/updateCart/${user.userId}`, // Use userId from Redux store
+        [{ quantity: newQuantity, itemId }], // Send an array of the object with quantity and itemId
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`, // Include the token in the Authorization header
+          },
+        }
+      );
+      if (response.data.code == 1000) {
+        // Update local cart state with the new quantity
+        const updatedCartItems = cartItems.map(item =>
+          item.item_id === itemId ? { ...item, quantity: newQuantity } : item
+        );
+        setCartItems(updatedCartItems);
+        toast.success("Số lượng giỏ hàng đã được cập nhật.");
+      } else {
+        console.log("response.data: ", response.data);
+        toast.warning("Không thể cập nhật số lượng.");
+      }
+    } catch (error) {
+      toast.error("Lỗi khi cập nhật số lượng.");
+    }
   };
 
   const handlePaymentClick = () => {
-    sessionStorage.setItem("cart", JSON.stringify(cartItems)); // Store cart items
-    navigate('/payment'); // Navigate to payment page
+    navigate("/payment");
   };
 
   return (
@@ -98,7 +134,7 @@ function CartPage() {
       <Header />
       <div className="cart-page">
         <h2>Giỏ hàng</h2>
-        <Table dataSource={cartItems} columns={columns} rowKey="flower_id" />
+        <Table dataSource={cartItems} columns={columns} rowKey="item_id" />
         <Button className="pay-button" type="primary" onClick={handlePaymentClick}>
           Thanh toán
         </Button>

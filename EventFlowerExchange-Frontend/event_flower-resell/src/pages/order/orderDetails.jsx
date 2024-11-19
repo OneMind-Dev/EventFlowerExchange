@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from "../../components/config/axios";
-import Header from "../../components/header/header";
-import Footer from "../../components/footer/footer";
-import { useDispatch, useSelector } from "react-redux";
+import Header from '../../components/header/header';
+import Footer from '../../components/footer/footer';
+import { useSelector } from "react-redux";
+import { Table } from "antd";
+import "./orderDetails.css";
 
-
-function orderDetails() {
+function OrderDetails() {
     const { orderId } = useParams(); // Lấy orderId từ URL
     const [orderDetails, setOrderDetails] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -28,42 +29,53 @@ function orderDetails() {
             }
         };
         fetchOrderDetails();
-    }, [orderId]);
+    }, [orderId, user?.token]);
+
+    // Cấu hình cột cho Ant Design Table
+    const columns = [
+        {
+            title: 'Sự kiện',
+            dataIndex: 'eventName',
+            key: 'eventName',
+        },
+        {
+            title: 'Tên hoa',
+            dataIndex: 'flowerName',
+            key: 'flowerName',
+        },
+        {
+            title: 'Số lượng',
+            dataIndex: 'quantity',
+            key: 'quantity',
+            render: (quantity) => <span>{quantity}</span>, // Custom render nếu cần
+        },
+        {
+            title: 'Giá',
+            dataIndex: 'price',
+            key: 'price',
+            render: (price) => <span>{price.toLocaleString()} VNĐ</span>, // Hiển thị giá với định dạng tiền tệ
+        },
+    ];
 
     if (loading) {
-        return <div>Đang tải...</div>; // Hiển thị khi dữ liệu đang được tải
+        return <div className="loading-message">Đang tải...</div>; // Hiển thị khi dữ liệu đang được tải
     }
 
     return (
         <>
             <Header />
-            <div style={{ padding: '20px' }}>
+            <div className="order-details-container">
                 <h1>Chi tiết đơn hàng #{orderId}</h1>
                 {orderDetails.length > 0 ? (
-                    <table border="1" style={{ width: '100%', borderCollapse: 'collapse' }}>
-                        <thead>
-                            <tr>
-                                <th>ID Chi tiết</th>
-                                <th>Sự kiện</th>
-                                <th>Tên hoa</th>
-                                <th>Số lượng</th>
-                                <th>Giá</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {orderDetails.map((detail) => (
-                                <tr key={detail.orderDetailId}>
-                                    <td>{detail.orderDetailId}</td>
-                                    <td>{detail.eventName}</td>
-                                    <td>{detail.flowerName}</td>
-                                    <td>{detail.quantity}</td>
-                                    <td>{detail.price.toLocaleString()} VNĐ</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <Table
+                        columns={columns}
+                        dataSource={orderDetails}
+                        rowKey="orderDetailId" // Khóa duy nhất cho từng hàng
+                        pagination={{ pageSize: 5 }} // Phân trang, hiển thị 5 hàng mỗi trang
+                        bordered
+                    />
                 ) : (
-                    <div>Không có dữ liệu chi tiết cho đơn hàng này.</div>
+                    <div className="no-data">Không có dữ liệu chi tiết cho đơn hàng này.</div>
                 )}
             </div>
             <Footer />
@@ -71,4 +83,4 @@ function orderDetails() {
     );
 }
 
-export default orderDetails
+export default OrderDetails;
