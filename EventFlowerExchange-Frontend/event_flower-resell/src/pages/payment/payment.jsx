@@ -5,104 +5,41 @@ import "../../components/payment/payment.css"; // Ensure to import your CSS
 import { Table, Button, Image, Modal } from 'antd';
 import { toast } from 'react-toastify';
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import api from "../../components/config/axios";
 
 function Payment() {
     const [cartItems, setCartItems] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const user = useSelector((store) => store.user);
     console.log("user: ", user);
-
-    // Fetch cart items
     useEffect(() => {
-        if (user?.userId) {
-            const fetchCartItems = async () => {
-                try {
-                    const response = await api.get(
-                        `/GetCartItem/${user.userId}`,
-                        { headers: { Authorization: `Bearer ${user.token}` } }
-                    );
-                    console.log("cart items: ", response.data);
-                    const data = response.data || [];
-                    setCartItems(data);
-                } catch (error) {
-                    console.error("Failed to fetch cart items:", error);
-                    toast.error("Không thể tải thông tin giỏ hàng!");
-                }
-            };
-
-            const fetchTotalPrice = async () => {
-                try {
-                    const response = await api.get(
-                        `/GetShoppingCart/${user.userId}`,
-                        { headers: { Authorization: `Bearer ${user.token}` } }
-                    );
-                    console.log("shopping cart: ", response.data);
-                    if (response.data?.code === 1000 && response.data?.result) {
-                        setTotalPrice(response.data.result.totalPrice || 0);
-                    } else {
-                        setTotalPrice(0);
-                    }
-                } catch (error) {
-                    console.error("Failed to fetch total price:", error);
-                    toast.error("Không thể tải tổng giá trị giỏ hàng!");
-                }
-            };
-
-            fetchCartItems();
-            fetchTotalPrice();
-        }
-    }, [user?.userId]);
-
+        const storedCartItems = JSON.parse(sessionStorage.getItem("cart")) || [];
+        setCartItems(storedCartItems);
+        const total = storedCartItems.reduce((sum, item) => {
+            console.log("item: ", item.quantity);
+            const priceValue = typeof item.floPrice === 'string' ? item.floPrice : String(item.floPrice || 0);
+            return sum + (parseFloat(priceValue.replace(/\./g, '').replace('đ', '')) * item.quantity);
+        }, 0);
+        setTotalPrice(total.toLocaleString() + 'đ'); // Format total price
+    }, []);
 
     const columns = [
         {
             title: "Image",
-            dataIndex: "image",
-            key: "image",
+            dataIndex: "flower_image",
+            key: "flower_image",
             render: (src) => <Image width={50} src={src} alt="Flower Image" />,
         },
-        { title: "Name", dataIndex: "flowerName", key: "flowerName" },
-        { title: "Price (VND)", dataIndex: "item_price", key: "item_price" },
+        { title: "Name", dataIndex: "flowername", key: "flowername" },
+        { title: "Price (VND)", dataIndex: "floPrice", key: "floPrice" },
         { title: "Quantity", dataIndex: "quantity", key: "quantity" },
     ];
 
-    const handleConfirmPayment = async () => {
-        try {
-            // Call the "shipcode" API
-            const orderResponse = await api.post(`/order/shipcode/${user.userId}`, {
-                phone: user?.phone || "Chưa cập nhật",
-                name: user?.username || "Chưa cập nhật",
-                address: user?.address || "Chưa cập nhật",
-            });
-
-            if (orderResponse.data?.code === 1000) {
-                const { orderId } = orderResponse.data.result;
-                console.log("orderId: ", orderId);
-
-                // Call the "payment" API
-                const paymentResponse = await api.get(
-                    `/payment/vn-pay/${orderId}?amount=${totalPrice}`,
-                    { headers: { Authorization: `Bearer ${user.token}` } }
-                );
-
-                if (paymentResponse.data?.code === 200 && paymentResponse.data?.data?.paymentUrl) {
-                    console.log("Redirecting to: ", paymentResponse.data.data.paymentUrl);
-                    // Redirect user to the payment URL
-                    window.location.href = paymentResponse.data.data.paymentUrl;
-                } else {
-                    toast.error("Thanh toán thất bại!");
-                }
-            } else {
-                toast.error("Không thể tạo đơn hàng!");
-            }
-        } catch (error) {
-            console.error("Error during payment:", error);
-            toast.error("Đã xảy ra lỗi trong quá trình thanh toán!");
-        }
+    const handleConfirmPayment = () => {
+        toast.success("Thanh toán thành công!");
+        sessionStorage.removeItem("cart"); // Clear cart after payment
+        setCartItems([]);
+        setTotalPrice('0đ'); // Reset total price to 0đ
     };
-
 
     const handlePaymentClick = () => {
         Modal.confirm({
@@ -113,10 +50,10 @@ function Payment() {
     };
 
     const handleCancelPayment = () => {
-        sessionStorage.removeItem("cart");
+        sessionStorage.removeItem("cart"); // Clear cart on cancel
         setCartItems([]);
-        setTotalPrice('0đ');
-        toast.info("Thanh toán đã bị hủy!");
+        setTotalPrice('0đ'); // Reset total price to 0đ
+        toast.info("Thanh toán đã bị hủy!"); // Notify the user
     };
 
     return (
@@ -124,24 +61,14 @@ function Payment() {
             <Header />
             <div className="payment-page">
                 <h2 className="payment-title">Trang thanh toán</h2>
-
-                {/* User Information Section */}
-                <div className="user-info">
-                    <h3>Thông tin người dùng</h3>
-                    <p><strong>Tên:</strong> {user?.username || 'Chưa cập nhật'}</p>
-                    <p><strong>Số điện thoại:</strong> {user?.phone || 'Chưa cập nhật'}</p>
-                    <p><strong>Địa chỉ:</strong> {user?.address || 'Chưa cập nhật'}</p>
-                </div>
-
                 <Table
                     dataSource={cartItems}
                     columns={columns}
-                    rowKey="item_id"
+                    rowKey="flower_id"
                     pagination={false}
                     bordered
                 />
-                <h3 className="total-price">Tổng cộng: {totalPrice.toLocaleString('vi-VN')} VND</h3>
-
+                <h3 className="total-price">Tổng cộng: {totalPrice} VND</h3>
                 <div className="button-group">
                     <Button
                         className="payment-button"

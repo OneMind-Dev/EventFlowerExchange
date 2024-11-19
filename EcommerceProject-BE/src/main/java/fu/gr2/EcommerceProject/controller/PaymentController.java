@@ -32,12 +32,12 @@ public class PaymentController {
     @GetMapping("/vn-pay-callback")
     public RedirectView payCallbackHandler(HttpServletRequest request) {
         String status = request.getParameter("vnp_ResponseCode");
-        if ("00".equals(status)) {
+        if (status.equals("00")) {
             vnPayService.savePayment(1);
-            return new RedirectView("http://localhost:5173"); // Redirect to the frontend's homepage
+            return new RedirectView("http://localhost:5173");
         } else {
             vnPayService.savePayment(0);
-            return new RedirectView("redirect:http://localhost:5173/home?error=payment_failed"); // Redirect to frontend with error
+            return new RedirectView("http://localhost:5173/home?error=payment_failed");
         }
     }
 }

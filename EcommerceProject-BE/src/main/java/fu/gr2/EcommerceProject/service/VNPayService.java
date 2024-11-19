@@ -95,7 +95,10 @@ public class VNPayService {
         payment.setAmount(AM.multiply(BigDecimal.valueOf(100)));
         payment.setPaymentDate(LocalDateTime.now());
         payment.setPaymentStatus("PENDING");
-        payment.setOrder(orderRepository.findById(Integer.parseInt(orderId)).get());
+        Order order = orderRepository.findById(Integer.parseInt(orderId)).get();
+        order.setMethod("VNPAY");
+        orderRepository.save(order);
+        payment.setOrder(order);
         int pid = repository.save(payment).getPaymentId();
         long amount = Integer.parseInt(request.getParameter("amount")) * 100L;
         String bankCode = "NCB";
@@ -125,11 +128,9 @@ public class VNPayService {
          if(s==1){
              o.setOrderStatus("SUCESS");
              payment.setPaymentStatus("SUCCESS");
-
          }
          else {
              o.setOrderStatus("FAILED");
-
              payment.setPaymentStatus("FAILED");
          }
          orderRepository.save(o);

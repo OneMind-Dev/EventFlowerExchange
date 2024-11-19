@@ -16,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -143,8 +144,8 @@ public class OrderService {
         }
         List<OrderResponse> orderResponses = new ArrayList<>();
         for(Order order: orders){
-            if(order.getOrderDate().isAfter(LocalDateTime.now())){
-
+            if(Duration.between(order.getOrderDate(), LocalDateTime.now()).toMinutes() >= 15 && !order.getOrderStatus().equalsIgnoreCase("SUCCESS")){
+                order.setOrderStatus("FAILED");
             }
             OrderResponse orderResponse = OrderResponse.builder()
                     .orderId(order.getOrderId())
@@ -161,6 +162,23 @@ public class OrderService {
         return ApiResponse.<List<OrderResponse>>builder()
                 .result(orderResponses)
                 .build();
+    }
+    public OrderResponse OrderCash(Integer orderId){
+        Order o = orderRepository.findById(orderId).get();
+        o.setOrderStatus("SUCCESS");
+        o.setMethod("CASH");
+        orderRepository.save(o);
+        OrderResponse or = OrderResponse.builder()
+                .orderStatus(o.getOrderStatus())
+                .orderId(o.getOrderId())
+                .totalPrice(o.getTotalPrice())
+                .orderDate(o.getOrderDate())
+                .address(o.getAddress())
+                .phone(o.getPhone())
+                .method(o.getMethod())
+                .name(o.getName())
+                .build();
+        return or;
     }
     public List<OrderDetailResponse> GetOrderDetail(Integer orderId){
         List<OrderDetail> orderDetails = orderDetailRepository.findByOrder_OrderId(orderId);
