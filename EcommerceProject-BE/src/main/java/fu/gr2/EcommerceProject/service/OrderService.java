@@ -53,7 +53,7 @@ public class OrderService {
                 .name(request.getName())
                 .phone(request.getPhone())
                 .address(request.getAddress())
-                .method("Shipcode")
+                .method("SHIPCODE")
                 .orderStatus(Status.PENDING.toString())
                 .orderDate(LocalDateTime.now())
                 .user(user)
@@ -122,7 +122,12 @@ public class OrderService {
         if(oL==null){
             throw new AppException(ErrorCode.NO_ORDER);
         }
+
         for(Order order: oL){
+            if(Duration.between(order.getOrderDate(), LocalDateTime.now()).toMinutes() >= 15 && order.getOrderStatus().equalsIgnoreCase("PENDING")){
+                order.setOrderStatus("FAILED");
+                orderRepository.save(order);
+            }
             OrderResponse orderResponse = OrderResponse.builder()
                     .orderId(order.getOrderId())
                     .method(order.getMethod())
@@ -144,8 +149,9 @@ public class OrderService {
         }
         List<OrderResponse> orderResponses = new ArrayList<>();
         for(Order order: orders){
-            if(Duration.between(order.getOrderDate(), LocalDateTime.now()).toMinutes() >= 15 && !order.getOrderStatus().equalsIgnoreCase("SUCCESS")){
+            if(Duration.between(order.getOrderDate(), LocalDateTime.now()).toMinutes() >= 15 && order.getOrderStatus().equalsIgnoreCase("PENDING")){
                 order.setOrderStatus("FAILED");
+                orderRepository.save(order);
             }
             OrderResponse orderResponse = OrderResponse.builder()
                     .orderId(order.getOrderId())
