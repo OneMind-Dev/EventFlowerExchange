@@ -124,7 +124,7 @@ public class OrderService {
         }
 
         for(Order order: oL){
-            if(Duration.between(order.getOrderDate(), LocalDateTime.now()).toMinutes() >= 15 && order.getOrderStatus().equalsIgnoreCase("PENDING")){
+            if(Duration.between(order.getOrderDate(), LocalDateTime.now()).toMinutes() >= 0.5 && order.getOrderStatus().equalsIgnoreCase("PENDING")){
                 order.setOrderStatus("FAILED");
                 orderRepository.save(order);
             }
@@ -149,7 +149,7 @@ public class OrderService {
         }
         List<OrderResponse> orderResponses = new ArrayList<>();
         for(Order order: orders){
-            if(Duration.between(order.getOrderDate(), LocalDateTime.now()).toMinutes() >= 15 && order.getOrderStatus().equalsIgnoreCase("PENDING")){
+            if(Duration.between(order.getOrderDate(), LocalDateTime.now()).toMinutes() >= 0.5 && order.getOrderStatus().equalsIgnoreCase("PENDING")){
                 order.setOrderStatus("FAILED");
                 orderRepository.save(order);
             }
