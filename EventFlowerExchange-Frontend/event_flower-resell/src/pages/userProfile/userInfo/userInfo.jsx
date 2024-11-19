@@ -99,6 +99,8 @@ function UserInfo() {
     }
   }, []);
 
+  console.log("User roles: ", user.role);
+
   return (
     <>
       <Header />
@@ -138,13 +140,14 @@ function UserInfo() {
               >
                 Thay đổi mật khẩu
               </p>
-              {user.role && user.role.includes("USER") && user.role.includes("SELLER") && (
-                <p>Đơn hàng</p>
-              )}
+
               {user.role && user.role.includes("SELLER") && (
                 <p onClick={() => navigate("/profile/sellermanage")}>
                   Quản lý sự kiện
                 </p>
+              )}
+              {user.role && (user.role.includes("USER") || user.role.includes("SELLER")) && (
+                <p onClick={() => navigate("/orders")}>Đơn hàng</p>
               )}
               <Popconfirm
                 onConfirm={() => dispatch(logout())}
