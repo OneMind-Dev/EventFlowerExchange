@@ -59,8 +59,8 @@ function Payment() {
     const columns = [
         {
             title: "Image",
-            dataIndex: "flower_image",
-            key: "flower_image",
+            dataIndex: "image",
+            key: "image",
             render: (src) => <Image width={50} src={src} alt="Flower Image" />,
         },
         { title: "Name", dataIndex: "flowerName", key: "flowerName" },
@@ -124,6 +124,15 @@ function Payment() {
             <Header />
             <div className="payment-page">
                 <h2 className="payment-title">Trang thanh toán</h2>
+
+                {/* User Information Section */}
+                <div className="user-info">
+                    <h3>Thông tin người dùng</h3>
+                    <p><strong>Tên:</strong> {user?.username || 'Chưa cập nhật'}</p>
+                    <p><strong>Số điện thoại:</strong> {user?.phone || 'Chưa cập nhật'}</p>
+                    <p><strong>Địa chỉ:</strong> {user?.address || 'Chưa cập nhật'}</p>
+                </div>
+
                 <Table
                     dataSource={cartItems}
                     columns={columns}
