@@ -7,24 +7,30 @@ import Meta from "antd/es/card/Meta";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "../../../../components/config/axios";
+import { useSelector } from "react-redux";
 
 const FlowerDetail = () => {
   const navigate = useNavigate();
   const { relationshipID } = useParams(); // Retrieve relationshipID from URL
   const [flowerDetail, setFlowerDetail] = useState({});
-  const token = localStorage.getItem("token");
+  const user = useSelector((store) => store.user);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const eventId = queryParams.get("eventId");
   console.log("Event ID:", eventId);
+  console.log("user:", user);
 
   useEffect(() => {
     const fetchFlowerDetails = async () => {
+      if (!user || !user.token) {
+        toast.error("User not authenticated. Please log in.");
+        return;
+      }
       try {
-        const response = await api.get(`/GetFlowerEvent/${relationshipID}`, {
+        const response = await api.get(`GetFlowerEvent/${relationshipID}`, {
           headers: {
-            Authorization: `Bearer ${token}`  // Include token in Authorization header
-          }
+            Authorization: `Bearer ${user.token}`, // Use token from user object
+          },
         });
         if (response.data.code === 1000) {
           setFlowerDetail(response.data.result); // Set flower details
@@ -37,38 +43,39 @@ const FlowerDetail = () => {
         toast.error("Failed to fetch flower details");
       }
     };
-
     fetchFlowerDetails();
     window.scrollTo(0, 0);
-  }, [relationshipID, token]);
+  }, [relationshipID, user]);
+
 
   if (!flowerDetail) {
     return <h2>Flower not found</h2>;
   }
 
-  const addToCart = (flower) => {
-    const existingCart = JSON.parse(sessionStorage.getItem("cart")) || [];
-    console.log("Existing cart before update:", existingCart);
-
-    // Find index of the flower in the existing cart by flowerID (if this is your identifier)
-    const flowerIndex = existingCart.findIndex((item) => item.relationshipID === flower.relationshipID);
-
-    // If flower already exists in cart, update its quantity, otherwise add a new flower
-    if (flowerIndex !== -1) {
-      existingCart[flowerIndex].quantity += 1;
-    } else {
-      existingCart.push({ ...flower, quantity: 1 });
+  const addToCart = async () => {
+    if (!user || !user.token) {
+      toast.error("User not logged in. Please log in to add items to the cart.");
+      return;
     }
 
-    // Log the product being added and the updated cart state
-    console.log("Product added to cart:", flower);
-    console.log("Updated cart:", existingCart);
-
-    // Update sessionStorage with the new cart data
-    sessionStorage.setItem("cart", JSON.stringify(existingCart));
-
-    // Notify user
-    toast.success("Product added to cart successfully");
+    try {
+      const response = await api.post(`/addFlowerToCart/${user.userId}/${relationshipID}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`, // Include token for authentication
+          },
+        }
+      );
+      console.log("Add to Cart Response:", response.status);
+      if (response.status === 200) {
+        toast.success("Product added to cart successfully!");
+      } else {
+        toast.error("Failed to add product to cart.");
+      }
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      toast.error("An error occurred while adding product to cart.");
+    }
   };
 
   return (
