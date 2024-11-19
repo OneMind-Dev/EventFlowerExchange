@@ -28,6 +28,14 @@ function CartPage() {
     }
   }, [cartItems, user]);  // Trigger lại mỗi khi giỏ hàng thay đổi
 
+  const confirmDeletion = (itemId) => {
+    Modal.confirm({
+      title: 'Bạn có muốn xóa sản phẩm này không?',
+      onOk: () => handleQuantityChange(0, itemId), // Set quantity to 0 if confirmed
+      onCancel: () => handleQuantityChange(1, itemId), // Set quantity back to 1 if canceled
+    });
+  };
+
   const columns = [
     {
       title: "Ảnh",
@@ -52,8 +60,13 @@ function CartPage() {
       render: (quantity, record) => (
         <div>
           <Button
-            onClick={() => handleQuantityChange(quantity - 1, record.item_id)}
-            disabled={quantity <= 1}
+            onClick={() => {
+              if (quantity <= 1) {
+                confirmDeletion(record.item_id); // Show confirmation when decreasing quantity below 1
+              } else {
+                handleQuantityChange(quantity - 1, record.item_id);
+              }
+            }}
           >
             -
           </Button>
@@ -71,10 +84,13 @@ function CartPage() {
       ),
     },
     {
-      title: "Chức năng",
+      title: "",
       key: "actions",
       render: (_, record) => (
-        <Button type="danger" onClick={() => handleRemove(record.item_id)}>
+        <Button
+          type="danger"
+          onClick={() => confirmDeletion(record.item_id)} // Show confirmation when "Xóa" button is clicked
+        >
           Xóa
         </Button>
       ),
@@ -106,21 +122,6 @@ function CartPage() {
       }
     } catch (error) {
       toast.error("Lỗi khi cập nhật số lượng.");
-    }
-  };
-
-  const handleRemove = async (id) => {
-    try {
-      const response = await api.delete(`RemoveCartItem/${id}`);
-      if (response.data.success) {
-        const updatedCart = cartItems.filter(item => item.item_id !== id);
-        setCartItems(updatedCart);
-        toast.info("Sản phẩm đã được xóa khỏi giỏ hàng");
-      } else {
-        toast.warning("Không thể xóa sản phẩm.");
-      }
-    } catch (error) {
-      toast.error("Lỗi khi xóa sản phẩm.");
     }
   };
 
