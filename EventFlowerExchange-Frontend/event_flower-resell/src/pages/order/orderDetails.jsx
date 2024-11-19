@@ -3,23 +3,16 @@ import { useParams } from 'react-router-dom';
 import api from "../../components/config/axios";
 import Header from "../../components/header/header";
 import Footer from "../../components/footer/footer";
-import { useSelector } from "react-redux";
-import "../userProfile/userInfo/userInfo.css";
 
 function orderDetails() {
     const { orderId } = useParams(); // Lấy orderId từ URL
     const [orderDetails, setOrderDetails] = useState([]);
     const [loading, setLoading] = useState(true);
-    const user = useSelector((store) => store.user);
 
     useEffect(() => {
         const fetchOrderDetails = async () => {
             try {
-                const response = await api.get(`/order/detail/${orderId}`, {
-                    headers: {
-                        Authorization: `Bearer ${user?.token}`, // Thêm token vào header
-                    },
-                });
+                const response = await api.get(`/order/detail/${orderId}`);
                 setOrderDetails(response.data); // Lưu dữ liệu vào state
             } catch (error) {
                 console.error("Error fetching order details:", error);
