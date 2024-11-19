@@ -126,7 +126,7 @@ public class VNPayService {
         Payment payment = repository.findTopByOrderByPaymentIdDesc();
         Order o = orderRepository.findById(payment.getOrder().getOrderId()).get();
          if(s==1){
-             o.setOrderStatus("SUCESS");
+             o.setOrderStatus("SUCCESS");
              payment.setPaymentStatus("SUCCESS");
          }
          else {

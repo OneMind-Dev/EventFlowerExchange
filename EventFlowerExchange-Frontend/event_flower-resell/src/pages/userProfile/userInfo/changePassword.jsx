@@ -130,8 +130,8 @@ function ChangePassword() {
                             <h3 className="privateInfor">
                                 Thay đổi mật khẩu
                             </h3>
-                            {user.role && (user.role.includes("USER") || user.role.includes("SELLER")) && (
-                                <p onClick={() => navigate("/orders")}>Đơn hàng</p>
+                            {user.role && user.role.includes("USER") && user.role.includes("SELLER") && (
+                                <p>Đơn hàng</p>
                             )}
                             {user.role && user.role.includes("SELLER") && (
                                 <p onClick={() => navigate("/profile/sellermanage")}>

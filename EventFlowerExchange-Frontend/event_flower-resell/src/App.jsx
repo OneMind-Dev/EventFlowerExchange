@@ -26,8 +26,6 @@ import Managers from "./pages/admin/adminManagers";
 import Approve from "./pages/admin/adminApprove";
 import Payment from "./pages/payment/payment";
 import ChangePassword from "./pages/userProfile/userInfo/changePassword"
-import Order from "./pages/order/order";
-import OrderDetails from "./pages/order/orderDetails";
 const App = () => {
   const ProtectRouteAuth = ({ children }) => {
     const user = useSelector((store) => store.user);
@@ -183,14 +181,6 @@ const App = () => {
       path: "/:id",
       element: <ShopProfile />,
     },
-    {
-      path: "/orders",
-      element: <Order />,
-    },
-    {
-      path: "/orders/orderDetails/:orderId",
-      element: <OrderDetails />,
-    }
   ]);
 
   return <RouterProvider router={router} />;
