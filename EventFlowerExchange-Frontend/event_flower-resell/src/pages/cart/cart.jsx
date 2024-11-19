@@ -4,16 +4,18 @@ import { useNavigate } from "react-router-dom"; // Use useNavigate for navigatio
 import Header from "../../components/header/header";
 import { toast } from 'react-toastify'; // Ensure you have toast notifications set up
 import "./cart.css";
+import { useSelector } from "react-redux";
 
 function CartPage() {
   const [cartItems, setCartItems] = useState([]);
   const navigate = useNavigate(); // Initialize useNavigate for navigation
+  const user = useSelector((store) => store.user);
 
   useEffect(() => {
     if (user.userId) {
       const fetchCartItems = async () => {
         try {
-          const response = await api.get(`GetCartItem/${user.userId}`, {
+          const response = await api.get(`/GetCartItem/${user.userId}`, {
             headers: { Authorization: `Bearer ${user.token}` },
           });
           setCartItems(response.data); // Cập nhật lại giỏ hàng khi có sự thay đổi
