@@ -5,17 +5,18 @@ import Header from "../../components/header/header";
 import { toast } from 'react-toastify'; // Ensure you have toast notifications set up
 import "./cart.css";
 import { useSelector } from "react-redux";
+import api from "../../components/config/axios";
 
 function CartPage() {
   const [cartItems, setCartItems] = useState([]);
-  const navigate = useNavigate(); // Initialize useNavigate for navigation
-  const user = useSelector((store) => store.user);
+  const navigate = useNavigate();
+  const user = useSelector((store) => store.user);  // Get user info from Redux store
 
   useEffect(() => {
     if (user.userId) {
       const fetchCartItems = async () => {
         try {
-          const response = await api.get(`/GetCartItem/${user.userId}`, {
+          const response = await api.get(`GetCartItem/${user.userId}`, {
             headers: { Authorization: `Bearer ${user.token}` },
           });
           setCartItems(response.data); // Cập nhật lại giỏ hàng khi có sự thay đổi
@@ -44,13 +45,13 @@ function CartPage() {
     },
     {
       title: "Tên sản phẩm",
-      dataIndex: "flowername",
-      key: "flowername",
+      dataIndex: "flowerName",
+      key: "flowerName",
     },
     {
       title: "Giá (VND)",
-      dataIndex: "floPrice",
-      key: "floPrice",
+      dataIndex: "item_price",
+      key: "item_price",
     },
     {
       title: "Số lượng",
@@ -72,10 +73,10 @@ function CartPage() {
           <InputNumber
             min={1}
             value={quantity}
-            onChange={(value) => handleQuantityChange(value, record.relationshipID)}
+            onChange={(value) => handleQuantityChange(value, record.item_id)}
           />
           <Button
-            onClick={() => handleQuantityChange(quantity + 1, record.relationshipID)}
+            onClick={() => handleQuantityChange(quantity + 1, record.item_id)}
           >
             +
           </Button>
@@ -125,8 +126,7 @@ function CartPage() {
   };
 
   const handlePaymentClick = () => {
-    sessionStorage.setItem("cart", JSON.stringify(cartItems)); // Store cart items
-    navigate('/payment'); // Navigate to payment page
+    navigate("/payment");
   };
 
   return (
@@ -134,7 +134,7 @@ function CartPage() {
       <Header />
       <div className="cart-page">
         <h2>Giỏ hàng</h2>
-        <Table dataSource={cartItems} columns={columns} rowKey="flower_id" />
+        <Table dataSource={cartItems} columns={columns} rowKey="item_id" />
         <Button className="pay-button" type="primary" onClick={handlePaymentClick}>
           Thanh toán
         </Button>
