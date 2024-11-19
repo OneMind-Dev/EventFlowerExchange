@@ -143,6 +143,9 @@ public class OrderService {
         }
         List<OrderResponse> orderResponses = new ArrayList<>();
         for(Order order: orders){
+            if(order.getOrderDate().isAfter(LocalDateTime.now())){
+
+            }
             OrderResponse orderResponse = OrderResponse.builder()
                     .orderId(order.getOrderId())
                     .method(order.getMethod())

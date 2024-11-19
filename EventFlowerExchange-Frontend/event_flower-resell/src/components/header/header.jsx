@@ -70,7 +70,7 @@ function Header() {
               prefix={<SearchOutlined />}
             />
             <ShoppingCartOutlined
-              onClick={() => navigate(`/cart/${user.userId}}`)}
+              onClick={() => navigate("/cart")}
               className="header___container-search--cart"
             />
             <BellOutlined className="header___container-search--noti" />

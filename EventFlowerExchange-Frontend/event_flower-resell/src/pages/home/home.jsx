@@ -13,7 +13,6 @@ const Home = () => {
   const [events, setEvents] = useState([]);
   const [flowers, setFlowers] = useState([]);
   const navigate = useNavigate();
-
   const fetchEvent = async () => {
     const response = await api.get("/AllEvents");
     console.log(response.data);

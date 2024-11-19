@@ -77,7 +77,7 @@ const App = () => {
       ),
     },
     {
-      path: "/cart/:userId",
+      path: "cart",
       element: <CartPage />,
     },
     {

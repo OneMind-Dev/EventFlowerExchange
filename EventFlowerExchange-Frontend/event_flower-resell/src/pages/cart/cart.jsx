@@ -4,13 +4,10 @@ import { useNavigate } from "react-router-dom"; // Use useNavigate for navigatio
 import Header from "../../components/header/header";
 import { toast } from 'react-toastify'; // Ensure you have toast notifications set up
 import "./cart.css";
-import { useSelector } from "react-redux";
-import api from "../../components/config/axios";
 
 function CartPage() {
   const [cartItems, setCartItems] = useState([]);
-  const navigate = useNavigate();
-  const user = useSelector((store) => store.user);  // Get user info from Redux store
+  const navigate = useNavigate(); // Initialize useNavigate for navigation
 
   useEffect(() => {
     if (user.userId) {
@@ -45,13 +42,13 @@ function CartPage() {
     },
     {
       title: "Tên sản phẩm",
-      dataIndex: "flowerName",
-      key: "flowerName",
+      dataIndex: "flowername",
+      key: "flowername",
     },
     {
       title: "Giá (VND)",
-      dataIndex: "item_price",
-      key: "item_price",
+      dataIndex: "floPrice",
+      key: "floPrice",
     },
     {
       title: "Số lượng",
@@ -73,10 +70,10 @@ function CartPage() {
           <InputNumber
             min={1}
             value={quantity}
-            onChange={(value) => handleQuantityChange(value, record.item_id)}
+            onChange={(value) => handleQuantityChange(value, record.relationshipID)}
           />
           <Button
-            onClick={() => handleQuantityChange(quantity + 1, record.item_id)}
+            onClick={() => handleQuantityChange(quantity + 1, record.relationshipID)}
           >
             +
           </Button>
@@ -126,7 +123,8 @@ function CartPage() {
   };
 
   const handlePaymentClick = () => {
-    navigate("/payment");
+    sessionStorage.setItem("cart", JSON.stringify(cartItems)); // Store cart items
+    navigate('/payment'); // Navigate to payment page
   };
 
   return (
@@ -134,7 +132,7 @@ function CartPage() {
       <Header />
       <div className="cart-page">
         <h2>Giỏ hàng</h2>
-        <Table dataSource={cartItems} columns={columns} rowKey="item_id" />
+        <Table dataSource={cartItems} columns={columns} rowKey="flower_id" />
         <Button className="pay-button" type="primary" onClick={handlePaymentClick}>
           Thanh toán
         </Button>

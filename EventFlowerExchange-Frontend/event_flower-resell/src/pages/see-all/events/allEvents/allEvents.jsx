@@ -12,7 +12,7 @@ const Events = () => {
   const [events, setEvents] = useState([]);
   const fetchProduct = async () => {
     try {
-      const response = await api.get("/AllEvents");
+      const response = await api.get("AllEvents");
       setEvents(response.data);
     } catch (e) {
       console.log("Error fetch product: ", e);
