@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 @RequestMapping("/payment")
@@ -29,14 +30,14 @@ public class PaymentController {
     }
 
     @GetMapping("/vn-pay-callback")
-    public ResponseObject<PaymentResponse> payCallbackHandler(HttpServletRequest request) {
+    public RedirectView payCallbackHandler(HttpServletRequest request) {
         String status = request.getParameter("vnp_ResponseCode");
         if (status.equals("00")) {
             vnPayService.savePayment(1);
-            return new ResponseObject<>(HttpStatus.OK, "Success", new PaymentResponse("00", "Success", ""));
+            return new RedirectView("http://localhost:5173");
         } else {
             vnPayService.savePayment(0);
-            return new ResponseObject<>(HttpStatus.BAD_REQUEST, "Failed", null);
+            return new RedirectView("http://localhost:5173/home?error=payment_failed");
         }
     }
 }

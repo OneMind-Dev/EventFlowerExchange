@@ -34,6 +34,10 @@ public class OrderController {
     List<OrderDetailResponse> getOrderDetail(@PathVariable Integer orderId){
         return orderService.GetOrderDetail(orderId);
     }
+    @GetMapping("cash/{orderId}")
+    OrderResponse OrderCash(@PathVariable Integer orderId){
+        return orderService.OrderCash(orderId);
+    }
 //    @GetMapping("/seller/{userId}")
 //    ApiResponse<List<OrderResponse>> sellerGetOrder(@PathVariable String userId){
 //
