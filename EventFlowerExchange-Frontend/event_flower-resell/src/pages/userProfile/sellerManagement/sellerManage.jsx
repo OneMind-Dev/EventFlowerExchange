@@ -287,8 +287,10 @@ function SellerManage() {
               <p className="privateInfor" onClick={() => navigate("/profile/userinfo")}>
                 Hồ sơ cá nhân</p>
               <p onClick={() => navigate("/profile/changePassword")}>Thay đổi mật khẩu</p>
-              <p>Đơn hàng</p>
               <h3 className="privateInfor">Quản lý sự kiện</h3>
+              {user.role && (user.role.includes("USER") || user.role.includes("SELLER")) && (
+                <p onClick={() => navigate("/orders")}>Đơn hàng</p>
+              )}
               <Popconfirm
                 onConfirm={() => dispatch(logout())}
                 title="Bạn muốn đăng xuất ?"

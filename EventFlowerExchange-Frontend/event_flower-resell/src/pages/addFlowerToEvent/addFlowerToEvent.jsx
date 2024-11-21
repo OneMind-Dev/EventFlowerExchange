@@ -18,6 +18,7 @@ import api from "../../components/config/axios";
 import { useSelector } from "react-redux";
 import Footer from "../../components/footer/footer";
 import { useParams } from "react-router-dom";
+import Header from "../../components/header/header";
 
 function AddFlowerToEvent() {
   const [flowers, setFlowers] = useState([]);
@@ -183,7 +184,10 @@ function AddFlowerToEvent() {
             >
               <p className="infor_container-header">Thêm Hoa Vào Sự Kiện</p>
               <Form onFinish={handleAddFlower} form={formAddFlower}>
+
                 {/* rule => dinh nghia validation => [] */}
+
+                <p>Mô tả hoa</p>
                 <Form.Item
                   name="description"
                   rules={[
@@ -198,7 +202,7 @@ function AddFlowerToEvent() {
                     placeholder="Mô tả"
                   />
                 </Form.Item>
-
+                <p>Giá</p>
                 <Form.Item
                   name="floPrice"
                   rules={[
@@ -219,7 +223,7 @@ function AddFlowerToEvent() {
                     placeholder="Giá bán"
                   />
                 </Form.Item>
-
+                <p>Số lượng hoa</p>
                 <Form.Item
                   name="quantity"
                   rules={[
@@ -303,61 +307,64 @@ function AddFlowerToEvent() {
   };
 
   return (
-    <div className="wrapper">
-      <h1>Flower Management</h1>
-      <Button onClick={() => setOpenModal1(true)}>Create new flower</Button>
-      <Table columns={columns} dataSource={flowers} />
-      {/* {neu true => modal hien, false => an} */}
-      <Modal
-        confirmLoading={submitting}
-        onOk={() => formCreateFlower.submit()}
-        title="Create new flower"
-        open={openModal1}
-        onCancel={handleCloseModal1}
-      >
-        <Form onFinish={handleSubmitFlower} form={formCreateFlower}>
-          {/* rule => dinh nghia validation => [] */}
-          <Form.Item
-            label="Flower name"
-            name="flowerName"
-            rules={[
-              {
-                required: true,
-                message: "Please input flower's name",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
+    <>
+      <Header />
+      <div className="wrapper">
+        <h1>Flower Management</h1>
+        <Button onClick={() => setOpenModal1(true)}>Create new flower</Button>
+        <Table columns={columns} dataSource={flowers} />
+        {/* {neu true => modal hien, false => an} */}
+        <Modal
+          confirmLoading={submitting}
+          onOk={() => formCreateFlower.submit()}
+          title="Create new flower"
+          open={openModal1}
+          onCancel={handleCloseModal1}
+        >
+          <Form onFinish={handleSubmitFlower} form={formCreateFlower}>
+            {/* rule => dinh nghia validation => [] */}
+            <Form.Item
+              label="Tên hoa"
+              name="flowerName"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input flower's name",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
 
-          <Form.Item
-            label="Color"
-            name="color"
-            rules={[
-              {
-                required: true,
-                message: "Please input flower's color",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
+            <Form.Item
+              label="Màu sắc"
+              name="color"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input flower's color",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
 
-          <Form.Item
-            label="Origin"
-            name="origin"
-            rules={[
-              {
-                required: true,
-                message: "Please input flower's origin",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
-    </div>
+            <Form.Item
+              label="Nguồn gốc"
+              name="origin"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input flower's origin",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>
+    </>
   );
 }
 
