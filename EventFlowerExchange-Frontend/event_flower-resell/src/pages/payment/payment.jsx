@@ -7,12 +7,14 @@ import { toast } from 'react-toastify';
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import api from "../../components/config/axios";
+import { message } from 'antd';
 
 function Payment() {
     const [cartItems, setCartItems] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
     const [paymentMethod, setPaymentMethod] = useState('vnpay'); // Default payment method
     const user = useSelector((store) => store.user);
+    const navigate = useNavigate();
 
     // Fetch cart items and total price
     useEffect(() => {
@@ -86,12 +88,12 @@ function Payment() {
                     }
                 } else if (paymentMethod === 'cash') {
                     // Cash Payment
-                    const cashResponse = await api.post(
+                    const cashResponse = await api.get(
                         `/order/cash/${orderId}`,
-                        {},
                         { headers: { Authorization: `Bearer ${user.token}` } }
                     );
-                    if (cashResponse.data?.code === 1000) {
+                    console.log("order in cash: ", cashResponse.data);
+                    if (cashResponse.data?.orderStatus === "SUCCESS") {
                         message.success("Thanh toán bằng tiền mặt thành công!");
                         setCartItems([]);
                         setTotalPrice(0);
