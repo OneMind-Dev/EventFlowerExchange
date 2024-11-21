@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '../../components/header/header';
 import Footer from '../../components/footer/footer';
 import "../../components/payment/payment.css"; // Ensure to import your CSS
-import { Table, Button, Image, Modal } from 'antd';
+import { Table, Button, Image, Modal, Checkbox } from 'antd';
 import { toast } from 'react-toastify';
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -11,10 +11,10 @@ import api from "../../components/config/axios";
 function Payment() {
     const [cartItems, setCartItems] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [paymentMethod, setPaymentMethod] = useState('vnpay'); // Default payment method
     const user = useSelector((store) => store.user);
-    console.log("user: ", user);
 
-    // Fetch cart items
+    // Fetch cart items and total price
     useEffect(() => {
         if (user?.userId) {
             const fetchCartItems = async () => {
@@ -23,12 +23,10 @@ function Payment() {
                         `/GetCartItem/${user.userId}`,
                         { headers: { Authorization: `Bearer ${user.token}` } }
                     );
-                    console.log("cart items: ", response.data);
-                    const data = response.data || [];
-                    setCartItems(data);
+                    setCartItems(response.data || []);
                 } catch (error) {
                     console.error("Failed to fetch cart items:", error);
-                    toast.error("Không thể tải thông tin giỏ hàng!");
+                    message.error("Không thể tải thông tin giỏ hàng!");
                 }
             };
 
@@ -38,15 +36,10 @@ function Payment() {
                         `/GetShoppingCart/${user.userId}`,
                         { headers: { Authorization: `Bearer ${user.token}` } }
                     );
-                    console.log("shopping cart: ", response.data);
-                    if (response.data?.code === 1000 && response.data?.result) {
-                        setTotalPrice(response.data.result.totalPrice || 0);
-                    } else {
-                        setTotalPrice(0);
-                    }
+                    setTotalPrice(response.data?.result?.totalPrice || 0);
                 } catch (error) {
                     console.error("Failed to fetch total price:", error);
-                    toast.error("Không thể tải tổng giá trị giỏ hàng!");
+                    message.error("Không thể tải tổng giá trị giỏ hàng!");
                 }
             };
 
@@ -55,13 +48,12 @@ function Payment() {
         }
     }, [user?.userId]);
 
-
     const columns = [
         {
             title: "Image",
             dataIndex: "image",
             key: "image",
-            render: (src) => <Image width={50} src={src} alt="Flower Image" />,
+            render: (src) => <img width={50} src={src} alt="Flower Image" />,
         },
         { title: "Name", dataIndex: "flowerName", key: "flowerName" },
         { title: "Price (VND)", dataIndex: "item_price", key: "item_price" },
@@ -70,7 +62,7 @@ function Payment() {
 
     const handleConfirmPayment = async () => {
         try {
-            // Call the "shipcode" API
+            // Call the "shipcode" API to create the order
             const orderResponse = await api.post(`/order/shipcode/${user.userId}`, {
                 phone: user?.phone || "Chưa cập nhật",
                 name: user?.username || "Chưa cập nhật",
@@ -79,30 +71,45 @@ function Payment() {
 
             if (orderResponse.data?.code === 1000) {
                 const { orderId } = orderResponse.data.result;
-                console.log("orderId: ", orderId);
 
-                // Call the "payment" API
-                const paymentResponse = await api.get(
-                    `/payment/vn-pay/${orderId}?amount=${totalPrice}`,
-                    { headers: { Authorization: `Bearer ${user.token}` } }
-                );
+                if (paymentMethod === 'vnpay') {
+                    // VNPay Payment
+                    const paymentResponse = await api.get(
+                        `/payment/vn-pay/${orderId}?amount=${totalPrice}`,
+                        { headers: { Authorization: `Bearer ${user.token}` } }
+                    );
 
-                if (paymentResponse.data?.code === 200 && paymentResponse.data?.data?.paymentUrl) {
-                    console.log("Redirecting to: ", paymentResponse.data.data.paymentUrl);
-                    // Redirect user to the payment URL
-                    window.location.href = paymentResponse.data.data.paymentUrl;
-                } else {
-                    toast.error("Thanh toán thất bại!");
+                    if (paymentResponse.data?.code === 200 && paymentResponse.data?.data?.paymentUrl) {
+                        window.location.href = paymentResponse.data.data.paymentUrl;
+                    } else {
+                        message.error("Thanh toán bằng VNPay thất bại!");
+                    }
+                } else if (paymentMethod === 'cash') {
+                    // Cash Payment
+                    const cashResponse = await api.post(
+                        `/order/cash/${orderId}`,
+                        {},
+                        { headers: { Authorization: `Bearer ${user.token}` } }
+                    );
+                    if (cashResponse.data?.code === 1000) {
+                        message.success("Thanh toán bằng tiền mặt thành công!");
+                        setCartItems([]);
+                        setTotalPrice(0);
+
+                        // Redirect to the success page
+                        navigate('/payment/paymentSuccess');
+                    } else {
+                        message.error("Thanh toán bằng tiền mặt thất bại!");
+                    }
                 }
             } else {
-                toast.error("Không thể tạo đơn hàng!");
+                message.error("Không thể tạo đơn hàng!");
             }
         } catch (error) {
             console.error("Error during payment:", error);
-            toast.error("Đã xảy ra lỗi trong quá trình thanh toán!");
+            message.error("Đã xảy ra lỗi trong quá trình thanh toán!");
         }
     };
-
 
     const handlePaymentClick = () => {
         Modal.confirm({
@@ -115,8 +122,8 @@ function Payment() {
     const handleCancelPayment = () => {
         sessionStorage.removeItem("cart");
         setCartItems([]);
-        setTotalPrice('0đ');
-        toast.info("Thanh toán đã bị hủy!");
+        setTotalPrice(0);
+        message.info("Thanh toán đã bị hủy!");
     };
 
     return (
@@ -141,6 +148,21 @@ function Payment() {
                     bordered
                 />
                 <h3 className="total-price">Tổng cộng: {totalPrice.toLocaleString('vi-VN')} VND</h3>
+
+                <div className="payment-options">
+                    <Checkbox
+                        checked={paymentMethod === 'vnpay'}
+                        onChange={() => setPaymentMethod('vnpay')}
+                    >
+                        Thanh toán bằng VNPay
+                    </Checkbox>
+                    <Checkbox
+                        checked={paymentMethod === 'cash'}
+                        onChange={() => setPaymentMethod('cash')}
+                    >
+                        Thanh toán bằng tiền mặt
+                    </Checkbox>
+                </div>
 
                 <div className="button-group">
                     <Button

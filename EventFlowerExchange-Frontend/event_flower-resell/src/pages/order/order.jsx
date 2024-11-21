@@ -95,12 +95,27 @@ function order() {
             render: (price) => `${price.toLocaleString()} VNĐ`, // Định dạng tiền tệ
         },
         {
+            title: "Thanh toán",
+            dataIndex: "method",
+            key: "method",
+            render: (method) => {
+                switch (method) {
+                    case "CASH":
+                        return "Tiền mặt";
+                    case "vnpay":
+                        return "Đang xử lý";
+                    default:
+                        return "vnpay";
+                }
+            },
+        },
+        {
             title: "Trạng thái",
             dataIndex: "orderStatus",
             key: "orderStatus",
             render: (status) => {
                 switch (status) {
-                    case "SUCESS":
+                    case "SUCCESS":
                         return "Hoàn thành";
                     case "PENDING":
                         return "Đang xử lý";

@@ -28,6 +28,7 @@ import Payment from "./pages/payment/payment";
 import ChangePassword from "./pages/userProfile/userInfo/changePassword"
 import Order from "./pages/order/order";
 import OrderDetails from "./pages/order/orderDetails";
+import PaymentSuccess from "./pages/payment/paymentSuccess";
 const App = () => {
   const ProtectRouteAuth = ({ children }) => {
     const user = useSelector((store) => store.user);
@@ -190,6 +191,10 @@ const App = () => {
     {
       path: "/orders/orderDetails/:orderId",
       element: <OrderDetails />,
+    },
+    {
+      path: "/payment/paymentSuccess",
+      element: <PaymentSuccess />
     }
   ]);
 

@@ -22,29 +22,34 @@ function SellerRegister() {
   const navigate = useNavigate();
 
   const handleSellerRegister = async (values) => {
-    values.role = "SELLER";
+    values.role = 'SELLER';
+
+    // Handle image upload
     if (fileList.length > 0) {
-      const file = fileList[0];
-      console.log(file);
-      const url = await uploadFile(file.originFileObj);
-      values.image = url;
+      const file = fileList[0].originFileObj;
+      try {
+        const base64Image = await getBase64(file);
+        const uploadResponse = await api.post('/upload', { image: base64Image }); // Upload image to backend
+        values.image = uploadResponse.data.url; // Attach uploaded image URL to form values
+      } catch (error) {
+        console.error('Image upload failed:', error);
+        toast.error('Failed to upload image');
+        return; // Stop submission if image upload fails
+      }
     }
+
     try {
-      const response = await api.post(
-        `users/registerRole/${user.userId}`,
-        values
-      );
-      console.log(user.userId);
-      toast.success("Đăng ký chờ được phê duyệt");
-      console.log(response.data);
+      const response = await api.post(`users/registerRole/${user.userId}`, values);
+      toast.success('Đăng ký chờ được phê duyệt');
       dispatch(login(response.data));
-      navigate("/");
+      navigate('/');
     } catch (err) {
-      console.log(err);
-      toast.error("Đăng ký thất bại");
+      console.error(err);
+      toast.error('Đăng ký thất bại');
     }
   };
 
+  // Convert file to base64 format
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -60,26 +65,16 @@ function SellerRegister() {
     setPreviewImage(file.url || file.preview);
     setPreviewOpen(true);
   };
+
   const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+
   const uploadButton = (
-    <button
-      style={{
-        border: 0,
-        background: "#ffff",
-        color: "#686767",
-      }}
-      type="button"
-    >
+    <div>
       <PlusOutlined />
-      <div
-        style={{
-          marginTop: 8,
-        }}
-      >
-        Tải Lên
-      </div>
-    </button>
+      <div style={{ marginTop: 8 }}>Tải Lên</div>
+    </div>
   );
+
 
   return (
     <>

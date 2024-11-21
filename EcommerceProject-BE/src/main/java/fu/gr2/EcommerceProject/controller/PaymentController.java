@@ -34,7 +34,7 @@ public class PaymentController {
         String status = request.getParameter("vnp_ResponseCode");
         if (status.equals("00")) {
             vnPayService.savePayment(1);
-            return new RedirectView("http://localhost:5173");
+            return new RedirectView("http://localhost:5173/payment/paymentSuccess");
         } else {
             vnPayService.savePayment(0);
             return new RedirectView("http://localhost:5173/home?error=payment_failed");

@@ -1,0 +1,36 @@
+/* Center the entire content on the page */
+.payment-success {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f9f9f9; /* Light background */
+}
+
+/* Green checkmark icon styling */
+.payment-success .checkmark {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #4CAF50; /* Green background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.payment-success .checkmark::after {
+    content: "✔";
+    font-size: 50px;
+    color: white; /* White checkmark */
+}
+
+/* Text styling */
+.payment-success .success-text {
+    font-size: 24px;
+    color: #CC7A7A; /* Text color */
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+}
