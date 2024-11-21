@@ -17,6 +17,12 @@ const FlowerDetail = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const eventId = queryParams.get("eventId");
+
+  // State to track the quantity of the product already added to the cart
+  const [addedQuantity, setAddedQuantity] = useState(0);
+  const maxQuantity = flowerDetail?.quantity; // Maximum quantity of the product available
+
+
   console.log("Event ID:", eventId);
   console.log("user:", user);
 
@@ -58,8 +64,15 @@ const FlowerDetail = () => {
       return;
     }
 
+    if (addedQuantity >= maxQuantity) {
+      toast.error(`You cannot add more than ${maxQuantity} items to the cart.`);
+      return; // Stop if the user tries to add more than the available quantity
+    }
+
     try {
-      const response = await api.post(`/addFlowerToCart/${user.userId}/${relationshipID}`,
+      const response = await api.post(
+        `/addFlowerToCart/${user.userId}/${relationshipID}`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${user.token}`, // Include token for authentication
@@ -68,6 +81,7 @@ const FlowerDetail = () => {
       );
       console.log("Add to Cart Response:", response.status);
       if (response.status === 200) {
+        setAddedQuantity((prevQuantity) => prevQuantity + 1); // Increment added quantity
         toast.success("Product added to cart successfully!");
       } else {
         toast.error("Failed to add product to cart.");
@@ -77,6 +91,11 @@ const FlowerDetail = () => {
       toast.error("An error occurred while adding product to cart.");
     }
   };
+
+  // Reset added quantity when `flowerDetail` changes
+  useEffect(() => {
+    setAddedQuantity(0);
+  }, [flowerDetail]);
 
   return (
     <>
