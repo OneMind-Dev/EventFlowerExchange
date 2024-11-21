@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Button, Image, InputNumber, Modal } from "antd";
 import { useNavigate } from "react-router-dom"; // Use useNavigate for navigation
 import Header from "../../components/header/header";
-import { toast } from 'react-toastify'; // Ensure you have toast notifications set up
+import { toast, ToastContainer } from 'react-toastify'; // Ensure you have toast notifications set up
 import "./cart.css";
 import { useSelector } from "react-redux";
 import api from "../../components/config/axios";
@@ -131,6 +131,7 @@ function CartPage() {
 
   return (
     <>
+      <ToastContainer />
       <Header />
       <div className="cart-page">
         <h2>Giỏ hàng</h2>

@@ -3,9 +3,10 @@ import { Form, Input, Button } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import { useNavigate } from "react-router-dom";
 import api from "../../components/config/axios";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/features/userSlice";
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ const Login = () => {
 
   return (
     <>
+      <ToastContainer />
       <AuthenTemplate>
         <Form
           labelCol={{
