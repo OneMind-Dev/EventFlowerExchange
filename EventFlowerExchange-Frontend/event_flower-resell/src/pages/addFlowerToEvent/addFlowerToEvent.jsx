@@ -329,7 +329,7 @@ function AddFlowerToEvent() {
               rules={[
                 {
                   required: true,
-                  message: "Please input flower's name",
+                  message: "Xin hãy nhập tên hoa",
                 },
               ]}
             >
@@ -342,7 +342,7 @@ function AddFlowerToEvent() {
               rules={[
                 {
                   required: true,
-                  message: "Please input flower's color",
+                  message: "Xin hãy nhập màu hoa",
                 },
               ]}
             >
@@ -355,7 +355,7 @@ function AddFlowerToEvent() {
               rules={[
                 {
                   required: true,
-                  message: "Please input flower's origin",
+                  message: "Xin hãy nhập nguồn gốc của hoa",
                 },
               ]}
             >
