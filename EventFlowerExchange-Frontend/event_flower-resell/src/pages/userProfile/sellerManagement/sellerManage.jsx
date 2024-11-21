@@ -225,7 +225,10 @@ function SellerManage() {
 
   const handleDeleteEvent = async (eventId) => {
     try {
-      const response = await api.delete(`/deactive/${eventId}`);
+      const response = await api.delete(`/DeleteEvent/${eventId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        });
       console.log(response.data);
       toast.success("Xóa sự kiện thành công");
       fetchEvent();
