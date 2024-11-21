@@ -37,6 +37,7 @@ function SellerManage() {
   const [categories, setCategories] = useState([]);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [categoryId, setCategoryId] = useState(null);
+  const [startDate, setStartDate] = useState(null); // To store selected startDate
 
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
@@ -87,13 +88,16 @@ function SellerManage() {
     }
   };
 
-
   useEffect(() => {
 
     fetchCategories();
     fetchEvent();
 
   }, []);
+
+  const handleStartDateChange = (date) => {
+    setStartDate(date); // Update state when startDate changes
+  };
 
   const columns = [
     {
@@ -308,7 +312,10 @@ function SellerManage() {
             >
               <p className="infor_container-header">Tạo Sự Kiện Mới</p>
               <Form onFinish={handleSubmitEvent} form={form}>
+
                 {/* rule => dinh nghia validation => [] */}
+
+                <p>Tên sự kiện</p>
                 <Form.Item
                   name="eventName"
                   rules={[
@@ -324,6 +331,7 @@ function SellerManage() {
                   />
                 </Form.Item>
 
+                <p>Loại sự kiện</p>
                 <Form.Item
                   name="categoryId"
                   rules={[{ required: true, message: "Hãy chọn loại sự kiện." }]}
@@ -354,6 +362,7 @@ function SellerManage() {
                   </Form.Item>
                 )}
 
+                <p>Địa chỉ</p>
                 <Form.Item
                   name="description"
                   rules={[
@@ -369,6 +378,7 @@ function SellerManage() {
                   />
                 </Form.Item>
 
+                <p>Thời gian bắt đầu bán</p>
                 <Form.Item
                   name="startDate"
                   rules={[
@@ -380,21 +390,31 @@ function SellerManage() {
                     showTime={{ format: "HH:mm" }}
                     format="YYYY-MM-DD HH:mm"
                     placeholder="Thời gian bắt đầu"
-                    disabledDate={(current) => current && current < moment().startOf('day')}
+                    disabledDate={(current) =>
+                      current && current < moment().startOf("day")
+                    }
                     disabledTime={(current) => {
                       if (!current) return {};
                       const now = moment();
-                      if (current.isSame(now, 'day')) {
+                      if (current.isSame(now, "day")) {
                         return {
-                          disabledHours: () => Array.from({ length: 24 }, (_, i) => i).filter(h => h < now.hour()),
-                          disabledMinutes: () => Array.from({ length: 60 }, (_, i) => i).filter(m => m < now.minute()),
+                          disabledHours: () =>
+                            Array.from({ length: 24 }, (_, i) => i).filter(
+                              (h) => h < now.hour()
+                            ),
+                          disabledMinutes: () =>
+                            Array.from({ length: 60 }, (_, i) => i).filter(
+                              (m) => m < now.minute()
+                            ),
                         };
                       }
                       return {};
                     }}
+                    onChange={handleStartDateChange} // Capture startDate change
                   />
                 </Form.Item>
 
+                <p>Thời gian ngừng bán</p>
                 <Form.Item
                   name="endDate"
                   rules={[
@@ -406,6 +426,28 @@ function SellerManage() {
                     showTime={{ format: "HH:mm" }}
                     format="YYYY-MM-DD HH:mm"
                     placeholder="Thời gian kết thúc"
+                    disabledDate={(current) => {
+                      // Disable dates before startDate
+                      if (!startDate) return false;
+                      return current && current < startDate.startOf("minute");
+                    }}
+                    disabledTime={(current) => {
+                      if (!startDate || !current) return {};
+                      if (current.isSame(startDate, "day")) {
+                        return {
+                          disabledHours: () =>
+                            Array.from({ length: 24 }, (_, i) => i).filter(
+                              (h) => h < startDate.hour()
+                            ),
+                          disabledMinutes: () =>
+                            Array.from({ length: 60 }, (_, i) => i).filter(
+                              (m) =>
+                                startDate.hour() === current.hour() && m < startDate.minute()
+                            ),
+                        };
+                      }
+                      return {};
+                    }}
                   />
                 </Form.Item>
 
@@ -439,7 +481,7 @@ function SellerManage() {
             )}
           </div>
         </div>
-      </div>
+      </div >
 
       <Footer />
     </>
